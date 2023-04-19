@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_my_profile"
+        android:title="My Profile" />
+    <item
+        android:id="@+id/menu_interested"
+        android:title="Shortlists" />
+    <item
+        android:id="@+id/menu_connections"
+        android:title="Connections" />
+    <item
+        android:id="@+id/menu_meetings"
+        android:title="Meetings" />
+    <item
+        android:id="@+id/menu_settings"
+        android:title="Settings" />
+    <item
+        android:id="@+id/menu_sign_out"
+        android:title="Sign Out" />
+</menu>

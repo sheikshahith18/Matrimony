@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawer_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!--            <com.google.android.material.appbar.AppBarLayout-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content">-->
+
+            <!--                <androidx.appcompat.widget.Toolbar-->
+            <!--                    android:id="@+id/toolbar_top"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_width="match_parent"-->
+            <!--                    android:minHeight="?android:attr/actionBarSize"-->
+            <!--                    >-->
+
+
+            <!--                    <TextView-->
+            <!--                        android:layout_width="wrap_content"-->
+            <!--                        android:layout_height="wrap_content"-->
+            <!--                        android:text="Toolbar Title"-->
+            <!--                        android:layout_gravity="center"-->
+            <!--                        android:id="@+id/toolbar_title" />-->
+
+
+            <!--                </androidx.appcompat.widget.Toolbar>-->
+
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:elevation="4dp"
+                android:minHeight="?android:attr/actionBarSize">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_view"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="start"
+                    app:cardCornerRadius="100dp">
+
+                    <ImageView
+                        android:id="@+id/iv_profile_pic"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/itachi_img" />
+
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:fontFamily="monospace"
+                    android:text="Home Page"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </androidx.appcompat.widget.Toolbar>
+
+            <!--            </com.google.android.material.appbar.AppBarLayout>-->
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+
+                    <!--                                <androidx.cardview.widget.CardView-->
+                    <!--                                    android:id="@+id/card_view"-->
+                    <!--                                    android:layout_width="100dp"-->
+                    <!--                                    android:layout_height="100dp"-->
+                    <!--                                    app:cardCornerRadius="100dp"-->
+                    <!--                                    app:layout_constraintHorizontal_chainStyle="packed"-->
+                    <!--                                    app:layout_constraintStart_toStartOf="parent"-->
+                    <!--                                    app:layout_constraintTop_toTopOf="parent">-->
+
+                    <!--                                    <ImageView-->
+                    <!--                                        android:id="@+id/iv_profile_pic"-->
+                    <!--                                        android:layout_width="match_parent"-->
+                    <!--                                        android:layout_height="match_parent"-->
+                    <!--                                        android:layout_gravity="center"-->
+                    <!--                                        android:scaleType="centerCrop"-->
+                    <!--                                        android:src="@drawable/itachi_img" />-->
+
+                    <!--                                </androidx.cardview.widget.CardView>-->
+
+                    <TextView
+                        android:id="@+id/tv_welcome_back"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="24dp"
+                        android:text="Welcome Back!"
+                        android:textSize="18sp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/toolbar"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="NotSibling" />
+
+
+                    <TextView
+                        android:id="@+id/tv_profile_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="18dp"
+                        android:text="Profile Name"
+                        android:fontFamily="cursive"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toEndOf="@id/tv_welcome_back"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/tv_based_on_pref"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="20dp"
+                        android:text="Based On Your Preferences"
+
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_welcome_back" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_preferred_profiles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="12dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_based_on_pref"
+                        tools:itemCount="5" />
+
+                    <TextView
+                        android:id="@+id/tv_you_may_also_like"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="20dp"
+                        android:text="You May Also Like"
+
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/rv_preferred_profiles"
+                        app:layout_goneMarginStart="12dp" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rv_other_profiles"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="12dp"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_you_may_also_like"
+                        tools:itemCount="5" />
+
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.core.widget.NestedScrollView>
+        </LinearLayout>
+
+
+        <com.google.android.material.navigation.NavigationView
+            android:id="@+id/navigation_view"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            app:headerLayout="@layout/drawer_header"
+            app:menu="@menu/navigation_drawer_menu" />
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+
+</layout>
