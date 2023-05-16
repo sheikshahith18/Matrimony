@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <LinearLayout
+            android:id="@+id/ll_profile_pic"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginStart="3dp"
+            android:layout_marginTop="3dp"
+            android:background="@drawable/blur_bg"
+            app:cardCornerRadius="10dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="4dp"
+            tools:layout_editor_absoluteY="4dp">
+
+
+            <ImageView
+                android:id="@+id/iv_profile_pic"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_profile_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="12dp"
+            android:text="Profile Name"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@id/img_btn_edit"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/ll_profile_pic"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="208dp"
+            tools:layout_editor_absoluteY="16dp" />
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_profile_age_caste"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="24dp"-->
+        <!--            android:layout_marginStart="10dp"-->
+        <!--            android:text="Age"-->
+        <!--            android:textSize="16sp"-->
+        <!--            app:layout_constrainedWidth="true"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/ll_profile_pic"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/tv_profile_name"-->
+        <!--            tools:layout_editor_absoluteX="208dp"-->
+        <!--            tools:layout_editor_absoluteY="56dp" />-->
+
+        <!--        <TextView-->
+        <!--            android:id="@+id/tv_profile_education_from"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="24dp"-->
+        <!--            android:layout_marginStart="10dp"-->
+        <!--            android:text="Education"-->
+        <!--            app:layout_constrainedWidth="true"-->
+        <!--            app:layout_constraintEnd_toEndOf="parent"-->
+        <!--            app:layout_constraintHorizontal_bias="0"-->
+        <!--            android:textSize="16sp"-->
+        <!--            app:layout_constraintStart_toEndOf="@id/ll_profile_pic"-->
+        <!--            app:layout_constraintTop_toBottomOf="@id/tv_profile_age_caste"-->
+        <!--            tools:layout_editor_absoluteX="208dp"-->
+        <!--            tools:layout_editor_absoluteY="89dp" />-->
+
+
+        <TextView
+            android:id="@+id/tv_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="20dp"
+            android:drawableStart="@drawable/ic_description"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="Description"
+            android:textSize="16dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/ll_profile_pic"
+            app:layout_constraintTop_toBottomOf="@id/tv_profile_name"
+            tools:layout_editor_absoluteX="208dp"
+            tools:layout_editor_absoluteY="135dp" />
+
+        <TextView
+            android:id="@+id/tv_when"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:drawableStart="@drawable/ic_calendar_month"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="When"
+            android:textSize="16dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/ll_profile_pic"
+            app:layout_constraintTop_toBottomOf="@id/tv_description"
+            tools:layout_editor_absoluteX="208dp"
+            tools:layout_editor_absoluteY="168dp" />
+
+        <TextView
+            android:id="@+id/tv_where"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:drawableStart="@drawable/ic_location"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="Where"
+            android:textSize="16dp"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@id/ll_profile_pic"
+            app:layout_constraintTop_toBottomOf="@id/tv_when"
+            tools:layout_editor_absoluteX="208dp"
+            tools:layout_editor_absoluteY="199dp" />
+
+
+        <ImageView
+            android:id="@+id/img_btn_edit"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+
+
+            android:src="@drawable/ic_edit_24"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteX="368dp" />
+
+
+        <Button
+            android:id="@+id/btn_cancel_appointment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15dp"
+            android:backgroundTint="@color/red"
+            android:text="Cancel"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_mark_as_complete"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_profile_pic" />
+
+        <Button
+            android:id="@+id/btn_mark_as_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:backgroundTint="@color/teal_200"
+            android:text="Mark As Completed"
+            android:textAllCaps="false"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            app:layout_constraintStart_toEndOf="@id/btn_cancel_appointment"
+            app:layout_constraintTop_toTopOf="@id/btn_cancel_appointment" />
+
+        <View
+            android:id="@+id/divider1"
+
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="?android:attr/listDivider"
+            app:layout_constraintTop_toBottomOf="@id/btn_cancel_appointment" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <!--    </androidx.cardview.widget.CardView>-->
+</layout>
