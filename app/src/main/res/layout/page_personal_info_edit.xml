@@ -102,7 +102,7 @@
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_edit_dob"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:layout_width="330dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="8dp"
@@ -120,15 +120,15 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <ImageButton
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginLeft="12dp"
-                android:layout_marginTop="12dp"
-                android:background="@android:color/transparent"
-                android:src="@drawable/ic_baseline_calendar"
-                app:layout_constraintStart_toEndOf="@id/til_edit_dob"
-                app:layout_constraintTop_toBottomOf="@id/til_edit_name" />
+<!--            <ImageButton-->
+<!--                android:layout_width="50dp"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginLeft="12dp"-->
+<!--                android:layout_marginTop="12dp"-->
+<!--                android:background="@android:color/transparent"-->
+<!--                android:src="@drawable/ic_baseline_calendar"-->
+<!--                app:layout_constraintStart_toEndOf="@id/til_edit_dob"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/til_edit_name" />-->
 
             <TextView
                 android:id="@+id/tv_height"
@@ -142,17 +142,38 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/til_edit_dob" />
 
-            <Spinner
-                android:id="@+id/spinner_height"
+<!--            <Spinner-->
+<!--                android:id="@+id/spinner_height"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="50dp"-->
+<!--                android:layout_marginStart="12dp"-->
+<!--                android:layout_marginTop="1dp"-->
+<!--                android:layout_marginEnd="12dp"-->
+<!--                android:background="@drawable/background_spinner"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tv_height" />-->
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/til_height"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="26dp"
+                android:hint="Height"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="1dp"
                 android:layout_marginEnd="12dp"
-                android:background="@drawable/background_spinner"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:endIconDrawable="@drawable/arrow_dropdown"
+                app:endIconMode="dropdown_menu"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_height" />
+                app:layout_constraintTop_toBottomOf="@id/til_edit_dob">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/height_selector"
+                    style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
 
             <TextView
                 android:id="@+id/tv_status"
@@ -164,7 +185,7 @@
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_height" />
+                app:layout_constraintTop_toBottomOf="@id/til_height" />
 
             <Spinner
                 android:id="@+id/spinner_status"

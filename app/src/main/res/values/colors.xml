@@ -8,6 +8,15 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#006DFF</color>
-    <color name="red">#D10000</color>
+    <color name="red">#ad1010</color>
+    <color name="yellow">#FFEA00</color>
+    <color name="dark_yellow">#fcb103</color>
+    <color name="light_pink">#FBEAEB</color>
+
+
+    <color name="toolbar_background">#FF03DAC5</color>
+    <color name="sky_blue">#87d5e2</color>
+    <color name="text_color">@android:color/black</color>
+    <color name="radio_color">@color/teal_200</color>
 
 </resources>

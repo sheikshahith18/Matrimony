@@ -10,15 +10,15 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = Account::class,
-            parentColumns = arrayOf("userId"),
-            childColumns = arrayOf("userId"),
+            parentColumns = arrayOf("user_id"),
+            childColumns = arrayOf("user_id"),
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = Account::class,
-            parentColumns = arrayOf("userId"),
-            childColumns = arrayOf("viewerUserId"),
+            parentColumns = arrayOf("user_id"),
+            childColumns = arrayOf("viewer_user_id"),
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
@@ -26,6 +26,6 @@ import androidx.room.PrimaryKey
 )
 data class ProfileView(
     @PrimaryKey val id: Int,
-    val userId: String,
-    val viewerUserId: String
+    val user_id: Int,
+    val viewer_user_id: String
 )

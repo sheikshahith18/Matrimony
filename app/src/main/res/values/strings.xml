@@ -1,5 +1,6 @@
+
 <resources>
-    <string name="app_name">Matrimony</string>
+    <string name="app_name">Vivahaa</string>
 
     <string name="sign_in">Sign In</string>
     <string name="email_or_mobile_number">Email/Mobile Number</string>
@@ -12,6 +13,7 @@
     <string name="mobile_number">Mobile Number</string>
     <string name="continue_txt">Continue</string>
 
+    <string name="dot">\u0020\u0020·\u0020\u0020</string>
 
     <string name="lorem_ipsum_short">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin volutpat porttitor felis, vitae bibendum sem consectetur quis. Sed sed aliquam erat. Etiam at urna fringilla, tristique magna non, porttitor leo. Donec congue non velit in fermentum. Phasellus sodales accumsan lorem malesuada viverra. Fusce mollis magna a odio vulputate, id fermentum orci bibendum. Curabitur sit amet urna id tellus pretium egestas eleifend nec nunc. Fusce imperdiet, diam non sollicitudin congue, risus justo egestas leo, in accumsan velit quam vel augue. Aenean imperdiet blandit augue vitae imperdiet.
@@ -50,7 +52,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
 
 
     <string-array name="religion">
-        <item> - Select Religion - </item>
+        <!--        <item> - Select Religion - </item>-->
         <item>Muslim</item>
         <item>Hindu</item>
         <item>Christian</item>
@@ -58,7 +60,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="muslim_caste">
-<!--        <item> - Select Caste - </item>-->
+        <!--        <item> - Select Caste - </item>-->
         <item>Ansari</item>
         <item>Lebbai</item>
         <item>Hanafi</item>
@@ -68,7 +70,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="hindu_caste">
-<!--        <item> - Select Caste - </item>-->
+        <!--        <item> - Select Caste - </item>-->
         <item>Brahmin</item>
         <item>Chettiyar</item>
         <item>Gounder</item>
@@ -79,7 +81,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="christian_caste">
-<!--        <item> - Select Division - </item>-->
+        <!--        <item> - Select Division - </item>-->
         <item>Adventist</item>
         <item>Baptist</item>
         <item>Evangelist</item>
@@ -90,19 +92,28 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="marital_status">
-        <item> - Select Status - </item>
+        <!--        <item> - Select Status - </item>-->
         <item>Never Married</item>
         <item>Divorced</item>
         <item>Widow / Widower</item>
     </string-array>
 
+    <string-array name="count_0_to_5">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
     <string-array name="country">
-        <item> - Select Country - </item>
+        <!--        <item> - Select Country - </item>-->
         <item>India</item>
     </string-array>
 
     <string-array name="state">
-        <item> - Select State - </item>
+        <!--        <item> - Select State - </item>-->
         <item>Andhra Pradesh</item>
         <item>Karnataka</item>
         <item>Kerala</item>
@@ -111,7 +122,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="andhra_cities">
-        <item> - Select City - </item>
+        <!--        <item> - Select City - </item>-->
         <item>Amaravati</item>
         <item>Guntur</item>
         <item>Nellore</item>
@@ -122,7 +133,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="karnataka_cities">
-        <item> - Select City - </item>
+        <!--        <item> - Select City - </item>-->
         <item>Bangalore</item>
         <item>Hubbali</item>
         <item>Mangaluru</item>
@@ -132,7 +143,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="kerala_cities">
-        <item> - Select City - </item>
+        <!--        <item> - Select City - </item>-->
         <item>Aluva</item>
         <item>Cochin</item>
         <item>Kollam</item>
@@ -142,7 +153,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="tn_cities">
-        <item> - Select City - </item>
+        <!--        <item> - Select City - </item>-->
         <item>Chennai</item>
         <item>Coimbatore</item>
         <item>Madurai</item>
@@ -152,7 +163,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="languages">
-        <item> - Select Mother Tongue - </item>
+        <!--        <item> - Select Mother Tongue - </item>-->
         <item>Kannada</item>
         <item>Malayalam</item>
         <item>Sourashtra</item>
@@ -163,7 +174,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="height">
-        <item> - Select Height - </item>
+        <!--        <item> - Select Height - </item>-->
         <item>4 ft 6 in</item>
         <item>4 ft 7 in</item>
         <item>4 ft 8 in</item>
@@ -187,13 +198,13 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="physical_status">
-        <item> - Select Physical Status - </item>
+        <!--        <item> - Select Physical Status - </item>-->
         <item>Normal</item>
         <item>Physically Challenged</item>
     </string-array>
 
     <string-array name="education">
-        <item> - Select Education - </item>
+        <!--        <item> - Select Education - </item>-->
         <item>B.Arch</item>
         <item>B.Com</item>
         <item>B.E</item>
@@ -203,21 +214,29 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
         <item>Others</item>
     </string-array>
 
+    <string-array name="employed_in">
+        <item>Government</item>
+        <item>Private</item>
+        <item>Self Employed</item>
+        <item>Not Working</item>
+    </string-array>
+
     <string-array name="occupation">
-        <item> - Select Occupation - </item>
+        <!--        <item> - Select Occupation - </item>-->
         <item>Accountant</item>
         <item>Doctor</item>
         <item>Entrepreneur</item>
         <item>Manager</item>
         <item>Marketing Professional</item>
         <item>Software Professional</item>
+        <item>Studying</item>
         <item>Supervisor</item>
         <item>Technician</item>
         <item>Others</item>
     </string-array>
 
     <string-array name="annual_income">
-        <item> - Select Income - </item>
+        <!--        <item> - Select Income - </item>-->
         <item>3–4 Lakhs</item>
         <item>4–5 Lakhs</item>
         <item>5–6 Lakhs</item>
@@ -229,7 +248,7 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="family_status">
-        <item> - Select Family Status - </item>
+        <!--        <item> - Select Family Status - </item>-->
         <item>Middle Class</item>
         <item>Upper-Middle Class</item>
         <item>Rich</item>
@@ -237,49 +256,93 @@ Sed nisl purus, facilisis eu commodo in, rhoncus sed augue. In ultrices nunc non
     </string-array>
 
     <string-array name="family_type">
-        <item> - Select Family Type - </item>
+        <!--        <item> - Select Family Type - </item>-->
         <item>Joint</item>
         <item>Nuclear</item>
     </string-array>
 
-    <string-array name="dates">
-        <item>-- Day --</item>
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-        <item>4</item>
-        <item><font fgcolor="@color/red">5</font></item>
-        <item>6</item>
-        <item>7</item>
-        <item>8</item>
-        <item>9</item>
-        <item>10</item>
-        <item>11</item>
-        <item>12</item>
-        <item>13</item>
-        <item>14</item>
-        <item>15</item>
-        <item>16</item>
-        <item>17</item>
-        <item>18</item>
-        <item>19</item>
-        <item>20</item>
-        <item>21</item>
-        <item>22</item>
-        <item>23</item>
-        <item>24</item>
-        <item>25</item>
-        <item>26</item>
-        <item>27</item>
-        <item>28</item>
-        <item>29</item>
-        <item>30</item>
-        <item>31</item>
+    <string-array name="habits">
+        <item>Never</item>
+        <item>Occasionally</item>
+        <item>Often</item>
+    </string-array>
+
+    <string-array name="food_type">
+        <item>Vegetarian</item>
+        <item>Eggetarian</item>
+        <item>Non-Vegetarian</item>
+    </string-array>
+
+    <string-array name="hobbies">
+        <item>Acting</item>
+        <item>Travelling</item>
+        <item>Dancing</item>
+        <item>Eating</item>
+        <item>Fashion</item>
+        <item>Gaming</item>
+        <item>Indoor Sports</item>
+        <item>Outdoor Sports</item>
+        <item>Pets</item>
+        <item>Reading Books</item>
+        <item>Shopping</item>
+        <item>Singing</item>
+        <item>Workout</item>
+        <item>Writing</item>
+        <item>Yoga</item>
+    </string-array>
+
+    <string-array name="zodiac">
+        <item>None</item>
+        <item>Aries</item>
+        <item>Taurus</item>
+        <item>Gemini</item>
+        <item>Cancer</item>
+        <item>Leo</item>
+        <item>Virgo</item>
+        <item>Libra</item>
+        <item>Scorpio</item>
+        <item>Sagittarius</item>
+        <item>Capricorn</item>
+        <item>Aquarius</item>
+        <item>Pisces</item>
+    </string-array>
+
+    <string-array name="stars">
+        <item>None</item>
+        <item>Ashwini</item>
+        <item>Bharani</item>
+        <item>Krittika</item>
+        <item>Rohini</item>
+        <item>Mrigashira</item>
+        <item>Ardra</item>
+        <item>Punarvasu</item>
+        <item>Pushya</item>
+        <item>Ashlesha</item>
+        <item>Magha</item>
+        <item>Purva Phalguni</item>
+        <item>Uttara Phalguni</item>
+        <item>Hasta</item>
+        <item>Chitra</item>
+        <item>Swati</item>
+        <item>Vishakha</item>
+        <item>Anuradha</item>
+        <item>Jyeshtha</item>
+        <item>Mula</item>
+        <item>Purva Ashadha</item>
+        <item>Uttara Ashadha</item>
+        <item>Shravana</item>
+        <item>Dhanishta</item>
+        <item>Shatabhisha</item>
+        <item>Purva Bhadrapada</item>
+        <item>Uttara Bhadrapada</item>
+        <item>Revati</item>
     </string-array>
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
+    <string name="nav_open">open</string>
+    <string name="nav_close">close</string>
 
 </resources>

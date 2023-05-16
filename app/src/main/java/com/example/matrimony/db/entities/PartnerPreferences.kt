@@ -3,29 +3,37 @@ package com.example.matrimony.db.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import androidx.room.TypeConverters
+import com.example.matrimony.db.converters.BitmapConverter
+import com.example.matrimony.db.converters.ListConverter
 
 
 @Entity(
-    tableName = "partner_preferences", foreignKeys = [ForeignKey(
-        entity = Account::class,
-        parentColumns = arrayOf("userId"),
-        childColumns = arrayOf("userId"),
-        onDelete = ForeignKey.CASCADE,
-        onUpdate = ForeignKey.CASCADE
-    )]
+    tableName = "partner_preferences",
 )
 data class PartnerPreferences(
-    @PrimaryKey val id: Int,
-    val userId: String,
-    val ageFrom: Int,
-    val ageTo: Int,
-    val heightFrom: Int,
-    val heightTo: Int,
-    val religion: String,
-    val caste: String,    //
-    val zodiac: String,   //
-    val star: String,     //
-    val education: String,
-    val occupation: String,
-    val annualIncome: String
+    @PrimaryKey(autoGenerate = false)
+    val user_id: Int,
+    var age_from: Int=18,
+    var age_to: Int=45,
+    var height_from: String="4 ft 6 in",
+    var height_to: String="6 ft",
+    var marital_status: String?=null,
+    @TypeConverters(ListConverter::class)
+    var education: List<String>? = emptyList<String>(),
+    @TypeConverters(ListConverter::class)
+    var employed_in: List<String>? = emptyList<String>(),
+    @TypeConverters(ListConverter::class)
+    var occupation: List<String>? = emptyList<String>(),
+    var annual_income: String? =null,
+    var religion: String? =null,
+    @TypeConverters(ListConverter::class)
+    var caste: List<String>? = emptyList<String>(),
+    @TypeConverters(ListConverter::class)
+    var star: List<String>? = emptyList<String>(),
+    @TypeConverters(ListConverter::class)
+    var zodiac: List<String>? = emptyList<String>(),
+    var state: String? = null,
+    @TypeConverters(ListConverter::class)
+    var city: List<String>? = emptyList<String>()
 )

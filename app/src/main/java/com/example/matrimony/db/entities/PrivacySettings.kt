@@ -8,16 +8,16 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "privacy_settings", foreignKeys = [ForeignKey(
         entity = Account::class,
-        parentColumns = arrayOf("userId"),
-        childColumns = arrayOf("userId"),
+        parentColumns = arrayOf("user_id"),
+        childColumns = arrayOf("user_id"),
         onDelete = ForeignKey.CASCADE,
         onUpdate = ForeignKey.CASCADE
     )]
 )
 data class PrivacySettings(
-    @PrimaryKey val id: Int,
-    val userId: String,
-    val viewProfilePic: String,
-    val viewContactNum: String,
-    val viewMyAlbum: String
+    @PrimaryKey
+    val user_id: Int,
+    val view_profile_pic: String = "Everyone",
+    val view_contact_num: String = "Connections Only",
+    val view_my_album: String = "Everyone"
 )

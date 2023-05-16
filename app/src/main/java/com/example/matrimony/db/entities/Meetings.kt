@@ -8,27 +8,11 @@ import java.util.Date
 
 @Entity(
     tableName = "meetings",
-    foreignKeys = [
-        ForeignKey(
-            entity = Account::class,
-            parentColumns = arrayOf("userId"),
-            childColumns = arrayOf("senderUserId"),
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE
-        ),
-        ForeignKey(
-            entity = Account::class,
-            parentColumns = arrayOf("userId"),
-            childColumns = arrayOf("receiverUserId"),
-            onDelete = ForeignKey.CASCADE,
-            onUpdate = ForeignKey.CASCADE
-        )
-    ]
 )
 data class Meetings(
-    @PrimaryKey val id: Int,
-    val senderUserId: String,
-    val receiverUserId: String,
+    @PrimaryKey(autoGenerate = true) var id: Int=0,
+    val sender_user_id: Int,
+    val receiver_user_id: Int,
     val title: String,
     val date: Date,
     val time: String,

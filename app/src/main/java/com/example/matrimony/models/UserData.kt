@@ -1,32 +1,23 @@
 package com.example.matrimony.models
 
 import android.graphics.Bitmap
+import com.example.matrimony.utils.calculateAge
 import java.util.*
 
 data class UserData(
-//    val userId: String,
+    val userId: Int ,
     val name: String,
-//    val gender: String,
-//    val dob: Date,
-    val age:Int,
-//    val religion: String,
-//    val motherTongue: String,
-//    val maritalStatus: String,
-//    val noOfChildren: Int?,
-//    val caste: String,
-//    val zodiac: String,
-//    val star: String,
-//    val country: String,
-//    val state: String,
-//    val city: String,
-//    val height: String,
-    val profilePic: Bitmap?,
-//    val physicalStatus: String,
-//    val education: String,
-//    val employedIn: String,
-//    val occupation: String,
-//    val annualIncome: String,
-//    val familyStatus: String,
-//    val familyType: String,
-//    val about: String
-)
+    val dob: Date?,
+    val religion: String?,
+    val caste: String?,
+    val state: String?,
+    val city: String?,
+    val height: String?,
+    val profile_pic: Bitmap?,
+    val education: String?,
+    val occupation: String?,
+) {
+    val age: Int
+        get() = calculateAge(dob!!)
+}
+

@@ -10,23 +10,24 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = Account::class,
-            parentColumns = arrayOf("userId"),
-            childColumns = arrayOf("senderUserId"),
+            parentColumns = arrayOf("user_id"),
+            childColumns = arrayOf("user_id"),
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         ),
         ForeignKey(
             entity = Account::class,
-            parentColumns = arrayOf("userId"),
-            childColumns = arrayOf("receiverUserId"),
+            parentColumns = arrayOf("user_id"),
+            childColumns = arrayOf("connected_user_id"),
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         )
     ]
 )
+
 data class Connections(
-    @PrimaryKey val id: Int,
-    val senderUserId: String,
-    val receiverUserId: String,
+    @PrimaryKey(autoGenerate = true) val id: Int=0,
+    val user_id: Int,
+    val connected_user_id: Int,
     val status: String
 )

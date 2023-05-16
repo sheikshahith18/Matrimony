@@ -7,16 +7,9 @@ import androidx.room.PrimaryKey
 
 @Entity(
     tableName = "hobbies",
-    foreignKeys = [ForeignKey(
-        entity = Account::class,
-        parentColumns = arrayOf("userId"),
-        childColumns = arrayOf("userId"),
-        onDelete = ForeignKey.CASCADE,
-        onUpdate = ForeignKey.CASCADE
-    )]
 )
 data class Hobbies(
-    @PrimaryKey val id: Int,
-    val userId: String,
+    @PrimaryKey(autoGenerate = true) val id: Int,
+    val user_id: Int,
     val hobby: String
 )

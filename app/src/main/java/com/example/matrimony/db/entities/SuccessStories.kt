@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "success_stories")
 data class SuccessStories(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int,
     val image: Bitmap,
+    val couple_name:String,
     val description: String
 )

@@ -5,8 +5,7 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
 
         <TextView
@@ -24,7 +23,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/til_id_or_mobile"
+            android:id="@+id/til_email_or_mobile"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -36,10 +35,11 @@
             app:startIconDrawable="@drawable/ic_baseline_account_circle_24">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/et_id_or_mobile"
+                android:id="@+id/et_email_or_mobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
+                android:text="simbu@gmail.com"
                 android:maxLength="30" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -56,16 +56,16 @@
             android:hint="@string/password"
             app:endIconDrawable="@drawable/password_eye_selector"
             app:endIconMode="password_toggle"
-            app:layout_constraintTop_toBottomOf="@id/til_id_or_mobile"
+            app:layout_constraintTop_toBottomOf="@id/til_email_or_mobile"
             app:startIconDrawable="@drawable/ic_baseline_lock_24">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/et_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 android:inputType="textPassword"
-                android:maxLength="16" />
+                android:maxLength="16"
+                android:text="Qwerty@123" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -82,6 +82,7 @@
             tools:layout_editor_absoluteX="32dp" />
 
         <TextView
+            android:padding="10dp"
             android:id="@+id/tv_login_via_otp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -95,6 +96,7 @@
             app:layout_constraintTop_toBottomOf="@id/btn_sign_in" />
 
         <TextView
+            android:padding="10dp"
             android:id="@+id/tv_forgot_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -115,6 +117,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
             android:layout_marginBottom="32dp"
+            android:paddingStart="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="@string/dont_have_an_acc"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/tv_create_new_acc"
@@ -128,6 +133,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:text="@string/create_one"
+
+            android:paddingEnd="10dp"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:textColor="@color/red"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

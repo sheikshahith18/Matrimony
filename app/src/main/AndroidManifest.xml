@@ -2,7 +2,24 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+
     <application
+        android:requestLegacyExternalStorage="true"
+        android:name=".MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -12,28 +29,76 @@
         android:theme="@style/Theme.Matrimony"
         tools:targetApi="31">
 
-        <activity android:name=".ui.MainActivity" />
-        <activity android:name=".ui.ForgotPasswordActivity" />
-        <activity android:name=".ui.ResetPasswordActivity" />
-        <activity android:name=".ui.EnterOtpActivity" />
-        <activity android:name=".ui.SignUpActivity" />
-        <activity android:name=".ui.SignUpNextPageActivity" />
-        <activity android:name=".ui.LoginViaOTPActivity" />
-        <activity android:name=".ui.SignInActivity" />
+        <service
+            android:name=".ClosingService"
+            android:enabled="true"
+            android:exported="true"
+            android:stopWithTask="false" />
 
+        <activity android:name=".ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumActivity" />
+        <activity
+            android:name=".ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumActivity1"
+            android:exported="false" />
 
+        <activity android:name=".ui.mainscreen.meetingscreen.ScheduleMeetingActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity android:name=".ui.mainscreen.homescreen.settingsscreen.EnterPasswordActivity" />
+        <activity android:name=".ui.mainscreen.homescreen.settingsscreen.AccountSettingsActivity" />
+        <activity android:name=".ui.mainscreen.homescreen.settingsscreen.PrivacySettingsActivity" />
+        <activity android:name=".ui.mainscreen.homescreen.settingsscreen.SettingsActivity" />
+        <activity android:name=".ui.mainscreen.searchscreen.FilterActivity" />
+        <activity android:name=".ui.SplashActivity" />
+
+        <!-- <provider -->
+        <!-- android:name="androidx.core.content.FileProvider" -->
+        <!-- android:authorities="com.example.android.fileprovider" -->
+        <!-- android:exported="false" -->
+        <!-- android:grantUriPermissions="true"> -->
+        <!-- <meta-data -->
+        <!-- android:name="android.support.FILE_PROVIDER_PATHS" -->
+        <!-- android:resource="@xml/file_paths" /> -->
+        <!-- </provider> -->
+        <activity android:name=".ui.mainscreen.homescreen.profilescreen.editscreen.PartnerPrefEditActivity" />
+        <activity android:name=".ui.mainscreen.homescreen.profilescreen.editscreen.ProfessionalInfoEditActivity" />
+        <activity android:name=".ui.mainscreen.homescreen.profilescreen.editscreen.ReligionInfoEditActivity" />
+        <activity
+            android:name=".ui.mainscreen.homescreen.profilescreen.editscreen.PersonalInfoEditActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".ui.mainscreen.homescreen.profilescreen.ViewProfileActivity" />
+        <activity android:name=".ui.mainscreen.MainActivity" />
+        <activity android:name=".ui.loginscreen.ForgotPasswordActivity" />
+        <activity android:name=".ui.loginscreen.ResetPasswordActivity" />
+        <activity android:name=".ui.loginscreen.EnterOtpActivity" />
+        <activity android:name=".ui.registerscreen.SignUpActivity" />
+        <activity android:name=".ui.registerscreen.SignUpNextPageActivity" />
+        <activity android:name=".ui.loginscreen.LoginViaOTPActivity" />
+        <activity android:name=".ui.loginscreen.SignInActivity" />
         <activity android:name=".DemoActivity" />
 
         <activity-alias
             android:name=".LaunchActivity"
             android:exported="true"
-            android:targetActivity=".ui.SignInActivity">
+            android:targetActivity=".ui.SplashActivity">
+            <!-- android:targetActivity=".DemoActivity"> -->
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
+
+<!--        <provider-->
+<!--            android:name="androidx.core.content.FileProvider"-->
+<!--            android:authorities="com.example.matrimony.fileprovider"-->
+<!--            android:grantUriPermissions="true"-->
+<!--            android:exported="false">-->
+<!--            <meta-data-->
+<!--                android:name="android.support.FILE_PROVIDER_PATHS"-->
+<!--                android:resource="@xml/file_paths"/>-->
+<!--        </provider>-->
+
 
     </application>
 
