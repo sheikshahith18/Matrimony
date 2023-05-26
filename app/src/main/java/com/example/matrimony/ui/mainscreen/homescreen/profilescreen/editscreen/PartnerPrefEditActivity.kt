@@ -168,7 +168,7 @@ class PartnerPrefEditActivity : AppCompatActivity() {
 
         initDropDownList(
             binding.ageFromSelector,
-            Array(27) { it + 18 }.toList(),
+            Array(52) { it + 18 }.toList(),
             DropdownName.AGE_FROM
         )
 
@@ -648,7 +648,7 @@ class PartnerPrefEditActivity : AppCompatActivity() {
                     if (previousPosition == position)
                         return@setOnItemClickListener
                     previousPosition = position
-                    val ageArray = Array(27) { it + 18 }.toMutableList()
+                    val ageArray = Array(52) { it + 18 }.toMutableList()
                     val selectedFromAge = binding.ageFromSelector.text.toString().toInt()
                     val selectedToAge = binding.ageToSelector.text.toString()
                     if (selectedToAge.isNotBlank()) {
@@ -660,7 +660,7 @@ class PartnerPrefEditActivity : AppCompatActivity() {
                         if (selectedFromAge >= selectedToAge.toInt())
                             binding.ageToSelector.setText("")
                     }
-                    val ageToArray = Array(45 - selectedFromAge) { it + selectedFromAge + 1 }
+                    val ageToArray = Array(70 - selectedFromAge) { it + selectedFromAge + 1 }
                     initDropDownList(
                         binding.ageToSelector,
                         ageToArray.toList(),

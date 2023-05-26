@@ -58,7 +58,7 @@ class FilterActivity : AppCompatActivity() {
 
         initDropDownList(
             binding.ageFromSelector,
-            Array(22) { it + 18 }.toList(),
+            Array(52) { it + 18 }.toList(),
             DropdownName.AGE_FROM
         )
 
@@ -423,7 +423,7 @@ class FilterActivity : AppCompatActivity() {
                     if (previousPosition == position)
                         return@setOnItemClickListener
                     previousPosition = position
-                    val ageArray = Array(27) { it + 18 }.toMutableList()
+                    val ageArray = Array(52) { it + 18 }.toMutableList()
                     val selectedFromAge = binding.ageFromSelector.text.toString().toInt()
                     val selectedToAge = binding.ageToSelector.text.toString()
                     if (selectedToAge.isNotBlank()) {
@@ -435,7 +435,7 @@ class FilterActivity : AppCompatActivity() {
                         if (selectedFromAge >= selectedToAge.toInt())
                             binding.ageToSelector.setText("")
                     }
-                    val ageToArray = Array(45 - selectedFromAge) { it + selectedFromAge + 1 }
+                    val ageToArray = Array(70 - selectedFromAge) { it + selectedFromAge + 1 }
                     initDropDownList(
                         binding.ageToSelector,
                         ageToArray.toList(),
@@ -959,46 +959,15 @@ class FilterActivity : AppCompatActivity() {
             return true
         if (binding.heightToSelector.text.toString().isNotBlank())
             return true
-//        if (binding.maritalStatusSelector.text.toString()
-//                .isNotBlank() && binding.maritalStatusSelector.text.toString() != "- Select Marital Status -"
-//        )
-//            return true
-//        if (binding.educationSelector.text.toString()
-//                .isNotBlank() && binding.educationSelector.text.toString() != "- Select Education -"
-//        )
-//            return true
-//        if (binding.employedInSelector.text.toString()
-//                .isNotBlank() && binding.employedInSelector.text.toString() != "- Select EmployedIn -"
-//        )
-//            return true
-//        if (binding.occupationSelector.text.toString()
-//                .isNotBlank() && binding.occupationSelector.text.toString() != "- Select Occupation -"
-//        )
-//            return true
+
         if (binding.religionSelector.text.toString()
                 .isNotBlank() && binding.religionSelector.text.toString() != "- Select Religion -"
         )
             return true
-//        if (binding.casteSelector.text.toString()
-//                .isNotBlank() && binding.casteSelector.text.toString() != "- Select Caste -"
-//        )
-//            return true
-//        if (binding.starSelector.text.toString()
-//                .isNotBlank() && binding.starSelector.text.toString() != "- Select Star -"
-//        )
-//            return true
-//        if (binding.zodiacSelector.text.toString()
-//                .isNotBlank() && binding.zodiacSelector.text.toString() != "- Select Zodiac -"
-//        )
-//            return true
         if (binding.stateSelector.text.toString()
                 .isNotBlank() && binding.stateSelector.text.toString() != "- Select State -"
         )
             return true
-//        if (binding.citySelector.text.toString()
-//                .isNotBlank() && binding.citySelector.text.toString() != "- Select City -"
-//        )
-//            return true
         if(binding.maritalStatusChipGroup.childCount>0)
             return true
         if(binding.educationChipGroup.childCount>0)
@@ -1015,8 +984,6 @@ class FilterActivity : AppCompatActivity() {
             return true
         if(binding.cityChipGroup.childCount>0)
             return true
-
-
 
         return false
     }

@@ -15,7 +15,7 @@ data class PartnerPreferences(
     @PrimaryKey(autoGenerate = false)
     val user_id: Int,
     var age_from: Int=18,
-    var age_to: Int=45,
+    var age_to: Int=70,
     var height_from: String="4 ft 6 in",
     var height_to: String="6 ft",
     @TypeConverters(ListConverter::class)

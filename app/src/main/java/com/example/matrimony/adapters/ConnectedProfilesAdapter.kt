@@ -65,7 +65,18 @@ class ConnectedProfilesAdapter(
             binding.tvProfileAge.text = "👤${user.age},"
             binding.tvProfileHeight.text = user.height
             binding.tvProfileEducation.text = "🎓${user.education}, ${user.occupation}"
-            binding.tvProfileLocation.text = "📍${user.city}, ${user.state}"
+            if (user.city != null) {
+                if (user.state != null) binding.tvProfileLocation.text =
+                    "📍 ${user.city}, ${user.state}"
+                else binding.tvProfileLocation.text = "📍 ${user.city}"
+                binding.tvProfileLocation.visibility = View.VISIBLE
+            } else {
+                if (user.state != null) {
+                    binding.tvProfileLocation.text = "📍 ${user.state}"
+                    binding.tvProfileLocation.visibility = View.VISIBLE
+                } else
+                    binding.tvProfileLocation.visibility = View.GONE
+            }
 
             binding.imgBtnCall.setOnClickListener {
                 onCallButtonClick(user.userId)

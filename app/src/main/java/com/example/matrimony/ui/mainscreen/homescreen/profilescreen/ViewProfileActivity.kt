@@ -558,6 +558,11 @@ class ViewProfileActivity : AppCompatActivity() {
 ////                                                                            collapsingToolbarLayout.background = resource
 //                                            }
                                         }
+                                    Toast.makeText(this@ViewProfileActivity,"imageCnt=${binding.viewPagerProfilePics.adapter?.itemCount}",Toast.LENGTH_SHORT).show()
+                                    if((binding.viewPagerProfilePics.adapter?.itemCount ?: 0) <= 1){
+                                        binding.tvPageNo.visibility=View.GONE
+                                    }else
+                                        binding.tvPageNo.visibility=View.VISIBLE
                                 }
                             }
                     }
@@ -580,10 +585,7 @@ class ViewProfileActivity : AppCompatActivity() {
                 }
             })
 
-            if((binding.viewPagerProfilePics.adapter?.itemCount ?: 0) <= 1){
-                binding.tvPageNo.visibility=View.GONE
-            }else
-                binding.tvPageNo.visibility=View.VISIBLE
+
 
 
         }

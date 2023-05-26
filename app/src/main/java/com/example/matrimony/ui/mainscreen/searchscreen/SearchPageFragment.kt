@@ -270,22 +270,6 @@ class SearchPageFragment : Fragment() {
                     Snackbar.make(binding.root,"Connection Request sent to $name", Snackbar.LENGTH_SHORT)
                         .setAnchorView((requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottom_nav_view))
                         .show()
-//                    Toast.makeText(
-//                        requireContext(),
-//                        "Connection Request sent to $name",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-
-//                    connectionsViewModel.addConnection(
-//                        Connections(
-//                            user_id = connectionsViewModel.userId,
-//                            connected_user_id = userId,
-//                            status = "REQUESTED"
-//                        )
-//                    )
-//                    adapter?.notifyDataSetChanged()
-//                    connectionsViewModel.sendConnectionsTO.add(userId)
-//                    adapter?.notifyItemChanged(adapterPosition)
                 }
                 "REQUESTED" -> {
                     connectedUserId = userId
@@ -311,41 +295,8 @@ class SearchPageFragment : Fragment() {
                     Snackbar.make(binding.root,"Connection Request to $name is Cancelled", Snackbar.LENGTH_SHORT)
                         .setAnchorView((requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottom_nav_view))
                         .show()
-
-//                    Toast.makeText(
-//                        requireContext(),
-//                        "Connection Request to $name is Cancelled",
-//                        Toast.LENGTH_SHORT
-//                    ).show()
-
                 }
                 "CONNECTED" -> {
-//                    connectedUserId = userId
-//                    this.adapterPosition = adapterPosition
-//                    val dialog = RemoveConnectionDialogFragment()
-//                    dialog.removeConnectionListener = RemoveConnectionListener {
-//                        Snackbar.make(binding.root,"Connection with $name is Removed", Snackbar.LENGTH_SHORT)
-//                            .setAnchorView((requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottom_nav_view))
-//                            .show()
-////                        Toast.makeText(requireContext(), "Remove Click", Toast.LENGTH_SHORT).show()
-//                        val viewHolder =
-//                            binding.rvSearchResult.findViewHolderForAdapterPosition(adapterPosition) as SearchPageAdapter.ProfilesViewHolder
-//                        viewHolder.connectionStatus = ConnectionStatus.NOT_CONNECTED
-//                        viewHolder.btnConnection.setImageResource(R.drawable.ic_send_connection)
-//                        adapter?.notifyDataSetChanged()
-////                adapter?.notifyItemChanged(adapterPosition)
-//
-//                        connectionsViewModel.removeConnection(connectedUserId)
-////                connectionsViewModel.removeConnection(connectionsViewModel.userId, connectedUserId)
-//                        connectedUserId = -1
-//                    }
-//                    val args = Bundle()
-//                    args.putString("CALLER", this::class.simpleName)
-//                    dialog.arguments = args
-//                    dialog.show(
-//                        childFragmentManager,
-//                        "remove_connection_dialog"
-//                    )
                     loadDialog(userId, connectionStatus, adapterPosition, name)
                     userProfileViewModel.dialogLoad=true
                     userProfileViewModel.dialogUserId=userId
@@ -685,15 +636,8 @@ class SearchPageFragment : Fragment() {
                     if (filterViewModel.sortOptions == SortOptions.AGE_DESC) 1 else 0,
                     if (filterViewModel.sortOptions == SortOptions.DATE_ASC) 1 else 0,
                     if (filterViewModel.sortOptions == SortOptions.DATE_DESC) 1 else 0,
-//                        binding.etSearch.text.toString().ifBlank { "" }
                     if (binding.etSearch.text.toString().trim().length <= 2) "" else binding.etSearch.text.toString()
                         .trim()
-//                    if (filterViewModel.ascSortFlag == 1) filterViewModel.nameSortFlag else 0,
-//                    if (filterViewModel.descSortFlag == 1) filterViewModel.nameSortFlag else 0,
-//                    if (filterViewModel.ascSortFlag == 1) filterViewModel.ageSortFlag else 0,
-//                    if (filterViewModel.descSortFlag == 1) filterViewModel.ageSortFlag else 0,
-//                    if (filterViewModel.ascSortFlag == 1) filterViewModel.idSortFlag else 0,
-//                    if (filterViewModel.descSortFlag == 1) filterViewModel.idSortFlag else 0
 
                 ).observe(requireActivity()) {
                     Log.i(TAG, "Filtered Profiles Count : ${it.size}")
