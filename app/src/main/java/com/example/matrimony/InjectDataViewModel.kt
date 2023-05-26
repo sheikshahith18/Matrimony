@@ -44,7 +44,7 @@ constructor(
     lateinit var context: Application
 
 //    val applicationContext=context.applicationContext
-    val handler= android.os.Handler(Looper.getMainLooper())
+//    val handler= android.os.Handler(Looper.getMainLooper())
 
     var initial=true
     val count=62
@@ -1308,9 +1308,9 @@ constructor(
 
         Log.i(TAG,"Users Loaded")
 
-        handler.post {
-//            Toast.makeText(context.applicationContext,"Loading Complete",Toast.LENGTH_SHORT).show()
-        }
+//        handler.post {
+////            Toast.makeText(context.applicationContext,"Loading Complete",Toast.LENGTH_SHORT).show()
+//        }
     }
 
     private suspend fun addAlbum() {
