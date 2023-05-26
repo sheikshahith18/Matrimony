@@ -53,7 +53,6 @@ interface PartnerPreferenceDao {
             "education= :education," +
             "employed_in= :employedIn," +
             "occupation= :occupation," +
-            "annual_income= :annualIncome," +
             "religion= :religion," +
             "caste= :caste," +
             "star= :star," +
@@ -61,7 +60,7 @@ interface PartnerPreferenceDao {
             "state= :state," +
             "city= :city " +
             "WHERE user_id= :userId")
-    fun updatePartnerPreference(
+    suspend fun updatePartnerPreference(
         userId: Int,
         ageFrom: Int,
         ageTo: Int,
@@ -71,7 +70,6 @@ interface PartnerPreferenceDao {
         education: List<String>,
         employedIn: List<String>,
         occupation: List<String>,
-        annualIncome: String,
         religion: String,
         caste: List<String>,
         star: List<String>,

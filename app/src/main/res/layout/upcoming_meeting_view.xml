@@ -9,25 +9,47 @@
         android:layout_height="wrap_content">
 
 
-        <LinearLayout
-            android:id="@+id/ll_profile_pic"
+        <androidx.cardview.widget.CardView
             android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:id="@+id/ll_profile_pic"
             android:layout_marginStart="3dp"
             android:layout_marginTop="3dp"
-            android:background="@drawable/blur_bg"
-            app:cardCornerRadius="10dp"
+            app:cardCornerRadius="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_editor_absoluteX="4dp"
-            tools:layout_editor_absoluteY="4dp">
+            tools:layout_editor_absoluteY="4dp"
+            android:layout_height="150dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:background="@drawable/blur_bg"
+            >
 
 
             <ImageView
                 android:id="@+id/iv_profile_pic"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-        </LinearLayout>
+            <TextView
+                android:id="@+id/tv_album_count"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="3dp"
+                android:layout_marginBottom="3dp"
+                android:background="@drawable/tv_background"
+                android:gravity="center"
+                android:paddingEnd="2dp"
+                android:scaleX="0.8"
+                android:scaleY=".8"
+                android:text="8"
+                android:paddingStart="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:drawableStartCompat="@drawable/ic_album" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/tv_profile_name"
@@ -46,43 +68,13 @@
             tools:layout_editor_absoluteX="208dp"
             tools:layout_editor_absoluteY="16dp" />
 
-        <!--        <TextView-->
-        <!--            android:id="@+id/tv_profile_age_caste"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="24dp"-->
-        <!--            android:layout_marginStart="10dp"-->
-        <!--            android:text="Age"-->
-        <!--            android:textSize="16sp"-->
-        <!--            app:layout_constrainedWidth="true"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintHorizontal_bias="0"-->
-        <!--            app:layout_constraintStart_toEndOf="@id/ll_profile_pic"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/tv_profile_name"-->
-        <!--            tools:layout_editor_absoluteX="208dp"-->
-        <!--            tools:layout_editor_absoluteY="56dp" />-->
-
-        <!--        <TextView-->
-        <!--            android:id="@+id/tv_profile_education_from"-->
-        <!--            android:layout_width="wrap_content"-->
-        <!--            android:layout_height="24dp"-->
-        <!--            android:layout_marginStart="10dp"-->
-        <!--            android:text="Education"-->
-        <!--            app:layout_constrainedWidth="true"-->
-        <!--            app:layout_constraintEnd_toEndOf="parent"-->
-        <!--            app:layout_constraintHorizontal_bias="0"-->
-        <!--            android:textSize="16sp"-->
-        <!--            app:layout_constraintStart_toEndOf="@id/ll_profile_pic"-->
-        <!--            app:layout_constraintTop_toBottomOf="@id/tv_profile_age_caste"-->
-        <!--            tools:layout_editor_absoluteX="208dp"-->
-        <!--            tools:layout_editor_absoluteY="89dp" />-->
-
 
         <TextView
             android:id="@+id/tv_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="12dp"
             android:drawableStart="@drawable/ic_description"
             android:drawablePadding="10dp"
             android:gravity="center"
@@ -134,11 +126,15 @@
 
 
         <ImageView
+            android:padding="10dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
             android:id="@+id/img_btn_edit"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-
-
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
             android:src="@drawable/ic_edit_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"

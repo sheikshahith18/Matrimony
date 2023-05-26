@@ -1,35 +1,34 @@
 package com.example.matrimony.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.example.matrimony.R
 import com.example.matrimony.TAG
-import com.example.matrimony.databinding.ConnectedProfilesViewBinding
 import com.example.matrimony.databinding.UpcomingMeetingViewBinding
 import com.example.matrimony.db.entities.Meetings
-import com.example.matrimony.models.UserData
+import com.example.matrimony.ui.mainscreen.MainActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.ViewImageActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
 import com.example.matrimony.ui.mainscreen.meetingscreen.MeetingsViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.internal.managers.FragmentComponentManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.math.abs
 
 class UpcomingMeetingsAdapter(
     private val context: Context,
     private val meetingsViewModel: MeetingsViewModel,
+    private val albumViewModel: AlbumViewModel,
     private val editMeeting: (Int, Int, Int) -> Unit,
     private val viewFullProfile: (Int) -> Unit
 ) :
@@ -58,16 +57,20 @@ class UpcomingMeetingsAdapter(
                 val user = meetingsViewModel.getUserData(userId)
                 binding.tvProfileName.text = user.name
 
-                Glide.with(binding.ivProfilePic.context)
-                    .load(
-                        user.profile_pic
-                            ?: ResourcesCompat.getDrawable(
-                                context.resources, R.drawable.default_profile_pic,
-                                null
-                            )
-                    )
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
-                    .into(binding.ivProfilePic)
+                if(user.profile_pic!=null)
+                    binding.ivProfilePic.setImageBitmap(user.profile_pic)
+                else
+                    binding.ivProfilePic.setImageResource(R.drawable.default_profile_pic)
+//                Glide.with(binding.ivProfilePic.context)
+//                    .load(
+//                        user.profile_pic
+//                            ?: ResourcesCompat.getDrawable(
+//                                context.resources, R.drawable.default_profile_pic,
+//                                null
+//                            )
+//                    )
+////                    .apply(RequestOptions.bitmapTransform(RoundedCorners(50)))
+//                    .into(binding.ivProfilePic)
 
                 binding.tvDescription.text = meeting.title
                 val date = meeting.date
@@ -80,6 +83,31 @@ class UpcomingMeetingsAdapter(
             }
             binding.imgBtnEdit.setOnClickListener {
                 editMeeting(meeting.id, meeting.sender_user_id, meeting.receiver_user_id)
+            }
+            CoroutineScope(Dispatchers.Main).launch {
+                albumViewModel.getUserAlbumCount(userId)
+                    .observe((FragmentComponentManager.findActivity(binding.root.context) as AppCompatActivity)) {
+                        if (it > 1)
+                            binding.tvAlbumCount.text = it.toString()
+                        else
+                            binding.tvAlbumCount.visibility = View.GONE
+                        if (it > 0) {
+                            binding.ivProfilePic.setOnClickListener {
+                                val intent =
+                                    Intent(context as MainActivity, ViewImageActivity::class.java)
+                                intent.putExtra("user_id", userId)
+                                intent.putExtra("position", 0)
+                                context.startActivity(intent)
+                            }
+                        } else
+                            binding.ivProfilePic.setOnClickListener { view ->
+                                Snackbar.make(
+                                    view,
+                                    "This user didn't added any images",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                            }
+                    }
             }
             initListeners(userId, meeting.id)
         }
@@ -123,4 +151,13 @@ class UpcomingMeetingsAdapter(
     override fun getItemCount(): Int {
         return meetingsList.size
     }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
 }

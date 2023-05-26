@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -20,11 +21,13 @@ import com.example.matrimony.databinding.FragmentConnectedProfilesBinding
 import com.example.matrimony.db.entities.Connections
 import com.example.matrimony.ui.mainscreen.UserProfileViewModel
 import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.ViewProfileActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
 import com.example.matrimony.ui.mainscreen.meetingscreen.ScheduleMeetingActivity
 import com.example.matrimony.utils.CURRENT_USER_ID
 import com.example.matrimony.utils.MY_SHARED_PREFERENCES
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 
 
 @AndroidEntryPoint
@@ -36,6 +39,7 @@ class ConnectedProfilesFragment : Fragment() {
 
     private val userProfileViewModel by activityViewModels<UserProfileViewModel>()
     private val connectionsViewModel by activityViewModels<ConnectionsViewModel>()
+    private val albumViewModel by activityViewModels<AlbumViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -70,6 +74,7 @@ class ConnectedProfilesFragment : Fragment() {
 
 
     private val onCallButtonClicked = { userId: Int ->
+
         lifecycleScope.launch {
             connectionsViewModel.getUserMobile(userId).observe(viewLifecycleOwner) {
 
@@ -87,115 +92,80 @@ class ConnectedProfilesFragment : Fragment() {
         startActivity(intent)
     }
 
-    private val onRemoveButtonClicked: (Int, String, Int) -> Unit =
-        { userId: Int, buttonText: String, adapterPosition: Int ->
-            when (buttonText) {
-                "Remove Connection" -> {
-                    connectedUserId = userId
-                    this.adapterPosition = adapterPosition
-                    val dialog = RemoveConnectionDialogFragment()
-                    dialog.removeConnectionListener = RemoveConnectionListener {
-//                        when (clickedItem) {
-//                            "REMOVE_CONNECTION" -> {
-//                        Toast.makeText(requireContext(), "Remove Click", Toast.LENGTH_SHORT).show()
+    private val onRemoveButtonClicked: (Int, Int) -> Unit =
+        { userId: Int, adapterPosition: Int ->
 
-                        val viewHolder =
-                            binding.rvConnectedProfiles.findViewHolderForAdapterPosition(
-                                adapterPosition
-                            ) as ConnectedProfilesAdapter.ConnectedProfilesViewHolder
-                        viewHolder.btnRemoveConnection.text = "Send Request"
-                        viewHolder.btnRemoveConnection.setBackgroundColor(
-                            resources.getColor(
-                                R.color.teal_200,
-                                null
-                            )
-                        )
-                        connectionsViewModel.removeFromConnections.add(connectedUserId)
-                        connectedUserId = -1
-//                            }
-//                        }
-                    }
-
-
-                    val args = Bundle()
-                    args.putString("CALLER", this::class.simpleName)
-                    dialog.arguments = args
-                    dialog.show(
-                        childFragmentManager,
-                        "remove_connection_dialog"
-                    )
-
-                }
-                "Send Request" -> {
-                    connectedUserId = userId
-                    this.adapterPosition = adapterPosition
-                    val viewHolder =
-                        binding.rvConnectedProfiles.findViewHolderForAdapterPosition(adapterPosition) as ConnectedProfilesAdapter.ConnectedProfilesViewHolder
-                    viewHolder.btnRemoveConnection.text = "Request Sent"
-                    viewHolder.btnRemoveConnection.setBackgroundColor(
-                        resources.getColor(
-                            R.color.yellow,
-                            null
-                        )
-                    )
-                    viewHolder.btnText.value = "REQUESTED"
-//                    adapter?.notifyDataSetChanged()
-//                    connectionsViewModel.setConnectionStatus(connectedUserId,"REQUESTED")
-                    connectionsViewModel.sendConnectionsTo.add(userId)
-//                    adapter?.notifyItemChanged(adapterPosition)
-                }
-                "Request Sent" -> {
-                    connectedUserId = userId
-                    val viewHolder =
-                        binding.rvConnectedProfiles.findViewHolderForAdapterPosition(adapterPosition) as ConnectedProfilesAdapter.ConnectedProfilesViewHolder
-                    viewHolder.btnRemoveConnection.text = "Send Request"
-                    viewHolder.btnRemoveConnection.setBackgroundColor(
-                        resources.getColor(
-                            R.color.teal_200,
-                            null
-                        )
-                    )
-                    viewHolder.btnText.value = "NOT_CONNECTED"
-//                    adapter?.notifyDataSetChanged()
-//                    connectionsViewModel.setConnectionStatus(connectedUserId,"NOT_CONNECTED")
-                    connectionsViewModel.sendConnectionsTo.remove(userId)
-                }
-            }
-
+            loadDialog(userId, adapterPosition)
+            userProfileViewModel.dialogLoad=true
+            userProfileViewModel.dialogUserId=userId
         }
+
+    private fun loadDialog(userId: Int, adapterPosition: Int ){
+        val dialogFragment = parentFragmentManager.findFragmentByTag("remove_connection_dialog") as RemoveConnectionDialogFragment?
+        if (dialogFragment != null && dialogFragment.dialog?.isShowing == true) {
+            Log.i(TAG+4,"dialog dismissed")
+            Log.i(TAG+4,"after dismissal, userId= ${userProfileViewModel.dialogUserId}")
+//            Toast.makeText(requireContext(),"dialog dismissed",Toast.LENGTH_SHORT).show()
+            dialogFragment.dialog?.dismiss()
+//            userProfileViewModel.dialogLoad=false
+        }
+
+        Log.i(TAG+4,"Before dialog creation")
+        val dialog = RemoveConnectionDialogFragment()
+        Log.i(TAG+4,"After dialog creation")
+        dialog.removeConnectionListener = RemoveConnectionListener {
+            Log.i(TAG+4,"inside removeCon")
+            Log.i(TAG+4,"userId $userId")
+//            Toast.makeText(requireContext(),"con rem",Toast.LENGTH_SHORT).show()
+//            val viewHolder =
+//                binding.rvConnectedProfiles.findViewHolderForAdapterPosition(adapterPosition) as ConnectedProfilesAdapter.ConnectedProfilesViewHolder
+
+
+//            adapter?.removeUser(adapterPosition)
+            connectedUserId = -1
+            connectionsViewModel.removeConnection(userProfileViewModel.dialogUserId)
+            adapter?.notifyDataSetChanged()
+        }
+//        Log.i(TAG+4,(dialog::removeConnectionListener.isInitialized).toString())
+
+        val args = Bundle()
+        args.putString("CALLER", this::class.simpleName)
+        dialog.arguments = args
+        dialog.show(parentFragmentManager, "remove_connection_dialog")
+
+        userProfileViewModel.dialogLoad=true
+        userProfileViewModel.dialogUserId=userId
+//        Toast.makeText(requireContext(),"dialogLoadSetTo ${userProfileViewModel.dialogLoad}",Toast.LENGTH_SHORT).show()
+//        userProfileViewModel.dialogUserId=userId
+//        userProfileViewModel.dialogAdapterPosition=adapterPosition
+//        userProfileViewModel.dialogUserName=name
+    }
+
+    override fun onResume() {
+        Log.i(TAG+4,"ConPro onResume")
+        super.onResume()
+        val dialogFragment = parentFragmentManager.findFragmentByTag("remove_connection_dialog") as RemoveConnectionDialogFragment?
+        Log.i(TAG+4,"dialogFrag isNull ?: $dialogFragment")
+        Log.i(TAG+4,"dialogFrag isShowing ?: ${dialogFragment?.dialog?.isShowing ?: "null"}")
+        if (dialogFragment == null || dialogFragment.dialog?.isShowing == false) {
+            Log.i(TAG+4,"dialogFrag $dialogFragment")
+            Log.i(TAG+4,"onRes inside if")
+            userProfileViewModel.dialogLoad = false
+        }else
+            userProfileViewModel.dialogLoad = true
+
+//        Toast.makeText(requireContext(),"dialogLoad ${userProfileViewModel.dialogLoad}",Toast.LENGTH_SHORT).show()
+        Log.i(TAG+4,"dialogLoad ${userProfileViewModel.dialogLoad}")
+
+        if(userProfileViewModel.dialogLoad){
+            Log.i(TAG+4,"onRes loadNewDialog")
+            loadDialog(userProfileViewModel.dialogUserId,userProfileViewModel.dialogAdapterPosition)
+        }
+    }
 
 
     //from dialog fragment
     private var connectedUserId = -1
-    private var adapterPosition = -1
-
-//    override fun onButtonClick(clickedItem: String) {
-//        when (clickedItem) {
-//            "REMOVE_CONNECTION" -> {
-//                Toast.makeText(requireContext(), "Remove Click", Toast.LENGTH_SHORT).show()
-//
-//                val viewHolder =
-//                    binding.rvConnectedProfiles.findViewHolderForAdapterPosition(adapterPosition) as ConnectedProfilesAdapter.ConnectedProfilesViewHolder
-//                viewHolder.btnRemoveConnection.text = "Send Request"
-//                viewHolder.btnRemoveConnection.setBackgroundColor(
-//                    resources.getColor(
-//                        R.color.teal_200,
-//                        null
-//                    )
-//                )
-////                val viewHolder =
-////                    binding.rvConnectedProfiles.findViewHolderForAdapterPosition(adapterPosition) as ConnectedProfilesAdapter.ConnectedProfilesViewHolder
-////                viewHolder.btnText.value="NOT_CONNECTED"
-////                adapter?.notifyDataSetChanged()
-////                adapter?.notifyItemChanged(adapterPosition)
-////                connectionsViewModel.setConnectionStatus(connectedUserId,"NOT_CONNECTED")
-////                connectionsViewModel.removeConnection(connectedUserId)
-////                connectionsViewModel.setConnectionStatus(connectedUserId,"NOT_CONNECTED")
-//                connectionsViewModel.removeFromConnections.add(connectedUserId)
-//                connectedUserId = -1
-//            }
-//        }
-//    }
 
     override fun onPause() {
         super.onPause()
@@ -234,8 +204,9 @@ class ConnectedProfilesFragment : Fragment() {
         connectedProfilesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         adapter = ConnectedProfilesAdapter(
-            requireContext(),
+            requireActivity(),
             connectionsViewModel,
+            albumViewModel,
             onCallButtonClicked,
             onRemoveButtonClicked,
             onScheduleButtonCLicked,
@@ -255,32 +226,6 @@ class ConnectedProfilesFragment : Fragment() {
                         binding.rvConnectedProfiles.visibility = View.VISIBLE
                     }
                 }
-//            connectionsViewModel.getConnectedUserIds(connectionsViewModel.userId)
-//                .observe(requireActivity()) {
-//                    Log.i(TAG, "connected profiles count :${it.size}")
-//                    if (it.isEmpty()) {
-//
-////                        adapter?.notifyDataSetChanged()
-//                        binding.noProfilesMessage.visibility = View.VISIBLE
-//                        binding.rvConnectedProfiles.visibility = View.GONE
-//                        return@observe
-//                    }
-//                    binding.noProfilesMessage.visibility = View.GONE
-//                    binding.rvConnectedProfiles.visibility = View.VISIBLE
-//
-//
-//                    val usersList = mutableListOf<UserData>()
-//
-//                    lifecycleScope.launch {
-//                        it.forEach { userId ->
-//                            val userData = connectionsViewModel.getUserData(userId)
-//                            Log.i(TAG, userData.toString())
-//                            usersList.add(userData)
-//                        }
-//                        adapter?.setUserList(usersList)
-//                    }
-//
-//                }
         }
     }
 

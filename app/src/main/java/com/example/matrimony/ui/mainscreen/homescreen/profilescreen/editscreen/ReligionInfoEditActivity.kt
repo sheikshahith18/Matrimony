@@ -44,7 +44,7 @@ class ReligionInfoEditActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-//        initValues()
+        initValues()
 
         initDropDownList(
             binding.religionSelector,
@@ -65,6 +65,10 @@ class ReligionInfoEditActivity : AppCompatActivity() {
 
         binding.btnSaveChanges.setOnClickListener {
             saveChanges()
+        }
+
+        binding.btnDiscardChanges.setOnClickListener {
+            finish()
         }
 
         if(userProfileViewModel.loaded){

@@ -2,6 +2,7 @@ package com.example.matrimony.db.dao
 
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -14,9 +15,18 @@ import java.util.*
 interface UserDao {
 
 
+    //    @Query("SELECT * FROM user")
+//    @Query("SELECT * FROM user WHERE gender= 'M'")
+//    @Query("SELECT * FROM user WHERE gender= 'F'")
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addUser(user: User)
+
+
+    @Query("SELECT COUNT(user_id) FROM user")
+    suspend fun getNoOfUsers():Int
+
     @Query("SELECT * FROM user WHERE user_id = :userId")
     fun getUser(userId: Int): LiveData<User>
-
 
     @Query("SELECT * FROM user WHERE user_id= :userId ORDER BY :orderBy")
     fun getSortedUser(userId:Int,orderBy:String):User
@@ -71,9 +81,9 @@ interface UserDao {
         about: String
     )
 
+
     @Query("SELECT user_id as userId,name,dob,religion,caste,state,city,height,profile_pic,education,occupation FROM user WHERE user_id = :userId")
     suspend fun getUserData(userId: Int): UserData
-
 
     @Query("UPDATE user SET profile_pic= :image WHERE user_id = :userId")
     suspend fun updateProfilePic(userId: Int, image: Bitmap?)
@@ -87,23 +97,18 @@ interface UserDao {
     @Query("SELECT name FROM user WHERE user_id= :userId")
     fun getNameOfUser(userId: Int): LiveData<String>
 
-//    @Query("SELECT * FROM user")
 //    fun getAllUsers(): LiveData<List<UserData>>
 
-//    @Query("SELECT * FROM user WHERE gender= 'M'")
 //    fun getAllMaleUsers(): LiveData<List<UserData>>
 
-//    @Query("SELECT * FROM user WHERE gender= 'F'")
 //    fun getAllFemaleUsers(): LiveData<List<UserData>>
+
+
+
 
     @Query("SELECT user_id as userId,name,dob,religion,caste,state,city,height,profile_pic,education,occupation FROM user WHERE gender= :gender")
     fun getUsersBasedOnGender(gender: String): LiveData<List<UserData>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addUser(user: User)
-
-//    @Query("SELECT COUNT(*) FROM user")
-//    suspend fun getNoOfUsers(): Int
 
     @Query("SELECT gender FROM user WHERE user_id= :userId")
     suspend fun getUserGender(userId: Int): String
@@ -153,7 +158,6 @@ interface UserDao {
                 "AND (:educationArraySize = 0 OR education IN (:educationArray)) " +
                 "AND (:employedInArraySize = 0 OR employed_in IN (:employedInArray)) " +
                 "AND (:occupationArraySize = 0 OR occupation IN (:occupationArray)) " +
-                "AND (:annualIncomeFlag = 0 OR annual_income LIKE '%'  || :annualIncomeArray || '%' ) " +
                 "AND (:religionArraySize = 0 OR religion IN (:religionArray)) " +
                 "AND (:casteArraySize = 0 OR caste IN (:casteArray)) " +
                 "AND (:starArraySize = 0 OR star IN (:starArray)) " +
@@ -183,8 +187,6 @@ interface UserDao {
         employedInArray: List<String>,
         occupationArraySize: Int,
         occupationArray: List<String>,
-        annualIncomeFlag: Int,
-        annualIncomeArray: String,
         religionArraySize: Int,
         religionArray: List<String>,
         casteArraySize: Int,
@@ -207,36 +209,5 @@ interface UserDao {
     ): LiveData<List<UserData>>
 
 
-
-//    @Query("SELECT user_id as userId,name,dob,religion,caste,state,city,height,profile_pic,education,occupation " +
-//            "FROM user  " +
-//            "WHERE " +
-//            "gender = :gender AND " +
-//            "age BETWEEN :ageFrom AND :ageTo AND " +
-//            "height IN (:heightArray) AND " +
-//            "marital_status IN (:maritalStatusArray) AND " +
-//            "caste IN (:casteArray) AND " +
-//            "star IN (:starArray) AND " +
-//            "zodiac IN (:zodiacArray) AND " +
-//            "state IN (:stateArray) AND " +
-//            "education IN (:educationArray) AND " +
-//            "occupation IN (:occupationArray) AND " +
-//            "annual_income IN (:annualIncomeArray)"
-//    )
-//    fun getFilteredUserData(
-//        gender: String,
-//        ageFrom: Int,
-//        ageTo: Int,
-//        heightArray: List<String>,
-//        maritalStatusArray: List<String>,
-//        casteArray: List<String>,
-//        starArray: List<String>,
-//        zodiacArray: List<String>,
-//        stateArray: List<String>,
-//        educationArray: List<String>,
-//        occupationArray: List<String>,
-//        annualIncomeArray: List<String>,
-//    ): LiveData<List<UserData>>
-//
 
 }

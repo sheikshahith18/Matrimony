@@ -72,7 +72,7 @@ class AlbumActivity1 : AppCompatActivity(), OpenCameraDialogFragment.Companion.B
         val albumRecyclerView = binding.rvAlbum
         albumRecyclerView.layoutManager = GridLayoutManager(this, 1)
         adapter = AlbumAdapter(
-            userProfileViewModel, albumViewModel, addImage, ::getPermission, ::checkForPermission
+            this,userProfileViewModel, albumViewModel, addImage, ::getPermission, ::checkForPermission
         )
         albumRecyclerView.adapter = adapter
 
@@ -136,15 +136,14 @@ class AlbumActivity1 : AppCompatActivity(), OpenCameraDialogFragment.Companion.B
 
     @Throws(IOException::class)
     private fun createImageFile(): File {
-        // Create an image file name
+
         val timeStamp: String = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
         val storageDir: File? = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
         return File.createTempFile(
-            "JPEG_${timeStamp}_", /* prefix */
-            ".jpg", /* suffix */
-            storageDir /* directory */
+            "JPEG_${timeStamp}_",
+            ".jpg",
+            storageDir
         ).apply {
-            // Save a file: path for use with ACTION_VIEW intents
             currentPhotoPath = absolutePath
         }
     }
@@ -177,15 +176,15 @@ class AlbumActivity1 : AppCompatActivity(), OpenCameraDialogFragment.Companion.B
             when (clickedItem) {
                 "camera" -> {
                     Log.i(TAG, "Check Permission ${checkForPermission()}")
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
                         val values = ContentValues()
                         values.put(MediaStore.Images.Media.TITLE, "New Picture")
                         values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera")
-                        imageUri = contentResolver.insert(
+                        albumViewModel.imageUri = contentResolver.insert(
                             MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values
                         )
                         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
+                        intent.putExtra(MediaStore.EXTRA_OUTPUT, albumViewModel.imageUri)
                         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
                     } else {
                         val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
@@ -217,7 +216,7 @@ class AlbumActivity1 : AppCompatActivity(), OpenCameraDialogFragment.Companion.B
         }
     }
 
-    fun rotateImage(source: Bitmap, angle: Float): Bitmap? {
+    private fun rotateImage(source: Bitmap, angle: Float): Bitmap? {
         val matrix = Matrix()
         matrix.postRotate(angle)
         return Bitmap.createBitmap(
@@ -261,7 +260,7 @@ class AlbumActivity1 : AppCompatActivity(), OpenCameraDialogFragment.Companion.B
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
                 try {
-                    val path = getRealPathFromURI(imageUri)!!
+                    val path = getRealPathFromURI(albumViewModel.imageUri)!!
                     loadImage(path)
 
                 } catch (e: java.lang.Exception) {

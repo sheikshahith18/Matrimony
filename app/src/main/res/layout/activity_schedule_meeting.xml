@@ -4,6 +4,7 @@
     <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/schedule_meeting_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -18,7 +19,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_constraintTop_toTopOf="parent"
-                app:title="Schedule Meeting" />
+                app:title="Schedule Meeting">
+
+                <ImageView
+                    android:id="@+id/img_btn_save"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="12dp"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:enabled="true"
+                    android:focusable="true"
+                    android:padding="10dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_done" />
+            </androidx.appcompat.widget.Toolbar>
 
             <View
                 android:id="@+id/divider"
@@ -36,16 +52,37 @@
             <!--                app:layout_constraintStart_toStartOf="parent"-->
             <!--                app:layout_constraintTop_toTopOf="parent">-->
 
-            <ImageView
-                android:id="@+id/iv_profile_pic"
+            <LinearLayout
+                android:id="@+id/ll_profile_pic"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_margin="10dp"
-                android:layout_marginTop="12dp"
-                android:scaleType="centerCrop"
+                android:background="@drawable/blur_bg"
+                android:orientation="vertical"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider"
-                tools:srcCompat="@tools:sample/avatars" />
+                app:layout_constraintTop_toBottomOf="@id/divider">
+
+                <ImageView
+                    android:id="@+id/iv_profile_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    tools:srcCompat="@tools:sample/avatars" />
+
+                <LinearLayout
+                    android:id="@+id/no_profiles_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    android:background="@android:color/white"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:srcCompat="@tools:sample/avatars">
+
+                    <ImageView
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:src="@drawable/default_profile_pic" />
+                </LinearLayout>
+            </LinearLayout>
 
 
             <!--            </androidx.cardview.widget.CardView>-->
@@ -56,11 +93,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
+                android:layout_marginEnd="12dp"
                 android:text="Schedule an appointment with this user..."
                 android:textSize="18sp"
                 android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_profile_pic" />
+                app:layout_constraintTop_toBottomOf="@+id/ll_profile_pic" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/til_meeting_title"
@@ -166,8 +206,9 @@
                 android:layout_marginStart="32dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="32dp"
-                android:layout_marginBottom="50dp"
+                android:layout_marginBottom="60dp"
                 android:hint="Place"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/til_meeting_time"
                 app:startIconDrawable="@drawable/ic_location">
@@ -181,32 +222,32 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
-                android:id="@+id/btn_cancel_meeting"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="60dp"
-                android:backgroundTint="@color/red"
-                android:text="Cancel"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_schedule_meeting"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/til_meeting_place" />
+            <!--            <Button-->
+            <!--                android:id="@+id/btn_cancel_meeting"-->
+            <!--                android:layout_width="120dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="40dp"-->
+            <!--                android:layout_marginBottom="60dp"-->
+            <!--                android:backgroundTint="@color/red"-->
+            <!--                android:text="Cancel"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                app:layout_constraintEnd_toStartOf="@id/btn_schedule_meeting"-->
+            <!--                app:layout_constraintStart_toStartOf="parent"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/til_meeting_place" />-->
 
 
-            <Button
-                android:id="@+id/btn_schedule_meeting"
-                android:layout_width="120dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                android:layout_marginBottom="60dp"
-                android:backgroundTint="@color/teal_200"
-                android:text="Schedule"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_cancel_meeting"
-                app:layout_constraintTop_toBottomOf="@id/til_meeting_place" />
+            <!--            <Button-->
+            <!--                android:id="@+id/btn_schedule_meeting"-->
+            <!--                android:layout_width="120dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_marginTop="40dp"-->
+            <!--                android:layout_marginBottom="60dp"-->
+            <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+            <!--                android:backgroundTint="@color/teal_200"-->
+            <!--                android:text="Schedule"-->
+            <!--                app:layout_constraintEnd_toEndOf="parent"-->
+            <!--                app:layout_constraintStart_toEndOf="@id/btn_cancel_meeting"-->
+            <!--                app:layout_constraintTop_toBottomOf="@id/til_meeting_place" />-->
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

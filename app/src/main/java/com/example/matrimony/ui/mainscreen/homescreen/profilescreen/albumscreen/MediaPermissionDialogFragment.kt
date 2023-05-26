@@ -27,9 +27,6 @@ class MediaPermissionDialogFragment : DialogFragment() {
 
     override fun onStart() {
         super.onStart()
-//        dialog?.let {
-//            it.window?.setWindowWidthPercentage(85)
-//        }
         dialog?.window?.setLayout(
             900,
             WindowManager.LayoutParams.WRAP_CONTENT

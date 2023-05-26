@@ -71,48 +71,33 @@ class PartnerPreferencesFragment : Fragment() {
         lifecycleScope.launch {
             partnerPrefViewModel.getPartnerPreference(userProfileViewModel.currentUserId)
                 .observe(viewLifecycleOwner) {
+                    Log.i(TAG,"Partner Pref ${if(it==null) "null" else "not null"}")
                     if (it != null) {
 
                         binding.noPreferenceMessage.visibility = View.GONE
                         binding.partnerPrefView.visibility = View.VISIBLE
 
-                        var text = """
-                        |Age - ${it.age_from} - ${it.age_to}
-                        |Height - ${it.height_from} - ${it.height_to}
-                        |Marital Status - ${it.marital_status?:"-Not Set-"}
-                    """.trimIndent()
-                            .trimMargin()
 
-                        binding.tvBasicPrefDesc.text = text
+                        binding.tvAgeValue.text="-  ${it.age_from}  -  ${it.age_to}"
+                        binding.tvHeightValue.text="-  ${it.height_from}  -  ${it.height_to}"
+                        binding.tvMaritalStatusValue.text="-  ${it.marital_status?.joinToString()?:"Not Set"}"
 
-                        text = """
-                        |Education  -  ${it.education?.joinToString()?:"-Not Set-"}
-                        |Employed In - ${it.employed_in?.joinToString()?:"-Not Set-"}
-                        |Occupation  - ${it.occupation?.joinToString()?:"-Not Set-"}
-                        |Annual Income - ${it.annual_income?:"-Not Set-"}
-                    """.trimIndent()
-                            .trimMargin()
+                        binding.tvEducationValue.text="-  ${it.education?.joinToString()?:"Not Set"}"
+                        binding.tvEmployedInValue.text="-  ${it.employed_in?.joinToString()?:"Not Set"}"
+                        binding.tvOccupationValue.text="-  ${it.occupation?.joinToString()?:"Not Set"}"
 
-                        binding.tvProfessionalPrefDesc.text = text
+                        binding.tvReligionValue.text="-  ${it.religion?:"Not Set"}"
+                        binding.tvCasteValue.text="-  ${it.caste?.joinToString()?:"Not Set"}"
+                        binding.tvStarValue.text="-  ${it.star?.joinToString()?:"Not Set"}"
+                        binding.tvZodiacValue.text="-  ${it.zodiac?.joinToString()?:"Not Set"}"
 
-                        text = """
-                        |Religion  -  ${it.religion}
-                        |Caste  - ${it.caste?.joinToString()?:"-Not Set-"}
-                        |Star   -   ${it.star?.joinToString()?:"-Not Set-"}
-                        |Zodiac   -  ${it.zodiac?.joinToString()?:"-Not Set-"}                        
-                    """.trimIndent()
-                            .trimMargin()
 
-                        binding.tvReligionPrefDesc.text = text
+                        binding.tvStateValue.text="-  ${it.state?:"Not Set"}"
+                        binding.tvCityValue.text="-  ${it.city?.joinToString()?:"Not Set"}"
 
-                        text = """
-                        |State     -   ${it.state?:"-Not Set-"}
-                        |City      -   ${it.city?.joinToString()?:"-Not Set-"}
-                    """.trimIndent()
-                            .trimMargin()
-
-                        binding.tvLocationPrefDesc.text = text
                     } else {
+                        Log.i(TAG,"Pref Null")
+
                         binding.noPreferenceMessage.visibility = View.VISIBLE
                         binding.partnerPrefView.visibility = View.GONE
                         if (userProfileViewModel.userId != userProfileViewModel.currentUserId) {

@@ -16,7 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class RemoveConnectionDialogFragment() :
+class RemoveConnectionDialogFragment :
     DialogFragment() {
 
 

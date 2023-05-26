@@ -1,6 +1,7 @@
 package com.example.matrimony.ui.mainscreen.searchscreen
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -25,11 +27,13 @@ import com.example.matrimony.databinding.FragmentSearchPageBinding
 import com.example.matrimony.db.entities.Connections
 import com.example.matrimony.models.ConnectionStatus
 import com.example.matrimony.models.SortOptions
+import com.example.matrimony.ui.mainscreen.MainActivity
 import com.example.matrimony.ui.mainscreen.UserProfileViewModel
 import com.example.matrimony.ui.mainscreen.connectionsscreen.ConnectionsViewModel
 import com.example.matrimony.ui.mainscreen.connectionsscreen.RemoveConnectionDialogFragment
 import com.example.matrimony.ui.mainscreen.connectionsscreen.RemoveConnectionListener
 import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.ViewProfileActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
 import com.example.matrimony.ui.mainscreen.homescreen.settingsscreen.SettingsViewModel
 import com.example.matrimony.utils.CURRENT_USER_GENDER
 import com.example.matrimony.utils.CURRENT_USER_ID
@@ -37,9 +41,12 @@ import com.example.matrimony.utils.MY_SHARED_PREFERENCES
 import com.example.matrimony.utils.OnDelayClickListener
 import com.google.android.material.badge.BadgeDrawable
 import com.google.android.material.badge.BadgeUtils
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
@@ -52,6 +59,7 @@ class SearchPageFragment : Fragment() {
     private val connectionsViewModel by activityViewModels<ConnectionsViewModel>()
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
     private val filterViewModel by activityViewModels<FilterViewModel>()
+    private val albumViewModel by activityViewModels<AlbumViewModel>()
 
     var previousFilterStatus = ""
 
@@ -66,12 +74,6 @@ class SearchPageFragment : Fragment() {
 
     private val profilesRecyclerView by lazy { binding.rvSearchResult }
 
-//    private val profilesAdapter by lazy {
-//        ProfilesSearchPageAdapter(
-//            userProfileViewModel,
-//            connectionsViewModel
-//        )
-//    }
 
 
 
@@ -89,7 +91,7 @@ class SearchPageFragment : Fragment() {
             userProfileViewModel.userId = userId
             connectionsViewModel.userId = userId
             userProfileViewModel.gender =
-                sharedPref.getString(CURRENT_USER_GENDER, null) ?: throw java.lang.Exception("")
+                sharedPref.getString(CURRENT_USER_GENDER, null) ?: throw java.lang.Exception("gender invalid")
 //        Log.i(TAG, "searchFrag current userId $userId")
 //        Log.i(TAG, "searchFrag current user gender ${userProfileViewModel.gender}")
 
@@ -122,10 +124,10 @@ class SearchPageFragment : Fragment() {
 
 
             binding.etSearch.addTextChangedListener {
-//                Toast.makeText(requireContext(),"Text Changed",Toast.LENGTH_SHORT).show()
-//                if(binding.etSearch.text.toString().length<=3)
-//                    return@addTextChangedListener
+                lifecycleScope.launch {
+                    delay(300L)
                 filterViewModel.sortChange.value = true
+                }
             }
 
             binding.imgBtnBackArrow.setOnClickListener {
@@ -152,16 +154,9 @@ class SearchPageFragment : Fragment() {
         }
 
         Log.i(TAG, "${sharedPref.getString("FILTER_STATUS", "not_applied")}")
-//        if(sharedPref.getString("FILTER_STATUS","not_applied").equals("applied"))
-//            initSearchResultProfiles()
-//        else
-//            Log.i(TAG,"Filters Not Aplliled")
         return fragmentView
     }
 
-    private fun registerBottomNavSheet() {
-
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -229,15 +224,37 @@ class SearchPageFragment : Fragment() {
         Log.i(TAG, "clearPref filterStat ${sharedPref.getString("FILTER_STATUS", "null")}")
     }
 
+    private fun showConfirmConnectionDialog(userId:Int){
+        val builder = AlertDialog.Builder(requireActivity())
+
+        builder.setTitle("Connection request pending")
+            .setMessage("Do you want to accept the request?")
+            .setPositiveButton("Ok") { dialog: DialogInterface, _: Int ->
+                lifecycleScope.launch {
+                    connectionsViewModel.setConnectionStatus(userId,"CONNECTED")
+                }
+                dialog.dismiss()
+            }
+            .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int ->
+                dialog.dismiss()
+            }
+        val alertDialog: AlertDialog = builder.create()
+        alertDialog.show()
+    }
+
     private val onConnectionButtonClicked: (Int, String, Int, String) -> Unit =
         { userId: Int, connectionStatus: String, adapterPosition: Int, name: String ->
             when (connectionStatus) {
                 "null" -> {
-                    Toast.makeText(
-                        requireContext(),
-                        "Accept the connection request sent by the user",
-                        Toast.LENGTH_SHORT
-                    ).show()
+//                    Snackbar.make(binding.root,"Accept the connection request sent by the user", Snackbar.LENGTH_SHORT)
+//                        .setAnchorView((requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottom_nav_view))
+//                        .show()
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "Accept the connection request sent by the user",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+                    showConfirmConnectionDialog(userId)
                 }
                 "NOT_CONNECTED" -> {
                     connectedUserId = userId
@@ -250,11 +267,15 @@ class SearchPageFragment : Fragment() {
 
                     connectionsViewModel.sendConnectionsTo.add(connectedUserId)
                     connectionsViewModel.removeFromConnections.remove(connectedUserId)
-                    Toast.makeText(
-                        requireContext(),
-                        "Connection Request sent to $name",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Snackbar.make(binding.root,"Connection Request sent to $name", Snackbar.LENGTH_SHORT)
+                        .setAnchorView((requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottom_nav_view))
+                        .show()
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "Connection Request sent to $name",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
+
 //                    connectionsViewModel.addConnection(
 //                        Connections(
 //                            user_id = connectionsViewModel.userId,
@@ -286,40 +307,91 @@ class SearchPageFragment : Fragment() {
 
                     connectionsViewModel.sendConnectionsTo.remove(connectedUserId)
                     connectionsViewModel.removeFromConnections.add(connectedUserId)
-                    Toast.makeText(
-                        requireContext(),
-                        "Connection Request to $name is Cancelled",
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+                    Snackbar.make(binding.root,"Connection Request to $name is Cancelled", Snackbar.LENGTH_SHORT)
+                        .setAnchorView((requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottom_nav_view))
+                        .show()
+
+//                    Toast.makeText(
+//                        requireContext(),
+//                        "Connection Request to $name is Cancelled",
+//                        Toast.LENGTH_SHORT
+//                    ).show()
 
                 }
                 "CONNECTED" -> {
-                    connectedUserId = userId
-                    this.adapterPosition = adapterPosition
-                    val dialog = RemoveConnectionDialogFragment()
-                    dialog.removeConnectionListener = RemoveConnectionListener {
-//                        Toast.makeText(requireContext(), "Remove Click", Toast.LENGTH_SHORT).show()
-                        val viewHolder =
-                            binding.rvSearchResult.findViewHolderForAdapterPosition(adapterPosition) as SearchPageAdapter.ProfilesViewHolder
-                        viewHolder.connectionStatus = ConnectionStatus.NOT_CONNECTED
-                        viewHolder.btnConnection.setImageResource(R.drawable.ic_send_connection)
-                        adapter?.notifyDataSetChanged()
-//                adapter?.notifyItemChanged(adapterPosition)
-
-                        connectionsViewModel.removeConnection(connectedUserId)
-//                connectionsViewModel.removeConnection(connectionsViewModel.userId, connectedUserId)
-                        connectedUserId = -1
-                    }
-                    val args = Bundle()
-                    args.putString("CALLER", this::class.simpleName)
-                    dialog.arguments = args
-                    dialog.show(
-                        childFragmentManager,
-                        "remove_connection_dialog"
-                    )
+//                    connectedUserId = userId
+//                    this.adapterPosition = adapterPosition
+//                    val dialog = RemoveConnectionDialogFragment()
+//                    dialog.removeConnectionListener = RemoveConnectionListener {
+//                        Snackbar.make(binding.root,"Connection with $name is Removed", Snackbar.LENGTH_SHORT)
+//                            .setAnchorView((requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottom_nav_view))
+//                            .show()
+////                        Toast.makeText(requireContext(), "Remove Click", Toast.LENGTH_SHORT).show()
+//                        val viewHolder =
+//                            binding.rvSearchResult.findViewHolderForAdapterPosition(adapterPosition) as SearchPageAdapter.ProfilesViewHolder
+//                        viewHolder.connectionStatus = ConnectionStatus.NOT_CONNECTED
+//                        viewHolder.btnConnection.setImageResource(R.drawable.ic_send_connection)
+//                        adapter?.notifyDataSetChanged()
+////                adapter?.notifyItemChanged(adapterPosition)
+//
+//                        connectionsViewModel.removeConnection(connectedUserId)
+////                connectionsViewModel.removeConnection(connectionsViewModel.userId, connectedUserId)
+//                        connectedUserId = -1
+//                    }
+//                    val args = Bundle()
+//                    args.putString("CALLER", this::class.simpleName)
+//                    dialog.arguments = args
+//                    dialog.show(
+//                        childFragmentManager,
+//                        "remove_connection_dialog"
+//                    )
+                    loadDialog(userId, connectionStatus, adapterPosition, name)
+                    userProfileViewModel.dialogLoad=true
+                    userProfileViewModel.dialogUserId=userId
+                    userProfileViewModel.dialogAdapterPosition=adapterPosition
+                    userProfileViewModel.dialogUserName=name
                 }
             }
         }
+
+    private fun loadDialog(userId: Int, connectionStatus: String, adapterPosition: Int, name: String){
+        val dialogFragment = childFragmentManager.findFragmentByTag("remove_connection_dialog") as RemoveConnectionDialogFragment?
+        if (dialogFragment != null && dialogFragment.dialog?.isShowing == true) {
+            dialogFragment.dialog?.dismiss()
+        } else {
+            // DialogFragment is not showing or doesn't exist
+        }
+        connectedUserId = userId
+        this.adapterPosition = adapterPosition
+
+        val dialog = RemoveConnectionDialogFragment()
+        dialog.removeConnectionListener = RemoveConnectionListener {
+            Snackbar.make(binding.root,"Connection with $name is Removed", Snackbar.LENGTH_SHORT)
+                .setAnchorView((requireActivity() as MainActivity).findViewById<BottomNavigationView>(R.id.bottom_nav_view))
+                .show()
+//                        Toast.makeText(requireContext(), "Remove Click", Toast.LENGTH_SHORT).show()
+            val viewHolder =
+                binding.rvSearchResult.findViewHolderForAdapterPosition(adapterPosition) as SearchPageAdapter.ProfilesViewHolder
+            viewHolder.connectionStatus = ConnectionStatus.NOT_CONNECTED
+            viewHolder.btnConnection.setImageResource(R.drawable.ic_send_connection)
+            adapter?.notifyDataSetChanged()
+//                adapter?.notifyItemChanged(adapterPosition)
+
+            connectionsViewModel.removeConnection(connectedUserId)
+//                connectionsViewModel.removeConnection(connectionsViewModel.userId, connectedUserId)
+            connectedUserId = -1
+        }
+        val args = Bundle()
+        args.putString("CALLER", this::class.simpleName)
+        dialog.arguments = args
+        dialog.show(
+            childFragmentManager,
+            "remove_connection_dialog"
+        )
+        userProfileViewModel.dialogLoad=true
+    }
+
 
 
     private var connectedUserId = -1
@@ -330,11 +402,28 @@ class SearchPageFragment : Fragment() {
         super.onResume()
         Log.i(TAG, "SearchPage onResume")
 
+        val dialogFragment = childFragmentManager.findFragmentByTag("remove_connection_dialog") as RemoveConnectionDialogFragment?
+        if (dialogFragment == null || dialogFragment.dialog?.isShowing == false) {
+            Log.i(TAG+4,"dialogFrag $dialogFragment")
+            Log.i(TAG+4,"onRes inside if")
+            userProfileViewModel.dialogLoad = false
+        }else
+            userProfileViewModel.dialogLoad = true
+        if(userProfileViewModel.dialogLoad){
+            loadDialog(userProfileViewModel.dialogUserId,"",userProfileViewModel.dialogAdapterPosition,userProfileViewModel.dialogUserName)
+        }
+
         val sharedPref =
             requireActivity().getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
 
+        if(sharedPref.getBoolean("PREF_FILTER_APPLIED",false)){
+            loadSearchProfiles()
+            return
+        }
+
         if (sharedPref.getBoolean("FILTER_CLEARED", false)) {
             previousFilterStatus = "not_applied"
+            binding.imgBtnFilter.setImageResource(R.drawable.ic_filter_icon)
             val editor = sharedPref.edit()
             editor.remove("FILTER_CLEARED")
             editor.apply()
@@ -351,6 +440,13 @@ class SearchPageFragment : Fragment() {
         Log.i(TAG, "onResume filterStat $filterStatus")
         when (filterStatus) {
             "applied" -> {
+//                if(!sharedPref.getBoolean("PREF_FILTER_APPLIED",false)) {
+                    binding.imgBtnFilter.setImageResource(R.drawable.ic_filter_applied_icon)
+//                }else{
+//                    val editor=sharedPref.edit()
+//                    editor.remove("PREF_FILTER_APPLIED")
+//                    editor.apply()
+//                }
 //                loadSearchProfiles()
                 filterViewModel.filterChange.value = true
                 previousFilterStatus = filterStatus
@@ -359,6 +455,7 @@ class SearchPageFragment : Fragment() {
 
             }
             "cleared" -> {
+                binding.imgBtnFilter.setImageResource(R.drawable.ic_filter_icon)
 //                loadSearchProfiles()
                 filterViewModel.filterChange.value = true
                 previousFilterStatus = "not_applied"
@@ -367,6 +464,7 @@ class SearchPageFragment : Fragment() {
                 editor.apply()
             }
             "not_applied" -> {
+                binding.imgBtnFilter.setImageResource(R.drawable.ic_filter_icon)
 //                loadSearchProfiles()
                 filterViewModel.filterChange.value = true
                 previousFilterStatus = filterStatus
@@ -410,10 +508,11 @@ class SearchPageFragment : Fragment() {
 //            GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
 
         adapter = SearchPageAdapter(
-            requireContext(),
+            requireActivity(),
             userProfileViewModel,
             connectionsViewModel,
             settingsViewModel,
+            albumViewModel,
             onConnectionButtonClicked,
             viewFullProfile
         )
@@ -467,13 +566,14 @@ class SearchPageFragment : Fragment() {
             }
             Log.i(TAG, "height - $hValue")
 
-            var value =
-                sharedPref.getString("MARITAL_STATUS_FILTER", "")
+            var value:String?// =
+//                sharedPref.getString("MARITAL_STATUS_FILTER", "")
+//
+//            val maritalStatus =
+//                if (value == "" || value == null) listOf<String>() else listOf(value)
 
-            val maritalStatus =
-                if (value == "" || value == null) listOf<String>() else listOf(value)
 
-
+            val maritalStatusArray = sharedPref.getStringSet("MARITAL_STATUS_FILTER", setOf())
             val educationArray = sharedPref.getStringSet("EDUCATION_FILTER", setOf())
             val employedIn = sharedPref.getStringSet("EMPLOYED_IN_FILTER", setOf())
             val occupationArray = sharedPref.getStringSet("OCCUPATION_FILTER", setOf())
@@ -517,8 +617,8 @@ class SearchPageFragment : Fragment() {
             Log.i(TAG, "age To$ageTo")
             Log.i(TAG, "heightSize ${heightArray.size}")
             Log.i(TAG, "height ${heightArray.joinToString()}")
-            Log.i(TAG, "maritalSize ${maritalStatus.size}")
-            Log.i(TAG, "marital ${maritalStatus.joinToString()}")
+            Log.i(TAG, "maritalSize ${maritalStatusArray?.size}")
+            Log.i(TAG, "marital ${maritalStatusArray?.joinToString()}")
             Log.i(TAG, "religionSize ${religionArray.size}")
             Log.i(TAG, "religion ${religionArray.joinToString()}")
             Log.i(TAG, "casteSize ${casteArray!!.size}")
@@ -559,16 +659,14 @@ class SearchPageFragment : Fragment() {
                     ageTo,
                     heightArray.size,
                     heightArray,
-                    maritalStatus.size,
-                    maritalStatus,
+                    maritalStatusArray?.size ?: 0,
+                    maritalStatusArray?.toList()?: emptyList(),
                     educationArray.size,
                     educationArray.toList(),
                     employedIn.size,
                     employedIn.toList(),
                     occupationArray.size,
                     occupationArray.toList(),
-                    if (annualIncomeArray.isNotBlank()) 1 else 0,
-                    annualIncomeArray,
                     religionArray.size,
                     religionArray.toList(),
                     casteArray.size,

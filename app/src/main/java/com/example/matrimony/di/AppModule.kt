@@ -100,10 +100,5 @@ object AppModule {
         return PrivacySettingsRepository(db.privacySettingsDao())
     }
 
-    @Provides
-    @Singleton
-    fun provideSuccessStoriesRepository(db: AppDatabase): SuccessStoriesRepository {
-        return SuccessStoriesRepository(db.successStoriesDao())
-    }
 
 }

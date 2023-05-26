@@ -24,6 +24,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="10dp"
+        android:textStyle="bold"
         android:textSize="14sp"
         android:text="Remove Connection"
         android:textColor="@color/red" />

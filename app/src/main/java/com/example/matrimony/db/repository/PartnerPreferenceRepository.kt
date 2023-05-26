@@ -21,7 +21,7 @@ class PartnerPreferenceRepository(private val partnerPreferenceDao: PartnerPrefe
     }
 
 
-    fun updatePartnerPreference(
+    suspend fun updatePartnerPreference(
         userId: Int,
         ageFrom: Int,
         ageTo: Int,
@@ -31,7 +31,6 @@ class PartnerPreferenceRepository(private val partnerPreferenceDao: PartnerPrefe
         education: List<String>,
         employedIn: List<String>,
         occupation: List<String>,
-        annualIncome: String,
         religion: String,
         caste: List<String>,
         star: List<String>,
@@ -49,7 +48,6 @@ class PartnerPreferenceRepository(private val partnerPreferenceDao: PartnerPrefe
             education,
             employedIn,
             occupation,
-            annualIncome,
             religion,
             caste,
             star,

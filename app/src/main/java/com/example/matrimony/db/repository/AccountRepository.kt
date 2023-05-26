@@ -36,6 +36,9 @@ class AccountRepository(
         return accountDao.getUserByEmail(email)
     }
 
+    suspend fun getUserGender(userId: Int): String {
+        return userDao.getUserGender(userId)
+    }
 
     suspend fun getUserByMobile(mobile: String): Int{
         return accountDao.getUserByMobile(mobile)

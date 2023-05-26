@@ -41,43 +41,44 @@ class SplashActivity : AppCompatActivity() {
 
 
         clearFilters()
+        val editor = sharedPref.edit()
 
-        injectDataViewModel.context = this
-        GlobalScope.launch() {
-            if (loaded == -1) {
-                deleteDatabase("app_database")
-                Log.i(TAG, "Profile Loading")
-                injectDataViewModel.addAccount()
-                injectDataViewModel.addHabits()
-                injectDataViewModel.addFamilyDetails()
-                injectDataViewModel.addUsers()
-            } else {
-                Log.i(TAG, "Profile AlreadyLoaded")
-            }
+        if (injectDataViewModel.initial) {
+            injectDataViewModel.context = application
 
-            val editor = sharedPref.edit()
-            editor.putInt("DATA_LOADED", 1)
+            GlobalScope.launch() {
+                if (loaded == -1) {
+                    deleteDatabase("app_database")
+                    Log.i(TAG, "Profile Loading")
+                    injectDataViewModel.addAccount()
+                    injectDataViewModel.addHabits()
+                    injectDataViewModel.addFamilyDetails()
+                    injectDataViewModel.addUsers()
+                } else {
+                    Log.i(TAG, "Profile AlreadyLoaded")
+                }
+
+                editor.putInt("DATA_LOADED", 1)
 //            editor.apply()
 //            editor.putInt(CURRENT_USER_ID, -1)
 //            editor.putString(CURRENT_USER_GENDER, "")
-            editor.apply()
+                editor.apply()
 //            clearPreferences()
 
 
-            val userId=sharedPref.getInt(CURRENT_USER_ID,-1)
-            Log.i(TAG,"Splash CurrUSerId $userId")
-            if(userId==-1){
-
+//            val editor = sharedPref.edit()
+            }
+        }
+        val userId = sharedPref.getInt(CURRENT_USER_ID, -1)
+        Log.i(TAG, "Splash CurrUSerId $userId")
+        if (userId == -1) {
             val intent = Intent(this@SplashActivity, SignInActivity::class.java)
             startActivity(intent)
             finish()
-            }else{
-                val intent = Intent(this@SplashActivity, MainActivity::class.java)
-                startActivity(intent)
-                finish()
-            }
-
-//            val editor = sharedPref.edit()
+        } else {
+            val intent = Intent(this@SplashActivity, MainActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
 

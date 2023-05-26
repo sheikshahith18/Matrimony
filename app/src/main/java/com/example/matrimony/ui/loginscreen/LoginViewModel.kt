@@ -57,13 +57,10 @@ class LoginViewModel @Inject constructor(private val loginRepository: LoginRepos
 
     fun updatePassword(userId: Int, password: String) {
         viewModelScope.launch {
-//            Log.i(TAG, (this@LoginViewModel.userId.value!!).toString())
-//            Log.i(TAG, (_userId.value!!).toString())
             Log.i(TAG, loginRepository.getPassword(userId).toString())
             loginRepository.updatePassword(userId, password)
             Log.i(TAG, "Password Updated")
             Log.i(TAG, loginRepository.getPassword(userId).toString())
-//            userId.value?.let { loginRepository.updatePassword(it, password) }
         }
     }
 

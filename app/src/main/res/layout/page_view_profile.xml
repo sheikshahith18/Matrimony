@@ -19,6 +19,10 @@
 
             <ImageView
                 android:id="@+id/img_btn_edit_album"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:enabled="true"
+                android:focusable="true"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_gravity="end"
@@ -67,17 +71,32 @@
                             android:id="@+id/view_pager_profile_pics"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-
-
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
 
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="1.0">
+                            app:layout_constraintVertical_bias="1.0"/>
 
+                        <LinearLayout
+                            android:background="@color/white"
+                            android:orientation="vertical"
+                            android:id="@+id/no_images"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
 
-                        </androidx.viewpager2.widget.ViewPager2>
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintVertical_bias="1.0"
+                            android:gravity="center"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent">
+                            <ImageView
+                                android:layout_width="200dp"
+                                android:layout_height="200dp"
+                                android:src="@drawable/default_profile_pic"/>
+                        </LinearLayout>
+
 
                         <com.google.android.material.tabs.TabLayout
                             android:id="@+id/tab_layout_images"
@@ -99,23 +118,22 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|end"
-                            android:layout_marginEnd="15dp"
-                            android:backgroundTint="@color/light_pink"
                             android:src="@drawable/ic_baseline_favorite_hollow"
-
-                            app:fabCustomSize="30dp"
+                            android:backgroundTint="@color/light_pink"
+                            app:tint="@null"
+                            app:fabCustomSize="30sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent" />
 
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/fab_send_connection"
+                            app:tint="@null"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|end"
-                            android:layout_marginEnd="15dp"
                             android:backgroundTint="@color/light_pink"
-                            app:fabCustomSize="30dp"
+                            app:fabCustomSize="30sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toEndOf="@id/fab_shortlist"
                             app:srcCompat="@drawable/ic_send_connection" />
@@ -127,11 +145,24 @@
                             android:layout_gravity="bottom|end"
                             android:layout_marginEnd="15dp"
                             android:backgroundTint="@color/light_pink"
-                            app:fabCustomSize="30dp"
+                            app:fabCustomSize="30sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toEndOf="@id/fab_send_connection"
 
                             app:srcCompat="@drawable/ic_dial_call" />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/fab_whatsapp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|end"
+                            android:layout_marginEnd="15dp"
+                            android:backgroundTint="@color/light_pink"
+                            app:fabCustomSize="30sp"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/fab_dial"
+
+                            app:srcCompat="@drawable/ic_whatsapp" />
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/fab_meeting"
@@ -141,15 +172,35 @@
 
                             android:layout_marginEnd="15dp"
                             android:backgroundTint="@color/light_pink"
-                            app:fabCustomSize="30dp"
+                            app:fabCustomSize="30sp"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/fab_dial"
+                            app:layout_constraintStart_toEndOf="@id/fab_whatsapp"
 
                             app:srcCompat="@drawable/ic_calendar_month" />
+
+                        <TextView
+                            android:id="@+id/tv_page_no"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginEnd="4dp"
+                            android:gravity="center"
+                            android:background="@drawable/tv_background"
+                            android:layout_width="30dp"
+                            android:text="1/2"
+                            android:textColor="@color/black"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            android:layout_height="20dp"/>
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+                <View
+                    android:id="@+id/divider1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="?android:attr/listDivider"
+                    app:layout_constraintTop_toBottomOf="@id/collapsing_toolbar" />
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tab_layout_profile_details"
@@ -158,7 +209,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:tabGravity="fill"
                     app:tabMode="fixed"
-                    app:tabRippleColor="@null"
+                    app:tabMaxWidth="0dp"
                     app:tabTextAppearance="@style/TabLayoutTextAppearance" />
             </com.google.android.material.appbar.AppBarLayout>
 

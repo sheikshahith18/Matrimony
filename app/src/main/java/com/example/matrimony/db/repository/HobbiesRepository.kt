@@ -19,4 +19,8 @@ class HobbiesRepository(private val hobbiesDao: HobbiesDao) {
     suspend fun getHobbies(userId:Int): LiveData<List<String>>{
         return hobbiesDao.getHobbies(userId)
     }
+
+    suspend fun removeAllHobbies(userId: Int){
+        hobbiesDao.removeAllHobbies(userId)
+    }
 }

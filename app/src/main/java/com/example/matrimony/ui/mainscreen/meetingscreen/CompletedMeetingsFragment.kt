@@ -19,6 +19,7 @@ import com.example.matrimony.adapters.UpcomingMeetingsAdapter
 import com.example.matrimony.databinding.FragmentCompletedMeetingsBinding
 import com.example.matrimony.databinding.FragmentUpcomingMeetingsBinding
 import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.ViewProfileActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
 import com.example.matrimony.utils.CURRENT_USER_ID
 import com.example.matrimony.utils.MY_SHARED_PREFERENCES
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class CompletedMeetingsFragment : Fragment() {
     private var fragmentView: View? = null
 
     private val meetingsViewModel by activityViewModels<MeetingsViewModel>()
-
+    private val albumViewModel by activityViewModels<AlbumViewModel>()
 
 
     override fun onCreateView(
@@ -68,7 +69,13 @@ class CompletedMeetingsFragment : Fragment() {
 
         meetingRequestsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val adapter = CompletedMeetingsAdapter(requireContext(),meetingsViewModel,this::class.java.simpleName,viewFullProfile)
+        val adapter = CompletedMeetingsAdapter(
+            requireContext(),
+            meetingsViewModel,
+            albumViewModel,
+            this::class.java.simpleName,
+            viewFullProfile
+        )
         meetingRequestsRecyclerView.adapter = adapter
         lifecycleScope.launch {
 

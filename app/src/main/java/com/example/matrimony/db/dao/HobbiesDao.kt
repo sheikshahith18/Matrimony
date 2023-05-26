@@ -20,4 +20,7 @@ interface HobbiesDao {
 
     @Query("SELECT hobby FROM hobbies WHERE user_id= :userId")
     fun getHobbies(userId:Int):LiveData<List<String>>
+
+    @Query("DELETE FROM hobbies WHERE user_id= :userId")
+    suspend fun removeAllHobbies(userId: Int)
 }

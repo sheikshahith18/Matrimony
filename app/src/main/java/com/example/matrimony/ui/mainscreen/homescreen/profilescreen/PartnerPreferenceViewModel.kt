@@ -21,6 +21,7 @@ class PartnerPreferenceViewModel @Inject constructor(private val partnerPreferen
     val selectedStars = sortedSetOf<String>()
     val selectedZodiacs = sortedSetOf<String>()
     val selectedCities = sortedSetOf<String>()
+    val selectedMaritalStatus = sortedSetOf<String>()
 
     var loaded = false
 
@@ -41,7 +42,7 @@ class PartnerPreferenceViewModel @Inject constructor(private val partnerPreferen
     }
 
 
-    fun updatePartnerPreference(
+    suspend fun updatePartnerPreference(
         userId: Int,
         ageFrom: Int,
         ageTo: Int,
@@ -51,7 +52,6 @@ class PartnerPreferenceViewModel @Inject constructor(private val partnerPreferen
         education: List<String>,
         employedIn: List<String>,
         occupation: List<String>,
-        annualIncome: String,
         religion: String,
         caste: List<String>,
         star: List<String>,
@@ -69,7 +69,6 @@ class PartnerPreferenceViewModel @Inject constructor(private val partnerPreferen
             education,
             employedIn,
             occupation,
-            annualIncome,
             religion,
             caste,
             star,

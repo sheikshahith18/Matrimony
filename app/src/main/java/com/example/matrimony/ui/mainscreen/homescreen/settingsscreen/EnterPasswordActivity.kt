@@ -13,9 +13,13 @@ import androidx.lifecycle.lifecycleScope
 import com.example.matrimony.R
 import com.example.matrimony.ui.loginscreen.ResetPasswordActivity
 import com.example.matrimony.ui.loginscreen.SignInActivity
+import com.example.matrimony.ui.mainscreen.MainActivity
 import com.example.matrimony.ui.mainscreen.UserProfileViewModel
+import com.example.matrimony.utils.CURRENT_USER_GENDER
 import com.example.matrimony.utils.CURRENT_USER_ID
 import com.example.matrimony.utils.MY_SHARED_PREFERENCES
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,10 +87,18 @@ class EnterPasswordActivity : AppCompatActivity(),
 
     override fun deleteAccount() {
         settingsViewModel.deleteAccount(settingsViewModel.userId)
+
+        val sharedPref = getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
+        val editor=sharedPref.edit()
+        editor.remove(CURRENT_USER_ID)
+        editor.remove(CURRENT_USER_GENDER)
+        editor.apply()
+
         finish()
         Intent(this,SignInActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            Toast.makeText(this@EnterPasswordActivity,"Account Deleted Successfully",Toast.LENGTH_SHORT).show()
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            Snackbar.make(findViewById(R.id.et_password),"Account Deleted Successfully", Snackbar.LENGTH_SHORT).show()
+//            Toast.makeText(this@EnterPasswordActivity,"Account Deleted Successfully",Toast.LENGTH_SHORT).show()
             startActivity(this)
         }
     }

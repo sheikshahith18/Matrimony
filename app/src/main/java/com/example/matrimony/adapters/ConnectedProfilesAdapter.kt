@@ -1,37 +1,36 @@
 package com.example.matrimony.adapters
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.MutableLiveData
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.example.matrimony.R
 import com.example.matrimony.TAG
 import com.example.matrimony.databinding.ConnectedProfilesViewBinding
-import com.example.matrimony.models.ConnectionStatus
 import com.example.matrimony.models.UserData
+import com.example.matrimony.ui.mainscreen.MainActivity
 import com.example.matrimony.ui.mainscreen.connectionsscreen.ConnectionsViewModel
-import com.example.matrimony.utils.OnDelayClickListener
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.ViewImageActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.internal.managers.FragmentComponentManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.math.abs
 
 
 class ConnectedProfilesAdapter(
     private val context: Context,
     private val connectionsViewModel: ConnectionsViewModel,
+    private val albumViewModel: AlbumViewModel,
     private val onCallButtonClick: (userId: Int) -> Unit,
-    private val onRemoveButtonClicked: (userId: Int, buttonText: String, adapterPosition: Int) -> Unit,
+    private val onRemoveButtonClicked: (userId: Int,adapterPosition:Int) -> Unit,
     private val onScheduleButtonClicked: (userId: Int) -> Unit,
     private val viewFullProfile: (Int) -> Unit
 
@@ -47,6 +46,11 @@ class ConnectedProfilesAdapter(
         notifyDataSetChanged()
     }
 
+    fun removeUser(position: Int){
+        usersList.removeAt(position)
+        notifyItemRemoved(position)
+    }
+
 
     inner class ConnectedProfilesViewHolder(private val binding: ConnectedProfilesViewBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -58,10 +62,10 @@ class ConnectedProfilesAdapter(
         fun bind(user: UserData) {
             Log.i(TAG, "onBind Connection")
             binding.tvProfileName.text = user.name
-            binding.tvProfileAge.text = user.age.toString()
+            binding.tvProfileAge.text = "👤${user.age},"
             binding.tvProfileHeight.text = user.height
-            binding.tvProfileEducation.text = "${user.education}/${user.occupation}"
-            binding.tvProfileLocation.text = "${user.city}/${user.state}"
+            binding.tvProfileEducation.text = "🎓${user.education}, ${user.occupation}"
+            binding.tvProfileLocation.text = "📍${user.city}, ${user.state}"
 
             binding.imgBtnCall.setOnClickListener {
                 onCallButtonClick(user.userId)
@@ -71,36 +75,75 @@ class ConnectedProfilesAdapter(
                 onScheduleButtonClicked(user.userId)
             }
 
+            binding.ivProfilePic.setOnClickListener {
+                val intent = Intent(context as MainActivity, ViewImageActivity::class.java)
+                intent.putExtra("user_id", user.userId)
+                intent.putExtra("position", 0)
+                context.startActivity(intent)
+            }
+
             getConnectionStatus(user.userId)
 
-            btnRemoveConnection.text = "Remove Connection"
-            btnRemoveConnection.setBackgroundColor(
-                context.resources.getColor(
-                    R.color.red,
-                    null
-                )
-            )
+//            btnRemoveConnection.text = "Remove Connection"
+//            btnRemoveConnection.setBackgroundColor(
+//                context.resources.getColor(
+//                    R.color.red,
+//                    null
+//                )
+//            )
             binding.btnRemoveConnection.setOnClickListener {
+//                usersList.removeAt(absoluteAdapterPosition)
+//                notifyItemRemoved(absoluteAdapterPosition)
 
                 onRemoveButtonClicked(
                     user.userId,
-                    (it as Button).text.toString(),
+//                    "",
                     absoluteAdapterPosition
                 )
 
             }
 
-            Log.i(TAG, "Connected Profiles user : $user")
-            Glide.with(binding.ivProfilePic.context)
-                .load(
-                    user.profile_pic ?: ResourcesCompat.getDrawable(
-                        binding.ivProfilePic.context.resources,
-                        R.drawable.default_profile_pic,
-                        null
-                    )
-                )
+            CoroutineScope(Dispatchers.Main).launch {
+                albumViewModel.getUserAlbumCount(user.userId)
+                    .observe((FragmentComponentManager.findActivity(binding.root.context) as AppCompatActivity)) {
+                        if (it > 1)
+                            binding.tvAlbumCount.text = it.toString()
+                        else
+                            binding.tvAlbumCount.visibility = View.GONE
+                        if (it > 0) {
+                            binding.ivProfilePic.setOnClickListener {
+                                val intent =
+                                    Intent(context as MainActivity, ViewImageActivity::class.java)
+                                intent.putExtra("user_id", user.userId)
+                                intent.putExtra("position", 0)
+                                context.startActivity(intent)
+                            }
+                        } else
+                            binding.ivProfilePic.setOnClickListener { view ->
+                                Snackbar.make(
+                                    view,
+                                    "This user didn't added any images",
+                                    Snackbar.LENGTH_SHORT
+                                ).show()
+                            }
+                    }
+            }
 
-                .into(binding.ivProfilePic)
+            Log.i(TAG, "Connected Profiles user : $user")
+            if(user.profile_pic!=null)
+                binding.ivProfilePic.setImageBitmap(user.profile_pic)
+            else
+                binding.ivProfilePic.setImageResource(R.drawable.default_profile_pic)
+//            Glide.with(binding.ivProfilePic.context)
+//                .load(
+//                    user.profile_pic ?: ResourcesCompat.getDrawable(
+//                        binding.ivProfilePic.context.resources,
+//                        R.drawable.default_profile_pic,
+//                        null
+//                    )
+//                )
+//
+//                .into(binding.ivProfilePic)
         }
 
         private fun getConnectionStatus(userId: Int) {
@@ -129,4 +172,13 @@ class ConnectedProfilesAdapter(
     override fun getItemCount(): Int {
         return usersList.size
     }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
 }

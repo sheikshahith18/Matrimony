@@ -1,6 +1,9 @@
 package com.example.matrimony.db.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
+import com.example.matrimony.BITMAP_TAG
+import com.example.matrimony.TAG
 import com.example.matrimony.db.dao.AlbumDao
 import com.example.matrimony.db.entities.Album
 
@@ -12,6 +15,7 @@ class AlbumRepository(private val albumDao: AlbumDao) {
 
     suspend fun addAlbum(album: Album){
         albumDao.addAlbum(album)
+        Log.i(BITMAP_TAG,"album added ${album.user_id}")
     }
 
 

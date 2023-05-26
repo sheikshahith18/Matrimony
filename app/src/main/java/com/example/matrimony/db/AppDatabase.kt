@@ -21,9 +21,7 @@ import com.example.matrimony.db.entities.*
         Album::class,
         PartnerPreferences::class,
         PrivacySettings::class,
-        ProfileView::class,
         Shortlists::class,
-        SuccessStories::class,
         User::class],
     version = 1,
     exportSchema = false
@@ -31,6 +29,23 @@ import com.example.matrimony.db.entities.*
 @TypeConverters(BitmapConverter::class, DateConverter::class, ListConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
+
+    companion object {
+        private var instance: AppDatabase? = null
+
+        fun getDatabase(context: Context): AppDatabase {
+            if (instance != null)
+                return instance!!
+
+            synchronized(this) {
+                instance = Room.databaseBuilder(context, AppDatabase::class.java, "user_db")
+                    .build()
+                return instance!!
+            }
+        }
+
+
+    }
 
     abstract fun accountDao(): AccountDao
     abstract fun connectionsDao(): ConnectionsDao
@@ -40,7 +55,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun partnerPreferenceDao(): PartnerPreferenceDao
     abstract fun privacySettingsDao(): PrivacySettingsDao
     abstract fun shortlistsDao(): ShortlistsDao
-    abstract fun successStoriesDao(): SuccessStoriesDao
     abstract fun userDao(): UserDao
     abstract fun habitsDao(): HabitsDao
     abstract fun familyDetailsDao(): FamilyDetailsDao

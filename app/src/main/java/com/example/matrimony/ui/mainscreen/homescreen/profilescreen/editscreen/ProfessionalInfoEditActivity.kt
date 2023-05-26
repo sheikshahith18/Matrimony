@@ -68,6 +68,9 @@ class ProfessionalInfoEditActivity : AppCompatActivity() {
         binding.btnSaveChanges.setOnClickListener {
             saveChanges()
         }
+        binding.btnDiscardChanges.setOnClickListener {
+            finish()
+        }
         if(userProfileViewModel.loaded){
             initValues()
             userProfileViewModel.loaded=false

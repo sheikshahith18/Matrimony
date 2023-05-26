@@ -89,9 +89,6 @@ class PersonalInfoFragment : Fragment() {
                     }
                 }
 
-            //////////////////////////////
-
-            var text = ""
 
             hobbiesViewModel.getHobbies(userProfileViewModel.currentUserId)
                 .observe(viewLifecycleOwner) { hobbiesList ->
@@ -99,25 +96,9 @@ class PersonalInfoFragment : Fragment() {
                         binding.tvHobbiesDesc.text = "Not Set"
                     } else {
 
-                        binding.tvHobbiesDesc.text = hobbiesList.joinToString()
+                        binding.tvHobbiesDesc.text = hobbiesList.toSortedSet().joinToString()
                     }
                 }
-
-            //////////////////////////////
-
-//            hobbiesViewModel.getHobbies(userProfileViewModel.currentUserId).observe(viewLifecycleOwner){ hobbiesList ->
-//                if(hobbiesList.isEmpty()){
-//                    binding.tvHobbiesDesc.text="Not Set"
-//                }else{
-//                    var text=""
-//                    hobbiesList.forEach{
-//                        text+="$it, "
-//                    }
-//                    binding.tvHobbiesDesc.text=text
-//                }
-//            }
-
-            //////////////////////////////
 
             habitsViewModel.getUserHabits(userProfileViewModel.currentUserId)
                 .observe(viewLifecycleOwner) {
@@ -127,22 +108,14 @@ class PersonalInfoFragment : Fragment() {
                         binding.tvSmokingHabitValue.text = ""
                         binding.tvFoodTypeValue.text = ""
 
-                        binding.tvDrinkingHabitValue.hint = "Not Set"
-                        binding.tvSmokingHabitValue.hint = "Not Set"
-                        binding.tvFoodTypeValue.hint = "Not Set"
+                        binding.tvDrinkingHabitValue.hint = "-\t\tNot Set"
+                        binding.tvSmokingHabitValue.hint = "-\t\tNot Set"
+                        binding.tvFoodTypeValue.hint = "-\t\tNot Set"
                     } else {
-                        binding.tvDrinkingHabitValue.text = it.drinking.ifBlank { "Not Set" }
-                        binding.tvSmokingHabitValue.text = it.smoking.ifBlank { "Not Set" }
-                        binding.tvFoodTypeValue.text = it.food_type.ifBlank { "Not Set" }
+                        binding.tvDrinkingHabitValue.text ="-\t\t"+ it.drinking.ifBlank { "-\t\tNot Set" }
+                        binding.tvSmokingHabitValue.text ="-\t\t"+ it.smoking.ifBlank { "-\t\tNot Set" }
+                        binding.tvFoodTypeValue.text ="-\t\t"+ it.food_type.ifBlank { "-\t\tNot Set" }
                     }
-//                    text = """
-//                    |Drinking     -   ${it?.drinking ?: "-Not Set-"}
-//                    |Smoking     -   ${it?.smoking ?: "-Not Set-"}
-//                    |Food Type     -   ${it?.food_type ?: "-Not Set-"}
-//                """.trimIndent()
-//                        .trimMargin()
-
-//                    binding.tvHabitsDesc.text = text
 
                 }
 
@@ -154,12 +127,12 @@ class PersonalInfoFragment : Fragment() {
                     val date = it.dob
                     val dob = dateFormat.format(date)
 
-                    binding.tvNameValue.text=it.name
-                    binding.tvAgeValue.text=it.age.toString()
-                    binding.tvDobValue.text=dob
-                    binding.tvHeightValue.text=it.height
-                    binding.tvPhysicalStatusValue.text=it.physical_status
-                    binding.tvMaritalStatusValue.text=it.marital_status
+                    binding.tvNameValue.text="-\t\t"+it.name
+                    binding.tvAgeValue.text="-\t\t"+it.age.toString()
+                    binding.tvDobValue.text="-\t\t"+dob
+                    binding.tvHeightValue.text="-\t\t"+it.height
+                    binding.tvPhysicalStatusValue.text="-\t\t"+it.physical_status
+                    binding.tvMaritalStatusValue.text="-\t\t"+it.marital_status
 
                     if(it.marital_status=="Never Married"){
                         binding.tvNoOfChildren.visibility=View.GONE
@@ -167,43 +140,18 @@ class PersonalInfoFragment : Fragment() {
                     }else{
                         binding.tvNoOfChildren.visibility=View.VISIBLE
                         binding.tvNoOfChildrenValue.visibility=View.VISIBLE
-                        binding.tvNoOfChildrenValue.text=it.no_of_children.toString()
+                        binding.tvNoOfChildrenValue.text="-\t\t"+it.no_of_children.toString()
                     }
 
-//                    text = """
-//                    |Name        -   ${it.name}
-//                    |Age         -   ${it.age}
-//                    |DOB         -   $dob
-//                    |Height      -   ${it.height}
-//                    |Physical Status   -   ${it.physical_status}
-//                    |Marital Status      -   ${it.marital_status}
-//                """.trimIndent()
-//                        .trimMargin()
-
-//                    if (it.marital_status == "Divorced" || it.marital_status == "Widow / Widower")
-//                        text += "\nNo of Children   -  ${it.no_of_children ?: "Not Set"} "
-
-
-//                    binding.tvBasicDetailsDesc.text = text
-
-                    binding.tvStateValue.text=it.state
+                    binding.tvStateValue.text="-\t\t"+it.state
                     if(it.state=="Others"){
                         binding.tvCity.visibility=View.GONE
                         binding.tvCityValue.visibility=View.GONE
                     }else{
                         binding.tvCity.visibility=View.VISIBLE
                         binding.tvCityValue.visibility=View.VISIBLE
-                        binding.tvCityValue.text=it.city
+                        binding.tvCityValue.text="-\t\t"+it.city
                     }
-
-//                    text = """
-//                    |Country       -    ${it.country}
-//                    |State         -    ${it.state}
-//                    |city          -    ${it.city ?: "Not Set"}
-//                """.trimIndent()
-//                        .trimMargin()
-
-//                    binding.tvLocationDesc.text = text
 
                 }
 
@@ -213,10 +161,10 @@ class PersonalInfoFragment : Fragment() {
 
                     if(it==null)
                         return@observe
-                    binding.tvFatherNameValue.text=it.fathers_name.ifBlank { "Not Set" }
-                    binding.tvMotherNameValue.text=it.mothers_name.ifBlank { "Not Set" }
-                    binding.tvNoOfBrothersValue.text=it.no_of_brothers.toString()
-                    binding.tvNoOfSistersValue.text=it.no_of_sisters.toString()
+                    binding.tvFatherNameValue.text="-\t\t"+it.fathers_name.ifBlank { "Not Set" }
+                    binding.tvMotherNameValue.text="-\t\t"+it.mothers_name.ifBlank { "Not Set" }
+                    binding.tvNoOfBrothersValue.text="-\t\t"+it.no_of_brothers.toString()
+                    binding.tvNoOfSistersValue.text="-\t\t"+it.no_of_sisters.toString()
 
                     if(it.no_of_brothers==0){
                         binding.tvMarriedBrothers.visibility=View.GONE
@@ -224,7 +172,7 @@ class PersonalInfoFragment : Fragment() {
                     }else{
                         binding.tvMarriedBrothers.visibility=View.VISIBLE
                         binding.tvMarriedBrothersValue.visibility=View.VISIBLE
-                        binding.tvMarriedBrothersValue.text=it.married_brothers.toString()
+                        binding.tvMarriedBrothersValue.text="-\t\t"+it.married_brothers.toString()
                     }
 
                     if(it.no_of_sisters==0){
@@ -233,27 +181,8 @@ class PersonalInfoFragment : Fragment() {
                     }else{
                         binding.tvMarriedSisters.visibility=View.VISIBLE
                         binding.tvMarriedSistersValue.visibility=View.VISIBLE
-                        binding.tvMarriedSistersValue.text=it.married_sisters.toString()
+                        binding.tvMarriedSistersValue.text="-\t\t"+it.married_sisters.toString()
                     }
-
-//                    it.fathers_name
-//                    var text = """
-//                    |Father's Name - ${it?.fathers_name ?: "-Not Set-"}
-//                    |Mother's Name - ${it?.mothers_name ?: "-Not Set-"}
-//                    |No Of Brothers - ${it?.no_of_brothers ?: "-Not Set-"}
-//                """.trimIndent()
-//                        .trimMargin()
-//
-//                    if (it?.no_of_brothers != 0 && it?.no_of_brothers.toString() != "-Not Set") {
-//                        text += "\nMarried Brothers   -   ${it?.married_brothers ?: "-Not Set-"}"
-//                    }
-//
-//                    text += "\nNo of Sisters   -   ${it?.no_of_sisters ?: "-Not Set-"}"
-//                    if (it?.no_of_sisters != 0 && it?.no_of_sisters.toString() != "-Not Set") {
-//                        text += "\nMarried Sisters   -   ${it?.married_sisters ?: "-Not Set-"}"
-//                    }
-
-//                    binding.tvFamilyDetailsDesc.text = text
 
                 }
         }

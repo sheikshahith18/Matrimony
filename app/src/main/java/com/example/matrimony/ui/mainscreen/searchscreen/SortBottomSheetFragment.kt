@@ -4,7 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import com.example.matrimony.R
@@ -13,7 +14,9 @@ import com.example.matrimony.models.SortOptions
 import com.example.matrimony.ui.mainscreen.UserProfileViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
+
 
 @AndroidEntryPoint
 class SortBottomSheetFragment() : BottomSheetDialogFragment() {
@@ -36,9 +39,19 @@ class SortBottomSheetFragment() : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         binding = DataBindingUtil.inflate(inflater, R.layout.bottom_sheet_sort, container, false)
-        setCheckStatus()
         initButtons()
+        setCheckStatus()
         return binding.root
+    }
+
+    override fun onPause() {
+        super.onPause()
+        filterViewModel.selectedTab=binding.ascDescTabs.selectedTabPosition
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.ascDescTabs.getTabAt(filterViewModel.selectedTab)?.select()
     }
 
     private fun setCheckStatus() {
@@ -50,28 +63,56 @@ class SortBottomSheetFragment() : BottomSheetDialogFragment() {
             binding.radioGrpSort.check(R.id.radio_btn_date_created)
 
 
-        if (filterViewModel.ascSortFlag == 1)
-            binding.radioGrpSortType.check(R.id.radio_btn_ascending)
+        if(filterViewModel.ascSortFlag==1)
+//            binding.ascDescTabs.setSelectedTabIndicator(0)
+        binding.ascDescTabs.getTabAt(0)?.select()
         else
-            binding.radioGrpSortType.check(R.id.radio_btn_descending)
+        binding.ascDescTabs.getTabAt(1)?.select()
+
+//        if (filterViewModel.ascSortFlag == 1)
+//            binding.radioGrpSortType.check(R.id.radio_btn_ascending)
+//        else
+//            binding.radioGrpSortType.check(R.id.radio_btn_descending)
 
     }
 
     private fun initButtons() {
 
+        val tabLayout=binding.ascDescTabs
+
+        val ascTab:View=LayoutInflater.from(requireContext()).inflate(R.layout.custom_tab_content,null)
+        ascTab.findViewById<ImageView>(R.id.tab_icon).setImageResource(R.drawable.sort_ascending)
+        ascTab.findViewById<TextView>(R.id.tab_text).text="Ascending"
+
+        val descTab:View=LayoutInflater.from(requireContext()).inflate(R.layout.custom_tab_content,null)
+        descTab.findViewById<ImageView>(R.id.tab_icon).setImageResource(R.drawable.sort_descending)
+        descTab.findViewById<TextView>(R.id.tab_text).text="Descending"
+        val tab1:TabLayout.Tab=tabLayout.newTab()
+        val tab2:TabLayout.Tab=tabLayout.newTab()
+        tab1.customView = ascTab
+        tab2.customView = descTab
+        tabLayout.addTab(tab1)
+        tabLayout.addTab(tab2)
+
+
         binding.imgBtnSave.setOnClickListener {
 
             val asc =
-                when (binding.radioGrpSortType.checkedRadioButtonId) {
-                    R.id.radio_btn_ascending -> {
-                        true
-                    }
-                    R.id.radio_btn_descending -> {
-                        false
-                    }
-                    else ->
-                        false
+                when(binding.ascDescTabs.selectedTabPosition){
+                    0->true
+                    1->false
+                    else->false
                 }
+//                when (binding.radioGrpSortType.checkedRadioButtonId) {
+//                    R.id.radio_btn_ascending -> {
+//                        true
+//                    }
+//                    R.id.radio_btn_descending -> {
+//                        false
+//                    }
+//                    else ->
+//                        false
+//                }
 
             when (binding.radioGrpSort.checkedRadioButtonId) {
                 R.id.radio_btn_name -> {

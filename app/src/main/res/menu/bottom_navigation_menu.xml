@@ -15,7 +15,7 @@
         android:id="@+id/nav_shortlists"
         app:showAsAction="always"
         android:icon="@drawable/favourite_selector"
-        android:title="Shortlists" />
+        android:title="Shortlisted Profiles" />
     <item
         android:id="@+id/nav_connections"
         app:showAsAction="always"
@@ -28,9 +28,4 @@
         android:icon="@drawable/meeting_selector"
         android:title="Meetings" />
 
-<!--    <item-->
-<!--        android:id="@+id/meeting"-->
-<!--        app:showAsAction="always"-->
-<!--        android:icon="@drawable/ic_meeting_logo"-->
-<!--        android:title="Requests" />-->
 </menu>

@@ -23,6 +23,10 @@ class FilterViewModel @Inject constructor(private val userRepository: UserReposi
     var ascSortFlag = 1
     var descSortFlag = -1
 
+    var selectedTab=0
+
+    var loaded = false
+
     val selectedEducations = sortedSetOf<String>()
     val selectedEmployedIns = sortedSetOf<String>()
     val selectedOccupation = sortedSetOf<String>()
@@ -30,6 +34,10 @@ class FilterViewModel @Inject constructor(private val userRepository: UserReposi
     val selectedStars = sortedSetOf<String>()
     val selectedZodiacs = sortedSetOf<String>()
     val selectedCities = sortedSetOf<String>()
+    val selectedMaritalStatus = sortedSetOf<String>()
+
+    var selectedState = ""
+    var selectedReligion = ""
 
 
 

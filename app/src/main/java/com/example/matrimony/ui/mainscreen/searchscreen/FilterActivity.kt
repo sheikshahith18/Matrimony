@@ -1,6 +1,7 @@
 package com.example.matrimony.ui.mainscreen.searchscreen
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -8,12 +9,15 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.Filter
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.children
 import androidx.databinding.DataBindingUtil
 import com.example.matrimony.R
 import com.example.matrimony.TAG
+import com.example.matrimony.adapters.CustomArrayAdapter
 import com.example.matrimony.databinding.ActivityFilterBinding
 import com.example.matrimony.models.DropdownName
 import com.example.matrimony.utils.MY_SHARED_PREFERENCES
@@ -28,6 +32,15 @@ class FilterActivity : AppCompatActivity() {
     lateinit var binding: ActivityFilterBinding
     private val filterViewModel by viewModels<FilterViewModel>()
 
+    private lateinit var maritalStatusAdapter: CustomArrayAdapter
+    private lateinit var educationAdapter: CustomArrayAdapter
+    private lateinit var employedInAdapter: CustomArrayAdapter
+    private lateinit var occupationAdapter: CustomArrayAdapter
+    private lateinit var casteAdapter: CustomArrayAdapter
+    private lateinit var starAdapter: CustomArrayAdapter
+    private lateinit var zodiacAdapter: CustomArrayAdapter
+    private lateinit var cityAdapter: CustomArrayAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 //        Log.i(TAG,"filter onCreate")
@@ -41,7 +54,7 @@ class FilterActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        initValues()
+
 
         initDropDownList(
             binding.ageFromSelector,
@@ -96,20 +109,62 @@ class FilterActivity : AppCompatActivity() {
         )
 
         binding.btnClearFilters.setOnClickListener {
-            clearFilters()
-            filterViewModel.filterChange.value = true
+            if (isValueSet()) {
+                val builder = AlertDialog.Builder(this)
+
+                builder.setTitle("Clear Filters")
+                    .setMessage("Are you sure want to clear applied filters?")
+                    .setPositiveButton("Ok") { dialog: DialogInterface, _: Int ->
+
+                                    Toast.makeText(this, "Filters Cleared", Toast.LENGTH_SHORT).show()
+//                        cleaPreferences()
+                        clearFilters()
+                        dialog.dismiss()
+                    }
+                    .setNegativeButton("Cancel") { dialog: DialogInterface, _: Int ->
+                        dialog.dismiss()
+                    }
+
+                val alertDialog: AlertDialog = builder.create()
+                alertDialog.show()
+            }
+//            clearFilters()
+//            filterViewModel.filterChange.value = true
+//            Toast.makeText(this, "Filters Cleared", Toast.LENGTH_SHORT).show()
         }
 
+        if (!filterViewModel.loaded)
+            initValues()
+        else {
+            initSelections()
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (binding.ageFromSelector.text.isBlank())
+            binding.tilAgeTo.visibility = View.GONE
+        else
+            binding.tilAgeTo.visibility = View.VISIBLE
+
+        if (binding.heightFromSelector.text.isBlank())
+            binding.tilHeightTo.visibility = View.GONE
+        else
+            binding.tilHeightTo.visibility = View.VISIBLE
+//        if (filterViewModel.loaded)
+        initSelections()
     }
 
 
     private fun initValues() {
 
+        filterViewModel.loaded = true
 
-        binding.ageToSelector.keyListener=null
-        binding.heightToSelector.keyListener=null
-        binding.casteSelector.keyListener=null
-        binding.citySelector.keyListener=null
+        binding.ageToSelector.keyListener = null
+        binding.heightToSelector.keyListener = null
+        binding.casteSelector.keyListener = null
+        binding.citySelector.keyListener = null
 
         Log.i(TAG, "initValues in Filter")
         val sharedPref = getSharedPreferences(MY_SHARED_PREFERENCES, MODE_PRIVATE)
@@ -127,8 +182,11 @@ class FilterActivity : AppCompatActivity() {
 
         binding.heightFromSelector.setText(sharedPref.getString("HEIGHT_FROM_FILTER", ""))
         binding.heightToSelector.setText(sharedPref.getString("HEIGHT_TO_FILTER", ""))
-        binding.maritalStatusSelector.setText(sharedPref.getString("MARITAL_STATUS_FILTER", ""))
+//        binding.maritalStatusSelector.setText(sharedPref.getString("MARITAL_STATUS_FILTER", ""))
 
+        sharedPref.getStringSet("MARITAL_STATUS_FILTER", null)?.forEach {
+            addChips(binding.maritalStatusChipGroup, it, DropdownName.MARITAL_STATUS)
+        }
         sharedPref.getStringSet("EDUCATION_FILTER", null)?.forEach {
             addChips(binding.educationChipGroup, it, DropdownName.EDUCATION)
         }
@@ -141,8 +199,8 @@ class FilterActivity : AppCompatActivity() {
             addChips(binding.occupationChipGroup, it, DropdownName.OCCUPATION)
         }
 
-        binding.religionSelector.setText(sharedPref.getString("RELIGION_FILTER", ""))
-        if (binding.religionSelector.text.toString().isNotBlank()) {
+        binding.religionSelector.setText(sharedPref.getString("RELIGION_FILTER", "- Select Religion -"))
+        if (binding.religionSelector.text.toString().isNotBlank() && binding.religionSelector.text.toString()!="- Select Religion -") {
             sharedPref.getStringSet("CASTE_FILTER", null)?.forEach {
                 addChips(binding.casteChipGroup, it, DropdownName.CASTE)
             }
@@ -161,31 +219,162 @@ class FilterActivity : AppCompatActivity() {
             addChips(binding.zodiacChipGroup, it, DropdownName.ZODIAC)
         }
 
-        binding.stateSelector.setText(sharedPref.getString("STATE_FILTER", ""))
-        if (binding.stateSelector.text.toString().isNotBlank()) {
+        binding.stateSelector.setText(sharedPref.getString("STATE_FILTER", "- Select State -"))
+        if (binding.stateSelector.text.toString().isNotBlank() && binding.stateSelector.text.toString()!="- Select State -") {
             sharedPref.getStringSet("CITY_FILTER", null)?.forEach {
                 addChips(binding.cityChipGroup, it, DropdownName.CITY)
             }
             getCityArray(binding.stateSelector.text.toString())?.let {
                 initDropDownList(binding.citySelector, it, DropdownName.CITY)
-                binding.tvCity.visibility = View.VISIBLE
+                binding.tvCityHeader.visibility = View.VISIBLE
                 binding.tilCity.visibility = View.VISIBLE
             }
         }
+    }
 
+    private fun initSelections() {
+        if (binding.ageFromSelector.text.toString().isNotBlank()) {
+//            val ageArray = Array(22) { it + 18 }.toMutableList()
+            val selectedFromAge = binding.ageFromSelector.text.toString().toInt()
+            val selectedToAge = binding.ageToSelector.text.toString()
+            if (selectedToAge.isNotBlank()) {
+                if (selectedFromAge >= selectedToAge.toInt())
+                    binding.ageToSelector.setText("")
+            }
+            val ageToArray = Array(45 - selectedFromAge) { it + selectedFromAge + 1 }
+            Log.i(TAG + 3, "AgeTo ${ageToArray.joinToString()}")
+            initDropDownList(
+                binding.ageToSelector,
+                ageToArray.toList(),
+                DropdownName.AGE_TO
+            )
+        }
+
+
+        if (binding.heightFromSelector.text.toString().isNotBlank()) {
+            val heightArray = resources.getStringArray(R.array.height).toMutableList()
+            val heightTo = binding.heightToSelector.text.toString()
+            if (heightTo.isNotBlank()) {
+                val fromIndex =
+                    heightArray.indexOf(binding.heightFromSelector.text.toString())
+                val toIndex = heightArray.indexOf(heightTo)
+
+                if (fromIndex >= toIndex)
+                    binding.heightToSelector.setText("")
+            }
+            val position = heightArray.indexOf(binding.heightFromSelector.text.toString())
+            heightArray.clear()
+            resources.getStringArray(R.array.height).forEachIndexed { index, value ->
+                if (index > position) {
+                    heightArray.add(value)
+                }
+            }
+            initDropDownList(binding.heightToSelector, heightArray, DropdownName.HEIGHT_TO)
+        }
+
+        filterViewModel.selectedMaritalStatus.forEach {
+            val maritalArray = resources.getStringArray(R.array.marital_status)
+            maritalStatusAdapter.setSelectedPosition(maritalArray.indexOf(it))
+            addChips(binding.maritalStatusChipGroup, it, DropdownName.MARITAL_STATUS)
+        }
+
+        filterViewModel.selectedEducations.forEach {
+            val eduArray = resources.getStringArray(R.array.education)
+            educationAdapter.setSelectedPosition(eduArray.indexOf(it))
+            addChips(binding.educationChipGroup, it, DropdownName.EDUCATION)
+        }
+
+        filterViewModel.selectedEmployedIns.forEach {
+            val employedInArray = resources.getStringArray(R.array.employed_in)
+            employedInAdapter.setSelectedPosition(employedInArray.indexOf(it))
+            addChips(binding.employedInChipGroup, it, DropdownName.EMPLOYED_IN)
+        }
+
+        filterViewModel.selectedOccupation.forEach {
+            val occArray = resources.getStringArray(R.array.occupation)
+            occupationAdapter.setSelectedPosition(occArray.indexOf(it))
+            addChips(binding.occupationChipGroup, it, DropdownName.OCCUPATION)
+        }
+
+        if (binding.religionSelector.text.toString().isNotBlank() && binding.religionSelector.text.toString()!="- Select Religion -") {
+            binding.tilCaste.visibility = View.VISIBLE
+            binding.tvCasteHeader.visibility = View.VISIBLE
+            Log.i(TAG + 3, "before caste Init")
+            Log.i(TAG + 3, "religion=${binding.religionSelector.text}")
+            val casteArray = when (binding.religionSelector.text.toString()) {
+                "Muslim" -> getCasteArray("Muslim")
+                "Christian" -> getCasteArray("Christian")
+                "Hindu" -> getCasteArray("Hindu")
+                else -> return
+            }
+            Log.i(TAG + 3, "caste Init")
+            initDropDownList(binding.casteSelector, casteArray, DropdownName.CASTE)
+        }
+        filterViewModel.selectedCastes.forEach {
+            Log.i(TAG + 3, "selectedCasteSize ${filterViewModel.selectedCastes.size}")
+            val casteArray = when (binding.religionSelector.text.toString()) {
+                "Muslim" -> getCasteArray("Muslim")
+                "Christian" -> getCasteArray("Christian")
+                "Hindu" -> getCasteArray("Hindu")
+                else -> return@forEach
+            }
+            Log.i(TAG + 3, "casteArray ${casteArray?.joinToString()}")
+            casteAdapter.setSelectedPosition(casteArray!!.indexOf(it))
+            addChips(binding.casteChipGroup, it, DropdownName.CASTE)
+        }
+
+        filterViewModel.selectedStars.forEach {
+            val starArray = resources.getStringArray(R.array.stars)
+            starAdapter.setSelectedPosition(starArray.indexOf(it))
+            addChips(binding.starChipGroup, it, DropdownName.STAR)
+        }
+
+        filterViewModel.selectedZodiacs.forEach {
+            val zodiacArray = resources.getStringArray(R.array.zodiac)
+            zodiacAdapter.setSelectedPosition(zodiacArray.indexOf(it))
+            addChips(binding.zodiacChipGroup, it, DropdownName.ZODIAC)
+        }
+
+
+        if (binding.stateSelector.text.toString().isNotBlank() && binding.stateSelector.text.toString()!="- Select State -"){
+            binding.tilCity.visibility = View.VISIBLE
+            binding.tvCityHeader.visibility = View.VISIBLE
+            val cityArray = when (binding.stateSelector.text.toString()) {
+                "Andhra Pradesh" -> getCityArray("Andhra Pradesh")
+                "Karnataka" -> getCityArray("Karnataka")
+                "Kerala" -> getCityArray("Kerala")
+                "Tamilnadu" -> getCityArray("Tamilnadu")
+                else -> null
+            }
+            initDropDownList(binding.citySelector, cityArray, DropdownName.CITY)
+        }
+        filterViewModel.selectedCities.forEach {
+
+            val cityArray = when (binding.stateSelector.text.toString()) {
+                "Andhra Pradesh" -> getCityArray("Andhra Pradesh")
+                "Karnataka" -> getCityArray("Karnataka")
+                "Kerala" -> getCityArray("Kerala")
+                "Tamilnadu" -> getCityArray("Tamilnadu")
+                else -> return@forEach
+            }
+            cityAdapter.setSelectedPosition(cityArray!!.indexOf(it))
+            addChips(binding.cityChipGroup, it, DropdownName.CITY)
+        }
 
     }
 
     private fun initDropDownList(
         selector: AutoCompleteTextView,
-        itemArray: List<Any>,
+        itemArray: List<Any>?,
         key: DropdownName?
     ) {
         selector.keyListener = null
-        val arrayAdapter = object : ArrayAdapter<Any>(
+        if (itemArray == null)
+            return
+        val arrayAdapter = object : CustomArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
-            itemArray
+            itemArray as List<String>
         ) {
             override fun getFilter(): Filter {
                 return object : Filter() {
@@ -207,32 +396,54 @@ class FilterActivity : AppCompatActivity() {
         }
         selector.setAdapter(arrayAdapter)
 
+        when (key) {
+//            DropdownName.AGE_FROM->
+//            DropdownName.AGE_TO->
+//            DropdownName.HEIGHT_FROM->
+//            DropdownName.HEIGHT_TO->
+            DropdownName.MARITAL_STATUS -> maritalStatusAdapter = arrayAdapter
+            DropdownName.EDUCATION -> educationAdapter = arrayAdapter
+            DropdownName.EMPLOYED_IN -> employedInAdapter = arrayAdapter
+            DropdownName.OCCUPATION -> occupationAdapter = arrayAdapter
+//            DropdownName.RELIGION->
+            DropdownName.CASTE -> casteAdapter = arrayAdapter
+            DropdownName.STAR -> starAdapter = arrayAdapter
+            DropdownName.ZODIAC -> zodiacAdapter = arrayAdapter
+//            DropdownName.STATE->
+            DropdownName.CITY -> cityAdapter = arrayAdapter
+            else -> {}
+        }
+
         var previousPosition = -1
         selector.setOnItemClickListener { parent, view, position, id ->
 
             when (key) {
                 DropdownName.AGE_FROM -> {
+                    binding.tilAgeTo.visibility = View.VISIBLE
                     if (previousPosition == position)
                         return@setOnItemClickListener
                     previousPosition = position
-                    val ageArray = Array(22) { it + 18 }.toMutableList()
+                    val ageArray = Array(27) { it + 18 }.toMutableList()
                     val selectedFromAge = binding.ageFromSelector.text.toString().toInt()
-                    val selectedAgeTo = binding.ageToSelector.text.toString()
-                    if (selectedAgeTo.isNotBlank()) {
-                        val fromIndex =
-                            ageArray.indexOf(binding.ageFromSelector.text.toString().toInt())
-                        val toIndex = ageArray.indexOf(selectedAgeTo.toInt())
-                        if (fromIndex >= toIndex)
+                    val selectedToAge = binding.ageToSelector.text.toString()
+                    if (selectedToAge.isNotBlank()) {
+//                        val fromIndex =
+//                            ageArray.indexOf(binding.ageFromSelector.text.toString().toInt())
+//                        val toIndex = ageArray.indexOf(selectedToAge.toInt())
+////                        if (fromIndex >= toIndex)
+////                            binding.ageToSelector.setText("")
+                        if (selectedFromAge >= selectedToAge.toInt())
                             binding.ageToSelector.setText("")
                     }
-                    val ageToArray = Array(40 - selectedFromAge) { it + selectedFromAge + 1 }
+                    val ageToArray = Array(45 - selectedFromAge) { it + selectedFromAge + 1 }
                     initDropDownList(
                         binding.ageToSelector,
                         ageToArray.toList(),
-                        DropdownName.AGE_FROM
+                        DropdownName.AGE_TO
                     )
                 }
                 DropdownName.HEIGHT_FROM -> {
+                    binding.tilHeightTo.visibility = View.VISIBLE
                     if (previousPosition == position)
                         return@setOnItemClickListener
                     previousPosition = position
@@ -261,6 +472,7 @@ class FilterActivity : AppCompatActivity() {
                     previousPosition = position
                     binding.casteSelector.setText("")
                     binding.casteChipGroup.removeAllViews()
+                    filterViewModel.selectedCastes.clear()
 
                     val casteArray: List<String> =
                         getCasteArray(parent.getItemAtPosition(position).toString())
@@ -268,7 +480,19 @@ class FilterActivity : AppCompatActivity() {
 
                     binding.tvCasteHeader.visibility = View.VISIBLE
                     binding.tilCaste.visibility = View.VISIBLE
+                    binding.casteSelector.setText("- Select Caste -")
                     initDropDownList(binding.casteSelector, casteArray, DropdownName.CASTE)
+                }
+                DropdownName.MARITAL_STATUS -> {
+//                    Toast.makeText(this, "Marital Status", Toast.LENGTH_SHORT).show()
+                    maritalStatusAdapter = arrayAdapter
+                    arrayAdapter.setSelectedPosition(position)
+                    addChips(
+                        binding.maritalStatusChipGroup,
+                        binding.maritalStatusSelector.text.toString(),
+                        DropdownName.MARITAL_STATUS
+                    )
+                    binding.maritalStatusSelector.setText("- Select Marital Status -")
                 }
                 DropdownName.STATE -> {
                     if (previousPosition == position)
@@ -276,69 +500,93 @@ class FilterActivity : AppCompatActivity() {
                     previousPosition = position
                     binding.citySelector.setText("")
                     binding.cityChipGroup.removeAllViews()
+                    filterViewModel.selectedCities.clear()
 
                     val cityArray: List<String> =
                         getCityArray(parent.getItemAtPosition(position).toString())
                             ?: return@setOnItemClickListener
-                    binding.tvCity.visibility = View.VISIBLE
+                    binding.tvCityHeader.visibility = View.VISIBLE
                     binding.tilCity.visibility = View.VISIBLE
+                    binding.citySelector.setText("- Select City -")
                     initDropDownList(binding.citySelector, cityArray, DropdownName.CITY)
                 }
                 DropdownName.EDUCATION -> {
+                    educationAdapter = arrayAdapter
+                    arrayAdapter.setSelectedPosition(position)
                     addChips(
                         binding.educationChipGroup,
                         binding.educationSelector.text.toString(),
                         DropdownName.EDUCATION
                     )
+                    binding.educationSelector.setText("- Select Education -")
                 }
                 DropdownName.EMPLOYED_IN -> {
+                    employedInAdapter = arrayAdapter
+                    arrayAdapter.setSelectedPosition(position)
                     addChips(
                         binding.employedInChipGroup,
                         binding.employedInSelector.text.toString(),
                         DropdownName.EMPLOYED_IN
                     )
+                    binding.employedInSelector.setText("- Select EmployedIn -")
                 }
                 DropdownName.OCCUPATION -> {
+                    occupationAdapter = arrayAdapter
+                    arrayAdapter.setSelectedPosition(position)
                     addChips(
                         binding.occupationChipGroup,
                         binding.occupationSelector.text.toString(),
                         DropdownName.OCCUPATION
                     )
+                    binding.occupationSelector.setText("- Select Occupation -")
                 }
                 DropdownName.CASTE -> {
+                    casteAdapter = arrayAdapter
+                    arrayAdapter.setSelectedPosition(position)
                     addChips(
                         binding.casteChipGroup,
                         binding.casteSelector.text.toString(),
                         DropdownName.CASTE
                     )
+                    binding.casteSelector.setText("- Select Caste -")
                 }
                 DropdownName.STAR -> {
+                    starAdapter = arrayAdapter
+                    arrayAdapter.setSelectedPosition(position)
                     addChips(
                         binding.starChipGroup,
                         binding.starSelector.text.toString(),
                         DropdownName.STAR
                     )
+                    binding.starSelector.setText("- Select Star -")
                 }
                 DropdownName.ZODIAC -> {
+                    zodiacAdapter = arrayAdapter
+                    arrayAdapter.setSelectedPosition(position)
                     addChips(
                         binding.zodiacChipGroup,
                         binding.zodiacSelector.text.toString(),
                         DropdownName.ZODIAC
                     )
+                    binding.zodiacSelector.setText("- Select Zodiac -")
                 }
                 DropdownName.CITY -> {
+                    cityAdapter = arrayAdapter
+                    arrayAdapter.setSelectedPosition(position)
+//                    Toast.makeText(this, "City", Toast.LENGTH_SHORT).show()
                     addChips(
                         binding.cityChipGroup,
                         binding.citySelector.text.toString(),
                         DropdownName.CITY
                     )
+                    binding.citySelector.setText("- Select City -")
                 }
                 else -> return@setOnItemClickListener
             }
         }
     }
 
-    private fun getCasteArray(selectedReligion: String): List<String>? {
+    private fun getCasteArray(selectedReligion: String?): List<String>? {
         return when (selectedReligion) {
             "Muslim" -> resources.getStringArray(R.array.muslim_caste).toList()
             "Hindu" -> resources.getStringArray(R.array.hindu_caste).toList()
@@ -349,6 +597,7 @@ class FilterActivity : AppCompatActivity() {
                 binding.tilCaste.visibility = View.GONE
                 null
             }
+
             else -> null
         }
     }
@@ -360,7 +609,7 @@ class FilterActivity : AppCompatActivity() {
             "Kerala" -> resources.getStringArray(R.array.kerala_cities).toList()
             "Tamilnadu" -> resources.getStringArray(R.array.tn_cities).toList()
             "Others" -> {
-                binding.tvCity.visibility = View.GONE
+                binding.tvCityHeader.visibility = View.GONE
                 binding.tilCity.visibility = View.GONE
                 null
             }
@@ -382,6 +631,7 @@ class FilterActivity : AppCompatActivity() {
             DropdownName.STAR -> filterViewModel.selectedStars.add(value)
             DropdownName.ZODIAC -> filterViewModel.selectedZodiacs.add(value)
             DropdownName.CITY -> filterViewModel.selectedCities.add(value)
+            DropdownName.MARITAL_STATUS -> filterViewModel.selectedMaritalStatus.add(value)
             else -> return
         }
         chipGroup.addView(getChip(value, key))
@@ -398,13 +648,58 @@ class FilterActivity : AppCompatActivity() {
 //            setOnClickListener {
                 (it.parent as ChipGroup).removeView(it)
                 when (key) {
-                    DropdownName.EDUCATION -> filterViewModel.selectedEducations.remove(value)
-                    DropdownName.EMPLOYED_IN -> filterViewModel.selectedEmployedIns.remove(value)
-                    DropdownName.OCCUPATION -> filterViewModel.selectedOccupation.remove(value)
-                    DropdownName.CASTE -> filterViewModel.selectedCastes.remove(value)
-                    DropdownName.STAR -> filterViewModel.selectedStars.remove(value)
-                    DropdownName.ZODIAC -> filterViewModel.selectedZodiacs.remove(value)
-                    DropdownName.CITY -> filterViewModel.selectedCities.remove(value)
+                    DropdownName.EDUCATION -> {
+                        filterViewModel.selectedEducations.remove(value)
+                        val eduArray = resources.getStringArray(R.array.education)
+                        educationAdapter.removeSelectedPosition(eduArray.indexOf(value))
+                    }
+                    DropdownName.EMPLOYED_IN -> {
+                        filterViewModel.selectedEmployedIns.remove(value)
+                        val empArray = resources.getStringArray(R.array.employed_in)
+                        employedInAdapter.removeSelectedPosition(empArray.indexOf(value))
+                    }
+                    DropdownName.OCCUPATION -> {
+                        filterViewModel.selectedOccupation.remove(value)
+                        val occArray = resources.getStringArray(R.array.occupation)
+                        occupationAdapter.removeSelectedPosition(occArray.indexOf(value))
+                    }
+                    DropdownName.CASTE -> {
+                        filterViewModel.selectedCastes.remove(value)
+                        val casteArray = when (binding.religionSelector.text.toString()) {
+                            "Muslim" -> getCasteArray("Muslim")
+                            "Christian" -> getCasteArray("Christian")
+                            "Hindu" -> getCasteArray("Hindu")
+                            else -> return@setOnCloseIconClickListener
+                        }
+                        casteAdapter.removeSelectedPosition(casteArray!!.indexOf(value))
+                    }
+                    DropdownName.STAR -> {
+                        filterViewModel.selectedStars.remove(value)
+                        val starArray = resources.getStringArray(R.array.stars)
+                        starAdapter.removeSelectedPosition(starArray.indexOf(value))
+                    }
+                    DropdownName.ZODIAC -> {
+                        filterViewModel.selectedZodiacs.remove(value)
+                        val zodiacArray = resources.getStringArray(R.array.zodiac)
+                        zodiacAdapter.removeSelectedPosition(zodiacArray.indexOf(value))
+                    }
+                    DropdownName.CITY -> {
+                        filterViewModel.selectedCities.remove(value)
+                        val cityArray = when (binding.stateSelector.text.toString()) {
+                            "Andhra Pradesh" -> getCityArray("Andhra Pradesh")
+                            "Karnataka" -> getCityArray("Karnataka")
+                            "Kerala" -> getCityArray("Kerala")
+                            "Tamilnadu" -> getCityArray("Tamilnadu")
+                            else -> return@setOnCloseIconClickListener
+                        }
+                        Log.i(TAG + 3, "cityArray ${cityArray?.joinToString()}")
+                        cityAdapter.removeSelectedPosition(cityArray!!.indexOf(value))
+                    }
+                    DropdownName.MARITAL_STATUS -> {
+                        filterViewModel.selectedMaritalStatus.remove(value)
+                        val maritalArray = resources.getStringArray(R.array.marital_status)
+                        maritalStatusAdapter.removeSelectedPosition(maritalArray.indexOf(value))
+                    }
                     else -> return@setOnCloseIconClickListener
                 }
             }
@@ -439,12 +734,20 @@ class FilterActivity : AppCompatActivity() {
             }
         }
 
-        val maritalStatus = binding.maritalStatusSelector.text.toString()
-        if (maritalStatus.isNotBlank()) {
-            editor.putString("MARITAL_STATUS_FILTER", maritalStatus)
-            isFilterApplied = true
-        }
+//        val maritalStatus = binding.maritalStatusSelector.text.toString()
+//        if (maritalStatus.isNotBlank()) {
+//            editor.putString("MARITAL_STATUS_FILTER", maritalStatus)
+//            isFilterApplied = true
+//        }
 
+        if (binding.maritalStatusChipGroup.childCount > 0) {
+            val set = mutableSetOf<String>()
+            isFilterApplied = true
+            binding.maritalStatusChipGroup.children.forEach {
+                set.add((it as Chip).text.toString())
+            }
+            editor.putStringSet("MARITAL_STATUS_FILTER", set)
+        }
 
         if (binding.educationChipGroup.childCount > 0) {
             val set = mutableSetOf<String>()
@@ -454,7 +757,6 @@ class FilterActivity : AppCompatActivity() {
             }
             editor.putStringSet("EDUCATION_FILTER", set)
         }
-
 
         if (binding.employedInChipGroup.childCount > 0) {
             val set = mutableSetOf<String>()
@@ -475,7 +777,7 @@ class FilterActivity : AppCompatActivity() {
         }
 
         val religion = binding.religionSelector.text.toString()
-        if (religion.isNotBlank()) {
+        if (religion.isNotBlank()  && binding.religionSelector.text.toString()!="- Select Religion -") {
             isFilterApplied = true
             editor.putString("RELIGION_FILTER", religion)
         }
@@ -499,7 +801,7 @@ class FilterActivity : AppCompatActivity() {
         }
 
         val state = binding.stateSelector.text.toString()
-        if (state.isNotBlank()) {
+        if (state.isNotBlank() && binding.stateSelector.text.toString()!="- Select State -") {
             isFilterApplied = true
             editor.putString("STATE_FILTER", state)
         }
@@ -575,26 +877,64 @@ class FilterActivity : AppCompatActivity() {
         clearPreferences()
 //        finish()
 
+        binding.tilAgeTo.visibility = View.GONE
+        binding.tilHeightTo.visibility = View.GONE
+
+        binding.ageFromSelector.clearFocus()
+        binding.ageToSelector.clearFocus()
+        binding.heightFromSelector.clearFocus()
+        binding.heightToSelector.clearFocus()
+        binding.maritalStatusSelector.clearFocus()
+        binding.educationSelector.clearFocus()
+        binding.employedInSelector.clearFocus()
+        binding.occupationSelector.clearFocus()
+        binding.religionSelector.clearFocus()
+        binding.casteSelector.clearFocus()
+        binding.starSelector.clearFocus()
+        binding.zodiacSelector.clearFocus()
+        binding.stateSelector.clearFocus()
+        binding.citySelector.clearFocus()
+
+        maritalStatusAdapter.removeAllSelections()
+        educationAdapter.removeAllSelections()
+        employedInAdapter.removeAllSelections()
+        occupationAdapter.removeAllSelections()
+        if (this::casteAdapter.isInitialized)
+            casteAdapter.removeAllSelections()
+        starAdapter.removeAllSelections()
+        zodiacAdapter.removeAllSelections()
+        if (this::cityAdapter.isInitialized)
+            cityAdapter.removeAllSelections()
+
         binding.ageToSelector.setText("")
         binding.ageFromSelector.setText("")
         binding.heightToSelector.setText("")
         binding.heightFromSelector.setText("")
-        binding.maritalStatusSelector.setText("")
+//        binding.maritalStatusSelector.setText("")
+        binding.maritalStatusChipGroup.removeAllViews()
         binding.educationChipGroup.removeAllViews()
         binding.employedInChipGroup.removeAllViews()
         binding.occupationChipGroup.removeAllViews()
-//        binding.annualIncomeSelector.setText("")
-        binding.religionSelector.setText("")
+        binding.religionSelector.setText("- Select Religion -")
         binding.casteChipGroup.removeAllViews()
         binding.tvCasteHeader.visibility = View.GONE
         binding.tilCaste.visibility = View.GONE
         binding.starChipGroup.removeAllViews()
         binding.zodiacChipGroup.removeAllViews()
-        binding.stateSelector.setText("")
-        binding.tvCity.visibility = View.GONE
+        binding.stateSelector.setText("- Select State -")
+        binding.tvCityHeader.visibility = View.GONE
         binding.tilCity.visibility = View.GONE
         binding.cityChipGroup.removeAllViews()
 
+        filterViewModel.selectedEducations.clear()
+        filterViewModel.selectedEmployedIns.clear()
+        filterViewModel.selectedOccupation.clear()
+        filterViewModel.selectedCastes.clear()
+        filterViewModel.selectedStars.clear()
+        filterViewModel.selectedZodiacs.clear()
+        filterViewModel.selectedCities.clear()
+        filterViewModel.selectedMaritalStatus.clear()
+        
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -619,26 +959,64 @@ class FilterActivity : AppCompatActivity() {
             return true
         if (binding.heightToSelector.text.toString().isNotBlank())
             return true
-        if (binding.maritalStatusSelector.text.toString().isNotBlank())
+//        if (binding.maritalStatusSelector.text.toString()
+//                .isNotBlank() && binding.maritalStatusSelector.text.toString() != "- Select Marital Status -"
+//        )
+//            return true
+//        if (binding.educationSelector.text.toString()
+//                .isNotBlank() && binding.educationSelector.text.toString() != "- Select Education -"
+//        )
+//            return true
+//        if (binding.employedInSelector.text.toString()
+//                .isNotBlank() && binding.employedInSelector.text.toString() != "- Select EmployedIn -"
+//        )
+//            return true
+//        if (binding.occupationSelector.text.toString()
+//                .isNotBlank() && binding.occupationSelector.text.toString() != "- Select Occupation -"
+//        )
+//            return true
+        if (binding.religionSelector.text.toString()
+                .isNotBlank() && binding.religionSelector.text.toString() != "- Select Religion -"
+        )
             return true
-        if (binding.educationSelector.text.toString().isNotBlank())
+//        if (binding.casteSelector.text.toString()
+//                .isNotBlank() && binding.casteSelector.text.toString() != "- Select Caste -"
+//        )
+//            return true
+//        if (binding.starSelector.text.toString()
+//                .isNotBlank() && binding.starSelector.text.toString() != "- Select Star -"
+//        )
+//            return true
+//        if (binding.zodiacSelector.text.toString()
+//                .isNotBlank() && binding.zodiacSelector.text.toString() != "- Select Zodiac -"
+//        )
+//            return true
+        if (binding.stateSelector.text.toString()
+                .isNotBlank() && binding.stateSelector.text.toString() != "- Select State -"
+        )
             return true
-        if (binding.employedInSelector.text.toString().isNotBlank())
+//        if (binding.citySelector.text.toString()
+//                .isNotBlank() && binding.citySelector.text.toString() != "- Select City -"
+//        )
+//            return true
+        if(binding.maritalStatusChipGroup.childCount>0)
             return true
-        if (binding.occupationSelector.text.toString().isNotBlank())
+        if(binding.educationChipGroup.childCount>0)
             return true
-        if (binding.religionSelector.text.toString().isNotBlank())
+        if(binding.employedInChipGroup.childCount>0)
             return true
-        if (binding.casteSelector.text.toString().isNotBlank())
+        if(binding.occupationChipGroup.childCount>0)
             return true
-        if (binding.stateSelector.text.toString().isNotBlank())
+        if(binding.casteChipGroup.childCount>0)
             return true
-        if (binding.zodiacSelector.text.toString().isNotBlank())
+        if(binding.starChipGroup.childCount>0)
             return true
-        if (binding.stateSelector.text.toString().isNotBlank())
+        if(binding.zodiacChipGroup.childCount>0)
             return true
-        if (binding.citySelector.text.toString().isNotBlank())
+        if(binding.cityChipGroup.childCount>0)
             return true
+
+
 
         return false
     }

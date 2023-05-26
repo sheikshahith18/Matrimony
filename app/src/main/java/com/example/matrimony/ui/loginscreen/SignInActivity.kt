@@ -130,8 +130,4 @@ class SignInActivity : AppCompatActivity() {
 
     }
 
-
-    fun checkLoginDetails() {
-
-    }
 }

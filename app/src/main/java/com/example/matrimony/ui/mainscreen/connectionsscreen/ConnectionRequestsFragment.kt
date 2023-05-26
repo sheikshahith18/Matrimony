@@ -21,6 +21,7 @@ import com.example.matrimony.adapters.ConnectionRequestAdapter
 import com.example.matrimony.databinding.FragmentConnectionRequestsBinding
 import com.example.matrimony.models.UserData
 import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.ViewProfileActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
 import com.example.matrimony.utils.CURRENT_USER_ID
 import com.example.matrimony.utils.MY_SHARED_PREFERENCES
 import dagger.hilt.android.AndroidEntryPoint
@@ -36,6 +37,7 @@ class ConnectionRequestsFragment : Fragment() {
     private var fragmentView: View? = null
 
     private val connectionsViewModel by activityViewModels<ConnectionsViewModel>()
+    private val albumViewModel by activityViewModels<AlbumViewModel>()
 
     private var adapter: ConnectionRequestAdapter? = null
 
@@ -72,7 +74,7 @@ class ConnectionRequestsFragment : Fragment() {
         val connectedProfilesRecyclerView = binding.rvConnectionRequests
         connectedProfilesRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        adapter=ConnectionRequestAdapter(connectionsViewModel,viewFullProfile)
+        adapter=ConnectionRequestAdapter(requireActivity(),connectionsViewModel,albumViewModel,viewFullProfile)
 //        adapter = ConnectedProfilesAdapter(
 //            connectionsViewModel,
 //            onCallButtonClicked,

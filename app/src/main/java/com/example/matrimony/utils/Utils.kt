@@ -13,7 +13,6 @@ const val CURRENT_USER_GENDER="CURRENT_USER_GENDER"
 fun calculateAge(date:Date): Int {
     val birthDate = Calendar.getInstance().apply {
         time = date
-
     }
     val currentDate = Calendar.getInstance()
 

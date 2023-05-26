@@ -9,21 +9,20 @@
         android:orientation="vertical"
         tools:context=".ui.mainscreen.homescreen.settingsscreen.SettingsActivity">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/app_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent">
+<!--        <com.google.android.material.appbar.AppBarLayout-->
+<!--                android:id="@+id/toolbar"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            app:layout_constraintTop_toTopOf="parent">-->
 
             <androidx.appcompat.widget.Toolbar
-                android:id="@+id/toolbar"
-                style="@style/AppToolbar"
+            android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 app:layout_scrollFlags="scroll|enterAlways"
                 app:title="AccountSettings" />
 
-        </com.google.android.material.appbar.AppBarLayout>
+<!--        </com.google.android.material.appbar.AppBarLayout>-->
 
         <TextView
             android:id="@+id/tv_change_password"
@@ -33,7 +32,7 @@
             android:layout_marginTop="20dp"
             android:gravity="center|start"
             android:text="Change Password"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <View
             android:id="@+id/divider1"
@@ -49,7 +48,7 @@
             android:layout_marginTop="5dp"
             android:gravity="center|start"
             android:text="Delete Account"
-            android:textSize="24sp" />
+            android:textSize="20sp" />
 
         <View
             android:id="@+id/divider2"

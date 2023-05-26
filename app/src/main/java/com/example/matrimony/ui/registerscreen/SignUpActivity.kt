@@ -2,6 +2,7 @@ package com.example.matrimony.ui.registerscreen
 
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.Editable
@@ -11,14 +12,18 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Filter
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import com.example.matrimony.InjectDataViewModel
 import com.example.matrimony.R
 import com.example.matrimony.TAG
 import com.example.matrimony.databinding.ActivitySignUpBinding
 import com.example.matrimony.db.entities.Account
 import com.example.matrimony.db.entities.User
+import com.example.matrimony.ui.loginscreen.SignInActivity
+import com.example.matrimony.ui.mainscreen.UserProfileViewModel
 import com.example.matrimony.utils.DatePickerFragment
 import com.example.matrimony.utils.DatePickerListener
 import com.example.matrimony.utils.*
@@ -31,10 +36,16 @@ class SignUpActivity : AppCompatActivity() {
 
     lateinit var binding: ActivitySignUpBinding
     private val signUpViewModel by viewModels<SignUpViewModel>()
+    private val injectDataViewModel by viewModels<InjectDataViewModel>()
+    private val userProfileViewModel by viewModels<UserProfileViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sign_up)
+
+        if (signUpViewModel.loadingStarted) {
+
+        }
 
         binding.btnContinue.setOnClickListener {
             validateAccount()
@@ -77,27 +88,53 @@ class SignUpActivity : AppCompatActivity() {
 
     private fun validateAccount() {
         if (isPageFilled()) {
-            if(!Validator.mobileNumValidator(binding.etMobile.text.toString())){
-                binding.tilMobile.isErrorEnabled=true
-                binding.tilMobile.error="Enter Valid Mobile No."
-                return
+            var error = false
+//                Toast.makeText(this, calculateAge(getDateFromString(binding.etDob.text.toString())!!).toString(),Toast.LENGTH_SHORT).show()
+            if (binding.etDob.text.toString()
+                    .isNotBlank() && calculateAge(getDateFromString(binding.etDob.text.toString())!!) < 18
+            ) {
+                binding.tilDob.isErrorEnabled = true
+                binding.tilDob.error = "You need to be older than 18 years to register"
+                error = true
+            } else {
+                binding.tilDob.isErrorEnabled = false
             }
-            if(!Validator.emailAddressValidator(binding.etEmail.text.toString())){
-                binding.tilEmail.isErrorEnabled=true
-                binding.tilEmail.error="Enter Valid Email Id"
-                return
+            if (!Validator.mobileNumValidator(binding.etMobile.text.toString())) {
+                binding.tilMobile.isErrorEnabled = true
+                binding.tilMobile.error = "Enter Valid Mobile No."
+                error = true
+            } else {
+                binding.tilMobile.isErrorEnabled = false
             }
-            if(!Validator.strongPasswordValidator(binding.etPassword.text.toString())){
-                binding.tilPassword.isErrorEnabled=true
-                binding.tilPassword.error="Enter Strong Password"
-                return
+            if (!Validator.emailAddressValidator(binding.etEmail.text.toString())) {
+                binding.tilEmail.isErrorEnabled = true
+                binding.tilEmail.error = "Enter Valid Email Id"
+                error = true
+            } else {
+                binding.tilEmail.isErrorEnabled = false
             }
-            if(!Validator.confirmPasswordValidator(binding.etPassword.text.toString(),binding.etConfirmPass.text.toString())){
-                binding.tilConfirmPass.isErrorEnabled=true
-                binding.tilConfirmPass.error="Passwords didn't match"
-                return
+            if (!Validator.strongPasswordValidator(binding.etPassword.text.toString())) {
+                binding.tilPassword.isErrorEnabled = true
+                binding.tilPassword.error = "Enter Strong Password"
+                error = true
+            } else {
+                binding.tilPassword.isErrorEnabled = false
             }
+            if (!Validator.confirmPasswordValidator(
+                    binding.etPassword.text.toString(),
+                    binding.etConfirmPass.text.toString()
+                )
+            ) {
+                binding.tilConfirmPass.isErrorEnabled = true
+                binding.tilConfirmPass.error = "Passwords didn't match"
+                error = true
+            } else {
+                binding.tilConfirmPass.isErrorEnabled = false
+            }
+            if (error)
+                return
             lifecycleScope.launch {
+                error = false
                 val isMobileNoUnique =
                     !signUpViewModel.isMobileAlreadyExiists(binding.etMobile.text.toString())
                 val isEmailUnique =
@@ -105,13 +142,15 @@ class SignUpActivity : AppCompatActivity() {
                 if (!isEmailUnique) {
                     binding.tilEmail.isErrorEnabled = true
                     binding.tilEmail.error = "Email already exists"
-                    return@launch
+                    error = true
                 }
                 if (!isMobileNoUnique) {
                     binding.tilMobile.isErrorEnabled = true
                     binding.tilMobile.error = "Mobile No. already exists"
-                    return@launch
+                    error = true
                 }
+                if (error)
+                    return@launch
 
                 startNextActivity()
             }
@@ -122,7 +161,11 @@ class SignUpActivity : AppCompatActivity() {
 
         lifecycleScope.launch {
 
+            val sharedPref =
+                getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE) ?: return@launch
+//            val loaded=
             val user = User(
+//                account.user_id,
                 name = binding.etName.text.toString(),
                 gender = if (binding.radioMale.isChecked) "M" else "F",
                 dob = getDateFromString(binding.etDob.text.toString())!!,
@@ -133,22 +176,52 @@ class SignUpActivity : AppCompatActivity() {
                 profile_pic = null
 
             )
-
             val account = Account(
+                user_id = user.user_id,
                 email = binding.etEmail.text.toString(),
                 mobile_no = binding.etMobile.text.toString(),
                 password = binding.etPassword.text.toString()
             )
+            Log.i(TAG, user.toString())
+
+
+            var loaded = sharedPref.getInt("DATA_LOADED", -1)
+//            Toast.makeText(this@SignUpActivity, "loaded=$loaded", Toast.LENGTH_SHORT).show()
+            userProfileViewModel.loaded = false
+            if (loaded == -1) {
+                binding.loadingScreen.visibility = View.VISIBLE
+                binding.signUpScreen.visibility = View.GONE
+                injectDataViewModel.context = application
+//                injectDataViewModel.addUsers()
+
+                while (injectDataViewModel.count > userProfileViewModel.getNoOfUsers()) {
+                    Log.i(
+                        TAG,
+                        "inject count=${injectDataViewModel.count}, noOfUsers=${userProfileViewModel.getNoOfUsers()}"
+                    )
+                }
+                Log.i(TAG, "MainAct Loaded")
+                val editor = sharedPref.edit()
+                editor.putInt("DATA_LOADED", 1)
+                userProfileViewModel.loaded = true
+                loaded = 1
+                editor.apply()
+            } else {
+                binding.loadingScreen.visibility = View.GONE
+                binding.signUpScreen.visibility = View.VISIBLE
+            }
+
             signUpViewModel.createAccount(account, user)
 
-            val sharedPref =
-                getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE) ?: return@launch
-
-            val userId = sharedPref.getInt(CURRENT_USER_ID, -1)
+            val userId = signUpViewModel.getUserByEmail(binding.etEmail.text.toString())
             val editor = sharedPref.edit()
             editor.putInt(
                 CURRENT_USER_ID,
-                signUpViewModel.getUserByEmail(binding.etEmail.text.toString())
+                userId
+            )
+            editor.putString(
+                CURRENT_USER_GENDER,
+                user.gender
             )
             editor.apply()
 
@@ -166,15 +239,30 @@ class SignUpActivity : AppCompatActivity() {
 
             val intent = Intent(this@SignUpActivity, SignUpNextPageActivity::class.java)
             startActivity(intent)
+            finish()
         }
     }
 
 
+//    override fun onBackPressed() {
+//        super.onBackPressed()
+//        val intent = Intent(this, SignInActivity::class.java)
+//        startActivity(intent)
+//        finish()
+//    }
+
     private fun initDatePicker() {
 //        binding.imgPickDate.setOnClickListener {
-        val datePicker = DatePickerFragment(true)
+        val datePicker = DatePickerFragment(null, binding.etDob.text.toString().ifBlank { null })
         datePicker.datePickerListener =
-            DatePickerListener { date -> binding.etDob.setText(date) }
+            DatePickerListener { date ->
+                binding.etDob.setText(date)
+//                Toast.makeText(
+//                    this@SignUpActivity,
+//                    calculateAge(getDateFromString(binding.etDob.text.toString())!!).toString(),
+//                    Toast.LENGTH_SHORT
+//                ).show()
+            }
         datePicker.show(supportFragmentManager, "date-picker")
 //        }
     }

@@ -15,7 +15,7 @@ interface ShortlistsDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun addShortlist(shortlist: Shortlists)
 
-    @Query("SELECT shortlisted_user_id FROM shortlists WHERE user_id= :userId")
+    @Query("SELECT shortlisted_user_id FROM shortlists WHERE user_id= :userId ORDER BY id DESC")
     fun getShortlistedProfiles(userId: Int): LiveData<List<Int>>
 
     @Query("DELETE FROM shortlists WHERE user_id= :userId AND shortlisted_user_id= :shortlistedUserId")

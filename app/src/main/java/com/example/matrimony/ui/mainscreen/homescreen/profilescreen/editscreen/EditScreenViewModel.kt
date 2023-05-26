@@ -12,7 +12,7 @@ class EditScreenViewModel:ViewModel() {
     var drinking=""
     var smoking=""
     var foodType=""
-    var hobbies= mutableListOf<String>()
+    var hobbies= sortedSetOf<String>()
     var fathersName=""
     var mothersName=""
     var noOfBrothers=""

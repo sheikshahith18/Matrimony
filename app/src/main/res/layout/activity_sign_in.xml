@@ -7,12 +7,42 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/banner"
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="50dp"
+                android:layout_marginEnd="12dp"
+                android:layout_height="50dp"
+                app:cardCornerRadius="50dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_launcher_round" />
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/henry_penny_regular"
+                android:text="Vivahaa"
+                android:textSize="30dp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/tv_sign_in_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="64dp"
             android:fontFamily="cursive"
             android:text="@string/sign_in"
             android:textSize="25sp"
@@ -20,7 +50,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/banner" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/til_email_or_mobile"
@@ -84,6 +114,10 @@
         <TextView
             android:padding="10dp"
             android:id="@+id/tv_login_via_otp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:enabled="true"
+            android:focusable="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
@@ -102,6 +136,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:layout_marginTop="32dp"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:enabled="true"
+            android:focusable="true"
             android:layout_marginEnd="32dp"
             android:text="@string/forgot_password"
             android:textColor="@color/red"
@@ -133,7 +171,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
             android:text="@string/create_one"
-
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:enabled="true"
+            android:focusable="true"
             android:paddingEnd="10dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"

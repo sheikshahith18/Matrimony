@@ -64,17 +64,6 @@ class ForgotPasswordActivity : AppCompatActivity() {
 
     private fun goToEnterOtpPage() {
 
-        GlobalScope.launch {
-            val sharedPref =
-                getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE) ?: return@launch
-            val editor = sharedPref.edit()
-            editor.putInt(
-                "CURRENT_USER_ID",
-                loginViewModel.getUserByMobile(binding.etMobile.text.toString())
-            )
-            editor.apply()
-        }
-
         val intent = Intent(this, EnterOtpActivity::class.java)
         intent.putExtra("class_name", "ForgotPasswordActivity")
         intent.putExtra("mobile_no","${binding.etMobile.text.toString()}")

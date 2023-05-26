@@ -13,6 +13,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
 import com.example.matrimony.R
 import com.example.matrimony.TAG
 import com.example.matrimony.databinding.ActivityEnterOtpBinding
@@ -97,7 +98,7 @@ class EnterOtpActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
-    fun sendOtp() {
+    private fun sendOtp() {
 
         val options = PhoneAuthOptions.newBuilder(firebaseAuth)
             .setPhoneNumber("+91$mobileNo")       // Phone number to verify
@@ -160,6 +161,16 @@ class EnterOtpActivity : AppCompatActivity() {
 
     private fun verifyOtp() {
 
+        if (binding.etOtp1.text.toString().isBlank()
+            || binding.etOtp2.text.toString().isBlank()
+            || binding.etOtp3.text.toString().isBlank()
+            || binding.etOtp4.text.toString().isBlank()
+            || binding.etOtp5.text.toString().isBlank()
+            || binding.etOtp6.text.toString().isBlank()
+        ) {
+            Toast.makeText(this, "Enter OTP to Continue", Toast.LENGTH_SHORT).show()
+            return
+        }
         otp = binding.etOtp1.text.toString() +
                 binding.etOtp2.text.toString() +
                 binding.etOtp3.text.toString() +
@@ -190,7 +201,7 @@ class EnterOtpActivity : AppCompatActivity() {
                     finish()
                 } else if (intent.getStringExtra("class_name") == LoginViaOTPActivity::class.simpleName) {
 
-                    GlobalScope.launch {
+                    lifecycleScope.launch {
                         val sharedPref =
                             getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)!!
                         val editor = sharedPref.edit()
@@ -203,7 +214,9 @@ class EnterOtpActivity : AppCompatActivity() {
                             "EnterOtp fetchedUser ${sharedPref.getInt(CURRENT_USER_ID, -11)}"
                         )
                         editor.apply()
-                        startActivity(Intent(this@EnterOtpActivity, MainActivity::class.java))
+                        val intent=Intent(this@EnterOtpActivity, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
                         firebaseAuth.signOut()
                         finish()
                     }

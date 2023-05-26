@@ -11,7 +11,7 @@
         android:icon="@drawable/favourite_selector"
         app:showAsAction="always"
         android:id="@+id/menu_shortlisted_profiles"
-        android:title="Shortlists" />
+        android:title="Shortlisted Profiles" />
     <item
         android:icon="@drawable/ic_request_hollow"
         app:showAsAction="always"

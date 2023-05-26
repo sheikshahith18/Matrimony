@@ -37,6 +37,7 @@ import com.example.matrimony.ui.mainscreen.MainActivity
 import com.example.matrimony.ui.mainscreen.UserProfileViewModel
 import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.PartnerPreferenceViewModel
 import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.ViewProfileActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
 import com.example.matrimony.ui.mainscreen.homescreen.settingsscreen.SettingsActivity
 import com.example.matrimony.ui.mainscreen.homescreen.settingsscreen.SettingsViewModel
 import com.example.matrimony.utils.CURRENT_USER_GENDER
@@ -57,6 +58,8 @@ class HomePageFragment : Fragment() {
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
     private val partnerPreferenceViewModel by activityViewModels<PartnerPreferenceViewModel>()
 
+    private val albumViewModel by activityViewModels<AlbumViewModel>()
+
     private var fragmentView: View? = null
 
     override fun onCreateView(
@@ -70,10 +73,6 @@ class HomePageFragment : Fragment() {
                 DataBindingUtil.inflate(inflater, R.layout.fragment_home_page, container, false)
             fragmentView = binding.root
 
-//            lifecycleScope.launch {
-//                val count = userProfileViewModel.getNoOfUsers()
-//                Log.i(TAG, "user_count $count")
-//            }
             val sharedPref =
                 requireActivity().getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
             val userId = sharedPref.getInt(CURRENT_USER_ID, -1)
@@ -95,13 +94,17 @@ class HomePageFragment : Fragment() {
                                 return@observe
                             }
 
+                            clearFilters()
                             val editor = sharedPref.edit()
                             editor.putString("FILTER_STATUS", "applied")
                             editor.putInt("AGE_FROM_FILTER", preferences.age_from)
                             editor.putInt("AGE_TO_FILTER", preferences.age_to)
                             editor.putString("HEIGHT_FROM_FILTER", preferences.height_from)
                             editor.putString("HEIGHT_TO_FILTER", preferences.height_to)
-                            editor.putString("MARITAL_STATUS_FILTER", preferences.marital_status)
+                            editor.putStringSet(
+                                "MARITAL_STATUS_FILTER",
+                                preferences.marital_status?.toSet() ?: emptySet()
+                            )
                             editor.putStringSet(
                                 "EDUCATION_FILTER",
                                 preferences.education?.toSet() ?: emptySet()
@@ -114,15 +117,11 @@ class HomePageFragment : Fragment() {
                                 "OCCUPATION_FILTER",
                                 preferences.occupation?.toSet() ?: emptySet()
                             )
-                            editor.putString(
-                                "ANNUAL_INCOME_FILTER",
-                                preferences.annual_income ?: ""
-                            )
-                            editor.putString("RELIGION_FILTER", preferences.religion ?: "")
 //                            editor.putString(
 //                                "ANNUAL_INCOME_FILTER",
 //                                preferences.annual_income ?: ""
 //                            )
+                            editor.putString("RELIGION_FILTER", preferences.religion ?: "")
                             editor.putStringSet(
                                 "CASTE_FILTER",
                                 preferences.caste?.toSet() ?: emptySet()
@@ -151,6 +150,7 @@ class HomePageFragment : Fragment() {
                 }
             }
             binding.tvSeeAllOtherProfiles.setOnClickListener {
+                clearFilters()
                 (requireActivity() as MainActivity).apply {
 //                    setCurrentMenuItem(R.id.nav_search)
                     findViewById<BottomNavigationView>(R.id.bottom_nav_view).selectedItemId =
@@ -210,6 +210,7 @@ class HomePageFragment : Fragment() {
 
             binding.homePageLayout.visibility = View.GONE
             binding.loadingScreen.visibility = View.VISIBLE
+
             setUpNavigationDrawer()
             initSuccessViewPager()
             initPreferredProfiles()
@@ -219,16 +220,9 @@ class HomePageFragment : Fragment() {
         return fragmentView
     }
 
-    override fun onStart() {
-        super.onStart()
-//        binding.homePageLayout.visibility = View.GONE
-//        binding.loadingScreen.visibility = View.VISIBLE
-    }
 
     override fun onResume() {
         super.onResume()
-
-//        binding.viewPagerSuccessStoryImages.currentItem = userProfileViewModel.currentSwipeImage
 
         lifecycleScope.launch {
 
@@ -258,6 +252,12 @@ class HomePageFragment : Fragment() {
         }
         if (!userProfileViewModel.profilesLoaded) {
             initPreferredProfiles()
+        }
+        if(sharedPref.getBoolean("personal_info_updated",false)) {
+            setUpNavigationDrawer()
+            val editor=sharedPref.edit()
+            editor.remove("personal_info_update")
+            editor.apply()
         }
     }
 
@@ -292,7 +292,10 @@ class HomePageFragment : Fragment() {
 
 //        binding.viewPagerSuccessStoryImages.currentItem = userProfileViewModel.currentSwipeImage
 
-        binding.viewPagerSuccessStoryImages.setCurrentItem(userProfileViewModel.currentSwipeImage,false)
+        binding.viewPagerSuccessStoryImages.setCurrentItem(
+            userProfileViewModel.currentSwipeImage,
+            false
+        )
 
         viewPager.setPageTransformer(false, SlidePageTransformer())
 
@@ -354,7 +357,13 @@ class HomePageFragment : Fragment() {
     private fun setUpNavigationDrawer() {
 
 
-        val toggle = ActionBarDrawerToggle(requireActivity(), binding.drawerLayout, binding.toolbar, R.string.nav_open, R.string.nav_close)
+        val toggle = ActionBarDrawerToggle(
+            requireActivity(),
+            binding.drawerLayout,
+            binding.toolbar,
+            R.string.nav_open,
+            R.string.nav_close
+        )
         binding.drawerLayout.addDrawerListener(toggle)
         toggle.syncState()
 
@@ -368,7 +377,12 @@ class HomePageFragment : Fragment() {
             userProfileViewModel.getNameOfUser(userProfileViewModel.userId)
                 .observe(viewLifecycleOwner) {
                     profileName.text = it
+                    binding.tvProfileName.text=it
                 }
+//            albumViewModel.getProfilePic(userProfileViewModel.userId).observe(viewLifecycleOwner){
+//                if (it != null) profileImage.setImageBitmap(it.image)
+//                else profileImage.setImageResource(R.drawable.default_profile_pic)
+//            }
             userProfileViewModel.getProfilePic(userProfileViewModel.userId)
                 .observe(viewLifecycleOwner) {
                     if (it != null) profileImage.setImageBitmap(it)
@@ -416,7 +430,7 @@ class HomePageFragment : Fragment() {
                             }
                             requireActivity().finish()
 
-                            userProfileViewModel.initialLogin=true
+                            userProfileViewModel.initialLogin = true
 
                             val sharedPref = requireActivity().getSharedPreferences(
                                 MY_SHARED_PREFERENCES, Context.MODE_PRIVATE
@@ -439,7 +453,6 @@ class HomePageFragment : Fragment() {
         }
 
     }
-
 
 
     private val viewFullProfile: (Int) -> Unit = { userId: Int ->
@@ -478,7 +491,8 @@ class HomePageFragment : Fragment() {
 
 
                     val profilesGridAdapter = ProfilesGridAdapter(
-                        userProfileViewModel, settingsViewModel, viewFullProfile
+                        requireActivity(),
+                        userProfileViewModel, settingsViewModel, albumViewModel, viewFullProfile
                     )
                     profilesRecyclerView.adapter = profilesGridAdapter
                     profilesGridAdapter.stateRestorationPolicy =
@@ -501,16 +515,14 @@ class HomePageFragment : Fragment() {
                             preferences.age_to,
                             heightArray.size,
                             heightArray,
-                            if (preferences.marital_status == null) 0 else 1,
-                            if (preferences.marital_status != null) mutableListOf(preferences.marital_status!!) else mutableListOf(),
+                            preferences.marital_status?.size ?: 0,
+                            preferences.marital_status ?: emptyList(),
                             preferences.education?.size ?: 0,
                             preferences.education ?: emptyList(),
                             preferences.employed_in?.size ?: 0,
                             preferences.employed_in ?: emptyList(),
                             preferences.occupation?.size ?: 0,
                             preferences.occupation ?: emptyList(),
-                            if (preferences.annual_income == null) 0 else 1,
-                            if (preferences.annual_income != null) preferences.annual_income!! else "",
                             if (preferences.religion == null) 0 else 1,
                             if (preferences.religion != null) mutableListOf(preferences.religion!!) else mutableListOf(),
                             preferences.caste?.size ?: 0,
@@ -535,6 +547,11 @@ class HomePageFragment : Fragment() {
                                 "initPref prefProf size ${userProfileViewModel.preferredUserIds.size}"
                             )
                             profilesGridAdapter.setList(it.take(5))//.take(5))
+                            if (it.isEmpty()) {
+                                binding.rvPreferredProfiles.visibility = View.GONE
+                                binding.tvSeeAllPrefProfiles.visibility = View.GONE
+                                binding.noPreferredProfilesMessage.visibility = View.VISIBLE
+                            }
                             initOtherProfiles()
                         }
                     }
@@ -557,7 +574,13 @@ class HomePageFragment : Fragment() {
             GridLayoutManager(requireContext(), 1, GridLayoutManager.HORIZONTAL, false)
 
         val profilesGridAdapter =
-            ProfilesGridAdapter(userProfileViewModel, settingsViewModel, viewFullProfile)
+            ProfilesGridAdapter(
+                requireActivity(),
+                userProfileViewModel,
+                settingsViewModel,
+                albumViewModel,
+                viewFullProfile
+            )
         profilesRecyclerView.adapter = profilesGridAdapter
         lifecycleScope.launch {
             val gender = if (userProfileViewModel.gender == "M") "F" else "M"
@@ -604,7 +627,6 @@ class HomePageFragment : Fragment() {
         editor.remove("EDUCATION_FILTER")
         editor.remove("EMPLOYED_IN_FILTER")
         editor.remove("OCCUPATION_FILTER")
-        editor.remove("ANNUAL_INCOME_FILTER")
         editor.remove("RELIGION_FILTER")
         editor.remove("CASTE_FILTER")
         editor.remove("STAR_FILTER")
@@ -616,5 +638,6 @@ class HomePageFragment : Fragment() {
 
         Log.i(TAG, "clearPref filterStat ${sharedPref.getString("FILTER_STATUS", "null")}")
     }
+
 
 }

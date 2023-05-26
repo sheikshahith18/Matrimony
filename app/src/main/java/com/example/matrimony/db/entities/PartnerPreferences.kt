@@ -18,22 +18,22 @@ data class PartnerPreferences(
     var age_to: Int=45,
     var height_from: String="4 ft 6 in",
     var height_to: String="6 ft",
-    var marital_status: String?=null,
     @TypeConverters(ListConverter::class)
-    var education: List<String>? = emptyList<String>(),
+    var marital_status: List<String>?=null,
     @TypeConverters(ListConverter::class)
-    var employed_in: List<String>? = emptyList<String>(),
+    var education: List<String>? = null,
     @TypeConverters(ListConverter::class)
-    var occupation: List<String>? = emptyList<String>(),
-    var annual_income: String? =null,
+    var employed_in: List<String>? = null,
+    @TypeConverters(ListConverter::class)
+    var occupation: List<String>? = null,
     var religion: String? =null,
     @TypeConverters(ListConverter::class)
-    var caste: List<String>? = emptyList<String>(),
+    var caste: List<String>? = null,
     @TypeConverters(ListConverter::class)
-    var star: List<String>? = emptyList<String>(),
+    var star: List<String>? = null,
     @TypeConverters(ListConverter::class)
-    var zodiac: List<String>? = emptyList<String>(),
+    var zodiac: List<String>? = null,
     var state: String? = null,
     @TypeConverters(ListConverter::class)
-    var city: List<String>? = emptyList<String>()
+    var city: List<String>? = null
 )

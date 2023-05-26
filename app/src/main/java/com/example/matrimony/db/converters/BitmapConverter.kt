@@ -11,7 +11,7 @@ import java.io.ByteArrayOutputStream
 
 class BitmapConverter {
 
-    private val bitmapCache = LruCache<String, Bitmap>(100)
+    private val bitmapCache = LruCache<String, Bitmap>((Runtime.getRuntime().maxMemory()/1024/8).toInt())
 
     @TypeConverter
     fun toBitmap(byteArray: ByteArray?): Bitmap? {

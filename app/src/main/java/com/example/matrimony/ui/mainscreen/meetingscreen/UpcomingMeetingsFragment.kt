@@ -17,6 +17,7 @@ import com.example.matrimony.TAG
 import com.example.matrimony.adapters.UpcomingMeetingsAdapter
 import com.example.matrimony.databinding.FragmentUpcomingMeetingsBinding
 import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.ViewProfileActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
 import com.example.matrimony.utils.CURRENT_USER_ID
 import com.example.matrimony.utils.MY_SHARED_PREFERENCES
 import dagger.hilt.android.AndroidEntryPoint
@@ -30,6 +31,7 @@ class UpcomingMeetingsFragment : Fragment() {
     private var fragmentView: View? = null
 
     private val meetingsViewModel by activityViewModels<MeetingsViewModel>()
+    private val albumViewModel by activityViewModels<AlbumViewModel>()
 
 
 
@@ -79,7 +81,7 @@ class UpcomingMeetingsFragment : Fragment() {
 
         meetingRequestsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        val adapter = UpcomingMeetingsAdapter(requireContext(),meetingsViewModel,editMeeting,viewFullProfile)
+        val adapter = UpcomingMeetingsAdapter(requireActivity(),meetingsViewModel,albumViewModel,editMeeting,viewFullProfile)
         meetingRequestsRecyclerView.adapter = adapter
         lifecycleScope.launch {
 

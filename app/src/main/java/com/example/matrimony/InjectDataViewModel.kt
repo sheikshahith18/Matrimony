@@ -1,9 +1,13 @@
 package com.example.matrimony
 
+import android.app.Application
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Looper
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.matrimony.db.entities.*
@@ -14,23 +18,36 @@ import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.ZoneId
 import java.util.*
+import java.util.logging.Handler
 import javax.inject.Inject
 
+
+const val BITMAP_TAG="bitmap"
 @HiltViewModel
 class InjectDataViewModel
 @Inject
 constructor(
     private val injectDataRepository: InjectDataRepository,
+    private val userRepository: UserRepository,
+    private val shortlistsRepository: ShortlistsRepository,
+    private val connectionsRepository: ConnectionsRepository,
+    private val partnerPreferenceRepository: PartnerPreferenceRepository,
+    private val meetingsRepository: MeetingsRepository,
     private val habitsRepository: HabitsRepository,
     private val familyDetailsRepository: FamilyDetailsRepository,
     private val albumRepository: AlbumRepository,
     private val privacySettingsRepository: PrivacySettingsRepository,
-    private val successStoriesRepository: SuccessStoriesRepository
 
 ) :
     ViewModel() {
 
-    lateinit var context: Context
+    lateinit var context: Application
+
+//    val applicationContext=context.applicationContext
+    val handler= android.os.Handler(Looper.getMainLooper())
+
+    var initial=true
+    val count=62
 
     suspend fun addAccount() {
         Log.i(TAG, "initAccount")
@@ -165,7 +182,7 @@ constructor(
             "8999999927",
             "8999999928",
         )
-        val accountsArray = Array<Account>(62) {
+        val accountsArray = Array<Account>(count) {
             Account(email = emailArray[it], mobile_no = mobileArray[it], password = "Qwerty@123")
         }
 
@@ -175,7 +192,7 @@ constructor(
             injectDataRepository.addAccount(it)
         }
 
-        for (i in 1..62) {
+        for (i in 1..count) {
             privacySettingsRepository.addPrivacySettings(
                 PrivacySettings(
                     i,
@@ -195,68 +212,68 @@ constructor(
         val nameArr = arrayOf(
             "Silambarasan",
             "Anirudh",
-            "GV Prakash",
-            "Yuvan Raja",
+            "Prakash",
+            "Yuvan",
             "Nani",
             "Dulquer",
-            "Harish Kalyan",
-            "Siva Karthikeyan",
+            "Harish",
+            "Siva Kumar",
             "Siddharth",
-            "Hrithik Roshan",
-            "Tovino Thomas",
+            "Roshan",
+            "Tovino",
             "Dhanush",
-            "Atharva Murali",
-            "Ma Ka Pa Anand",
-            "Ashok Selvan",
+            "Atharva",
+            "Anand",
+            "Ashok",
             "Trisha",
-            "Megha Akash",
-            "Sri Divya",
+            "Megha",
+            "Divya",
             "Anupama",
-            "Amy Jackson",
-            "Shreya Goshal",
-            "Nazriya Nazim",
-            "Priyanka Mohan",
+            "Amy",
+            "Shreya",
+            "Nazriya",
+            "Priyanka",
             "Priya Bhavani",
-            "Vani Bhojan",
-            "Shwetha Mohan",
+            "Vani",
+            "Shwetha",
             "Samantha",
             "Priyanka",
-            "Sai Pallavi",
-            "Deepika Padukone",
-            "Keerthy Suresh",
+            "Pallavi",
+            "Deepika",
+            "Keerthy",
 
 
-            "Silambarasan",
-            "Anirudh",
-            "GV Prakash",
-            "Yuvan Raja",
-            "Nani",
-            "Dulquer",
-            "Harish Kalyan",
-            "Siva Karthikeyan",
-            "Siddharth",
-            "Hrithik Roshan",
-            "Tovino Thomas",
-            "Dhanush",
-            "Atharva Murali",
-            "Ma Ka Pa Anand",
-            "Ashok Selvan",
-            "Trisha",
-            "Megha Akash",
-            "Sri Divya",
-            "Anupama",
-            "Amy Jackson",
-            "Shreya Goshal",
-            "Nazriya Nazim",
-            "Priyanka Mohan",
-            "Priya Bhavani",
-            "Vani Bhojan",
-            "Shwetha Mohan",
-            "Samantha",
-            "Priyanka",
-            "Sai Pallavi",
-            "Deepika Padukone",
-            "Keerthy Suresh",
+            "Raj",
+            "Ram",
+            "Rishi",
+            "Aarya",
+            "Arun",
+            "Karthick",
+            "Kannan",
+            "Kishore",
+            "Vijay",
+            "Vishwa",
+            "Aravind",
+            "Hariesh",
+            "Ganesh",
+            "Navin",
+            "Ajay",
+            "Aishwarya",
+            "Ramya",
+            "Aalia",
+            "Rehsmi",
+            "Preethi",
+            "Anjali",
+            "Vaishnavi",
+            "Lavanya",
+            "Shivani",
+            "Shivanya",
+            "Ankitha",
+            "Rithika",
+            "Aadhira",
+            "Manju",
+            "Aasha",
+            "Kavya",
         )
         val genderArr = arrayOf(
             "M",
@@ -331,7 +348,7 @@ constructor(
             getDateFromString("31/08/1979")!!,
             getDateFromString("24/02/1982")!!,
             getDateFromString("28/07/1986")!!,
-            getDateFromString("29/06/1990")!!,
+            getDateFromString("30/06/1990")!!,
             getDateFromString("17/02/1985")!!,
             getDateFromString("17/04/1979")!!,
             getDateFromString("10/01/1980")!!,
@@ -358,37 +375,37 @@ constructor(
             getDateFromString("17/10/1992")!!,
 
 
-            getDateFromString("03/02/1983")!!,
             getDateFromString("16/10/1990")!!,
-            getDateFromString("13/06/1987")!!,
+            getDateFromString("03/02/1983")!!,
             getDateFromString("31/08/1979")!!,
-            getDateFromString("24/02/1982")!!,
+            getDateFromString("13/06/1987")!!,
             getDateFromString("28/07/1986")!!,
-            getDateFromString("29/06/1990")!!,
+            getDateFromString("24/02/1982")!!,
             getDateFromString("17/02/1985")!!,
-            getDateFromString("17/04/1979")!!,
+            getDateFromString("30/06/1990")!!,
             getDateFromString("10/01/1980")!!,
-            getDateFromString("21/01/1989")!!,
+            getDateFromString("17/04/1979")!!,
             getDateFromString("28/07/1983")!!,
-            getDateFromString("07/05/1989")!!,
+            getDateFromString("21/01/1989")!!,
             getDateFromString("20/05/1986")!!,
-            getDateFromString("08/11/1989")!!,
+            getDateFromString("07/05/1989")!!,
             getDateFromString("04/05/1983")!!,
-            getDateFromString("26/10/1995")!!,
+            getDateFromString("08/11/1989")!!,
             getDateFromString("01/04/1993")!!,
-            getDateFromString("18/02/1996")!!,
+            getDateFromString("26/10/1995")!!,
             getDateFromString("31/01/1992")!!,
-            getDateFromString("12/03/1984")!!,
+            getDateFromString("18/02/1996")!!,
             getDateFromString("20/12/1994")!!,
-            getDateFromString("20/11/1994")!!,
+            getDateFromString("12/03/1984")!!,
             getDateFromString("31/12/1989")!!,
-            getDateFromString("28/10/1988")!!,
+            getDateFromString("20/11/1994")!!,
             getDateFromString("19/11/1985")!!,
-            getDateFromString("28/04/1987")!!,
+            getDateFromString("28/10/1988")!!,
             getDateFromString("28/04/1992")!!,
-            getDateFromString("09/05/1992")!!,
+            getDateFromString("28/04/1987")!!,
             getDateFromString("05/01/1986")!!,
             getDateFromString("17/10/1992")!!,
+            getDateFromString("09/05/1992")!!,
         )
 
 //        val dobArr = Array<Date>(12) {
@@ -430,38 +447,39 @@ constructor(
             "Atheism",
             "Hindu",
 
-            "Hindu",
             "Christian",
+            "Hindu",
+            "Muslim",
             "Hindu",
             "Muslim",
             "Atheism",
-            "Muslim",
-            "Hindu",
-            "Christian",
-            "Atheism",
-            "Muslim",
-            "Christian",
-            "Hindu",
-            "Hindu",
-            "Christian",
-            "Hindu",
-            "Hindu",
-            "Muslim",
-            "Muslim",
-            "Hindu",
-            "Christian",
-            "Hindu",
-            "Muslim",
-            "Hindu",
-            "Atheism",
-            "Hindu",
-            "Hindu",
             "Christian",
             "Hindu",
             "Muslim",
             "Atheism",
             "Hindu",
+            "Christian",
+            "Christian",
+            "Hindu",
+            "Hindu",
+            "Hindu",
+            "Muslim",
+            "Muslim",
+            "Christian",
+            "Hindu",
+            "Muslim",
+            "Hindu",
+            "Atheism",
+            "Hindu",
+            "Hindu",
+            "Hindu",
+            "Hindu",
+            "Christian",
+            "Atheism",
+            "Hindu",
+            "Muslim",
         )
+
         val casteArr = arrayOf(
             "Nadar",
             "Adventist",
@@ -495,37 +513,38 @@ constructor(
             null,
             "Chettiyar",
 
-            "Nadar",
+
             "Adventist",
-            "Gounder",
-            "Ansari",
-            null,
-            "Lebbai",
-            "Sourashtra",
-            "Roman Catholic",
-            null,
-            "Hanafi",
-            "Baptist",
-            "Others",
-            "Others",
-            "Latin Catholic",
-            "Brahmin",
-            "Chettiyar",
-            "Malik",
-            "Lebbai",
-            "Gounder",
-            "Unspecified",
-            "Unspecified",
-            "Unspecified",
             "Nadar",
-            null,
-            "Sourashtra",
-            "Others",
-            "Evangelist",
+            "Ansari",
             "Gounder",
             "Lebbai",
             null,
+            "Roman Catholic",
+            "Sourashtra",
+            "Hanafi",
+            null,
+            "Others",
+            "Baptist",
+            "Latin Catholic",
+            "Others",
             "Chettiyar",
+            "Brahmin",
+            "Lebbai",
+            "Malik",
+            "Unspecified",
+            "Gounder",
+            "Unspecified",
+            "Unspecified",
+            null,
+            "Nadar",
+            "Others",
+            "Sourashtra",
+            "Gounder",
+            "Evangelist",
+            null,
+            "Chettiyar",
+            "Lebbai",
         )
         val zodiacArr = arrayOf(
             "None",
@@ -561,37 +580,37 @@ constructor(
             "Leo",
 
 
-            "None",
             "Aries",
-            "Taurus",
-            "Gemini",
-            "Cancer",
-            "Leo",
-            "Vigro",
-            "Libra",
-            "Scorpio",
-            "Sagittarius",
-            "Capricorn",
-            "Aquarius",
-            "Pisces",
             "None",
+            "Gemini",
+            "Taurus",
+            "Leo",
+            "Cancer",
+            "Libra",
+            "Vigro",
+            "Sagittarius",
+            "Scorpio",
+            "Aquarius",
+            "Capricorn",
+            "None",
+            "Pisces",
+            "Taurus",
             "Aries",
-            "Taurus",
+            "Cancer",
             "Gemini",
-            "Cancer",
-            "Leo",
             "Vigro",
-            "Libra",
+            "Leo",
             "Scorpio",
+            "Libra",
+            "Capricorn",
             "Sagittarius",
-            "Capricorn",
-            "Aquarius",
             "Pisces",
-            "Capricorn",
             "Aquarius",
-            "None",
+            "Aquarius",
+            "Capricorn",
             "Cancer",
             "Leo",
+            "None",
         )
         val starArr = arrayOf(
             "None",
@@ -627,37 +646,37 @@ constructor(
             "Revati",
 
 
-            "None",
             "Ashwini",
-            "Bharani",
+            "None",
             "Krittika",
-            "Rohini",
+            "Bharani",
             "Mrigashira",
-            "Ardra",
+            "Rohini",
             "Punarvasu",
-            "Pushya",
+            "Ardra",
             "Ashlesha",
-            "Magha",
+            "Pushya",
             "Purva Phalguni",
-            "Uttara Phalguni",
+            "Magha",
             "Hasta",
-            "Chitra",
+            "Uttara Phalguni",
             "Swati",
-            "Vishakha",
+            "Chitra",
             "Anuradha",
-            "Jyeshtha",
+            "Vishakha",
             "Mula",
-            "Purva Ashadha",
+            "Jyeshtha",
             "Uttara Ashadha",
-            "Shravana",
+            "Purva Ashadha",
             "Shravana",
             "Dhanishta",
             "Shatabhisha",
+            "Shravana",
+            "Uttara Bhadrapada",
             "Purva Bhadrapada",
-            "Uttara Bhadrapada",
-            "Uttara Bhadrapada",
             "Revati",
             "Revati",
+            "Uttara Bhadrapada",
         )
 
         val stateArray = arrayOf(
@@ -694,38 +713,39 @@ constructor(
             "Tamilnadu",
 
 
-            "Andhra Pradesh",
             "Karnataka",
-            "Kerala",
-            "Tamilnadu",
-            "Others",
             "Andhra Pradesh",
-            "Karnataka",
-            "Kerala",
             "Tamilnadu",
-            "Others",
+            "Kerala",
             "Andhra Pradesh",
-            "Karnataka",
-            "Kerala",
-            "Tamilnadu",
             "Others",
+            "Kerala",
+            "Karnataka",
+            "Others",
+            "Tamilnadu",
+            "Karnataka",
             "Andhra Pradesh",
-            "Karnataka",
-            "Kerala",
             "Tamilnadu",
-            "Others",
+            "Kerala",
             "Andhra Pradesh",
-            "Karnataka",
-            "Kerala",
-            "Tamilnadu",
             "Others",
+            "Kerala",
+            "Karnataka",
+            "Others",
+            "Tamilnadu",
+            "Karnataka",
             "Andhra Pradesh",
-            "Karnataka",
-            "Kerala",
             "Tamilnadu",
+            "Kerala",
+            "Andhra Pradesh",
             "Others",
-            "Tamilnadu"
+            "Kerala",
+            "Karnataka",
+            "Others",
+            "Tamilnadu",
+            "Tamilnadu",
         )
+
         val cityArray = arrayOf(
             "Amaravati",
             "Bangalore",
@@ -759,36 +779,36 @@ constructor(
             null,
             "Chennai",
 
-            "Amaravati",
             "Bangalore",
-            "Aluva",
+            "Amaravati",
             "Chennai",
-            null,
+            "Aluva",
             "Guntur",
-            "Hubbali",
+            null,
             "Cochin",
+            "Hubbali",
+            null,
             "Coimbatore",
-            null,
-            "Nellore",
             "Mangaluru",
-            "Kollam",
+            "Nellore",
             "Madurai",
-            null,
+            "Kollam",
             "Tirupati",
-            "Mysore",
+            null,
             "Kozhikode",
+            "Mysore",
+            null,
             "Ooty",
-            null,
-            "Visakhapatnam",
             "Udupi",
-            "Tiruvanandapuram",
+            "Amaravati",
             "Nagercoil",
+            "Tiruvanandapuram",
+            "Amaravati",
             null,
             "Others",
             "Others",
-            "Others",
-            "Others",
             null,
+            "Others",
             "Chennai",
         )
         val heightArray = arrayOf(
@@ -825,53 +845,39 @@ constructor(
             "5 ft 5 in",
 
 
-            "4 ft 6 in",
             "4 ft 7 in",
-            "4 ft 8 in",
+            "4 ft 6 in",
             "4 ft 9 in",
-            "4 ft 10 in",
+            "4 ft 8 in",
             "4 ft 11 in",
-            "5 ft",
+            "4 ft 10 in",
             "5 ft 1 in",
-            "5 ft 2 in",
+            "5 ft",
             "5 ft 3 in",
-            "5 ft 4 in",
+            "5 ft 2 in",
             "5 ft 5 in",
-            "5 ft 6 in",
+            "5 ft 4 in",
             "5 ft 7 in",
-            "5 ft 8 in",
+            "5 ft 6 in",
             "5 ft 9 in",
-            "5 ft 10 in",
+            "5 ft 8 in",
             "5 ft 11 in",
-            "6 ft",
+            "5 ft 10 in",
             "4 ft 6 in",
-            "4 ft 7 in",
+            "6 ft",
             "4 ft 8 in",
-            "4 ft 9 in",
+            "4 ft 7 in",
             "4 ft 10 in",
-            "4 ft 11 in",
+            "4 ft 9 in",
             "5 ft",
-            "5 ft 1 in",
+            "4 ft 11 in",
             "5 ft 2 in",
-            "5 ft 3 in",
+            "5 ft 1 in",
             "5 ft 4 in",
             "5 ft 5 in",
+            "5 ft 3 in",
         )
 
-        val physicalStatusArray = arrayOf(
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal"
-        )
         val educationArray = arrayOf(
             "B.E",
             "B.Tech",
@@ -906,39 +912,44 @@ constructor(
             "MBBS",
 
 
-            "B.E",
             "B.Tech",
-            "MBBS",
+            "B.E",
             "B.Arch",
+            "MBBS",
+            "B.E",
             "B.Sc",
-            "B.E",
-            "B.Tech",
             "MBBS",
-            "B.Arch",
-            "B.Sc",
-            "Others",
-            "Others",
-            "MBBS",
-            "B.E",
             "B.Tech",
-            "B.Arch",
-            "B.Sc",
-            "B.E",
-            "B.Tech",
-            "MBBS",
-            "B.Arch",
             "B.Sc",
             "Others",
-            "Others",
-            "B.E",
-            "B.Tech",
             "B.Arch",
+            "Others",
+            "MBBS",
+            "B.E",
+            "B.Arch",
+            "B.Tech",
+            "B.E",
             "B.Sc",
             "MBBS",
+            "B.Tech",
+            "B.Sc",
+            "B.Arch",
+            "Others",
+            "Others",
+            "B.Tech",
             "B.E",
             "MBBS",
+            "B.Sc",
+            "MBBS",
+            "B.Arch",
+            "B.E",
         )
-        val employedInArray = arrayOf(
+
+        val employedInArray=Array(count){
+            if(it%2==0) "Government"
+            else "Private"
+        }
+        val employedInArray1 = arrayOf(
             "Government",
             "Private",
             "Government",
@@ -1038,35 +1049,35 @@ constructor(
             "Doctor",
 
 
-            "Accountant",
             "Entrepreneur",
-            "Doctor",
+            "Accountant",
             "Manager",
-            "Marketing Professional",
+            "Doctor",
             "Software Professional",
+            "Marketing Professional",
+            "Doctor",
+            "Studying",
+            "Technician",
+            "Supervisor",
+            "Accountant",
+            "Others",
+            "Manager",
+            "Doctor",
+            "Software Professional",
+            "Marketing Professional",
+            "Supervisor",
             "Studying",
             "Doctor",
-            "Supervisor",
             "Technician",
             "Others",
             "Accountant",
-            "Doctor",
             "Manager",
-            "Marketing Professional",
-            "Software Professional",
-            "Studying",
-            "Supervisor",
-            "Technician",
-            "Doctor",
-            "Accountant",
-            "Others",
             "Entrepreneur",
-            "Manager",
-            "Marketing Professional",
             "Software Professional",
-            "Studying",
+            "Marketing Professional",
             "Supervisor",
             "Doctor",
+            "Studying",
             "Others",
             "Doctor",
         )
@@ -1104,147 +1115,219 @@ constructor(
             "Above 10 Lakhs",
 
 
-            "3-4 Lakhs",
             "4-5 Lakhs",
-            "5-6 Lakhs",
+            "3-4 Lakhs",
             "6-7 Lakhs",
-            "7-8 Lakhs",
+            "5-6 Lakhs",
             "8-9 Lakhs",
-            "9-10 Lakhs",
-            "Above 10 Lakhs",
-            "3-4 Lakhs",
-            "4-5 Lakhs",
-            "5-6 Lakhs",
-            "6-7 Lakhs",
             "7-8 Lakhs",
+            "Above 10 Lakhs",
+            "9-10 Lakhs",
+            "4-5 Lakhs",
+            "3-4 Lakhs",
+            "6-7 Lakhs",
+            "5-6 Lakhs",
             "8-9 Lakhs",
-            "9-10 Lakhs",
-            "Above 10 Lakhs",
-            "3-4 Lakhs",
-            "4-5 Lakhs",
-            "5-6 Lakhs",
-            "6-7 Lakhs",
             "7-8 Lakhs",
+            "Above 10 Lakhs",
+            "9-10 Lakhs",
+            "4-5 Lakhs",
+            "3-4 Lakhs",
+            "6-7 Lakhs",
+            "5-6 Lakhs",
             "8-9 Lakhs",
-            "9-10 Lakhs",
-            "Above 10 Lakhs",
-            "3-4 Lakhs",
-            "4-5 Lakhs",
-            "5-6 Lakhs",
-            "6-7 Lakhs",
             "7-8 Lakhs",
-            "9-10 Lakhs",
             "Above 10 Lakhs",
+            "9-10 Lakhs",
+            "4-5 Lakhs",
+            "3-4 Lakhs",
+            "6-7 Lakhs",
+            "5-6 Lakhs",
+            "Above 10 Lakhs",
+            "9-10 Lakhs",
+            "7-8 Lakhs",
         )
 
-        val familyTypeArray =Array<String>(62){
+        val familyTypeArray =Array<String>(count){
             if (it%2==0) "Joint" else "Nuclear"
         }
 
 
+
+//        handler.post {
+//        Toast.makeText(context.applicationContext,"Before Loading Images1",Toast.LENGTH_SHORT).show()
+//        }
+
+        val options=BitmapFactory.Options()
+        options.inJustDecodeBounds=false
+        options.inSampleSize=calculateInSampleSize(options,500,500)
+
+        val pic1=BitmapFactory.decodeResource(context.resources, R.drawable.simbu1,options)
+        Log.i(BITMAP_TAG,"pic1 loaded")
+        val pic2=BitmapFactory.decodeResource(context.resources, R.drawable.anirudh1,options)
+        Log.i(BITMAP_TAG,"pic2 loaded")
+        val pic3=BitmapFactory.decodeResource(context.resources, R.drawable.gvp1,options)
+        Log.i(BITMAP_TAG,"pic3 loaded")
+        val pic4=BitmapFactory.decodeResource(context.resources, R.drawable.yuvan1,options)
+        Log.i(BITMAP_TAG,"pic4 loaded")
+        val pic5=BitmapFactory.decodeResource(context.resources, R.drawable.nani1,options)
+        Log.i(BITMAP_TAG,"pic5 loaded")
+        val pic6=BitmapFactory.decodeResource(context.resources, R.drawable.dulquer1,options)
+        Log.i(BITMAP_TAG,"pic6 loaded")
+        val pic7=BitmapFactory.decodeResource(context.resources, R.drawable.harish1,options)
+        Log.i(BITMAP_TAG,"pic7 loaded")
+        val pic8=BitmapFactory.decodeResource(context.resources, R.drawable.siva1,options)
+        Log.i(BITMAP_TAG,"pic8 loaded")
+        val pic9=BitmapFactory.decodeResource(context.resources, R.drawable.siddharth1,options)
+        Log.i(BITMAP_TAG,"pic9 loaded")
+        val pic10=BitmapFactory.decodeResource(context.resources, R.drawable.hirthik1,options)
+        Log.i(BITMAP_TAG,"pic10 loaded")
+        val pic11=BitmapFactory.decodeResource(context.resources, R.drawable.tovino1,options)
+        Log.i(BITMAP_TAG,"pic11 loaded")
+        val pic12=BitmapFactory.decodeResource(context.resources, R.drawable.dhanush1,options)
+        Log.i(BITMAP_TAG,"pic12 loaded")
+        val pic13=BitmapFactory.decodeResource(context.resources, R.drawable.adharva1,options)
+        Log.i(BITMAP_TAG,"pic13 loaded")
+        val pic14=BitmapFactory.decodeResource(context.resources, R.drawable.makapa1,options)
+        Log.i(BITMAP_TAG,"pic14 loaded")
+        val pic15=BitmapFactory.decodeResource(context.resources, R.drawable.ashok1,options)
+        Log.i(BITMAP_TAG,"pic15 loaded")
+
+        val pic16=BitmapFactory.decodeResource(context.resources, R.drawable.trisha1,options)
+        Log.i(BITMAP_TAG,"pic16 loaded")
+        val pic17=BitmapFactory.decodeResource(context.resources, R.drawable.megha1,options)
+        Log.i(BITMAP_TAG,"pic17 loaded")
+        val pic18=BitmapFactory.decodeResource(context.resources, R.drawable.sri1,options)
+        Log.i(BITMAP_TAG,"pic18 loaded")
+        val pic19=BitmapFactory.decodeResource(context.resources, R.drawable.anupama1,options)
+        Log.i(BITMAP_TAG,"pic19 loaded")
+        val pic20=BitmapFactory.decodeResource(context.resources, R.drawable.amy1,options)
+        Log.i(BITMAP_TAG,"pic20 loaded")
+        val pic21=BitmapFactory.decodeResource(context.resources, R.drawable.shreya1,options)
+        Log.i(BITMAP_TAG,"pic21 loaded")
+        val pic22=BitmapFactory.decodeResource(context.resources, R.drawable.nazriya1,options)
+        Log.i(BITMAP_TAG,"pic22 loaded")
+        val pic23=BitmapFactory.decodeResource(context.resources, R.drawable.priyankamohan1,options)
+        Log.i(BITMAP_TAG,"pic23 loaded")
+        val pic24=BitmapFactory.decodeResource(context.resources, R.drawable.priyabhavani1,options)
+        Log.i(BITMAP_TAG,"pic24 loaded")
+        val pic25=BitmapFactory.decodeResource(context.resources, R.drawable.vani1,options)
+        Log.i(BITMAP_TAG,"pic25 loaded")
+        val pic26=BitmapFactory.decodeResource(context.resources, R.drawable.shwetha1,options)
+        Log.i(BITMAP_TAG,"pic26 loaded")
+        val pic27=BitmapFactory.decodeResource(context.resources, R.drawable.samantha1,options)
+        Log.i(BITMAP_TAG,"pic27 loaded")
+        val pic28=BitmapFactory.decodeResource(context.resources, R.drawable.priyanka1,options)
+        Log.i(BITMAP_TAG,"pic28 loaded")
+        val pic29=BitmapFactory.decodeResource(context.resources, R.drawable.pallavi1,options)
+        Log.i(BITMAP_TAG,"pic29 loaded")
+        val pic30=BitmapFactory.decodeResource(context.resources, R.drawable.deepika1,options)
+        Log.i(BITMAP_TAG,"pic30 loaded")
+        val pic31=BitmapFactory.decodeResource(context.resources, R.drawable.keerthy1,options)
+        Log.i(BITMAP_TAG,"pic31 loaded")
+
+
         val profilePicArray = arrayOf(
-            BitmapFactory.decodeResource(context.resources, R.drawable.simbu4_19),
-            BitmapFactory.decodeResource(context.resources, R.drawable.anirudh3_13),
-            BitmapFactory.decodeResource(context.resources, R.drawable.gvp2_11),
-            BitmapFactory.decodeResource(context.resources, R.drawable.yuvan2_1),
-            BitmapFactory.decodeResource(context.resources, R.drawable.nani4_17),
-            BitmapFactory.decodeResource(context.resources, R.drawable.dulquer1_5),
-            BitmapFactory.decodeResource(context.resources, R.drawable.harish3_17),
-            BitmapFactory.decodeResource(context.resources, R.drawable.siva2_16),
-            BitmapFactory.decodeResource(context.resources, R.drawable.siddharth2_9),
-            BitmapFactory.decodeResource(context.resources, R.drawable.hrithik1_19),
-            BitmapFactory.decodeResource(context.resources, R.drawable.tovino1_3),
-            BitmapFactory.decodeResource(context.resources, R.drawable.dhanush4_4),
-            BitmapFactory.decodeResource(context.resources, R.drawable.adharva1),
-            BitmapFactory.decodeResource(context.resources, R.drawable.makapa1_6),
-            BitmapFactory.decodeResource(context.resources, R.drawable.ashok3_21),
+            pic1,
+            pic2,
+            pic3,
+            pic4,
+            pic5,
+            pic6,
+            pic7,
+            pic8,
+            pic9,
+            pic10,
+            pic11,
+            pic12,
+            pic13,
+            pic14,
+            pic15,
 
-            BitmapFactory.decodeResource(context.resources, R.drawable.trisha1_7),
-            BitmapFactory.decodeResource(context.resources, R.drawable.megha1_10),
-            BitmapFactory.decodeResource(context.resources, R.drawable.sri4_1),
-            BitmapFactory.decodeResource(context.resources, R.drawable.anupama2_16),
-            BitmapFactory.decodeResource(context.resources, R.drawable.amy2),
-            BitmapFactory.decodeResource(context.resources, R.drawable.shreya4_3),
-            BitmapFactory.decodeResource(context.resources, R.drawable.nazriya3_1),
-            BitmapFactory.decodeResource(context.resources, R.drawable.priyanka2_12),
-            BitmapFactory.decodeResource(context.resources, R.drawable.priya1_7),
-            BitmapFactory.decodeResource(context.resources, R.drawable.vani6),
-            BitmapFactory.decodeResource(context.resources, R.drawable.shwetha1_4),
-            BitmapFactory.decodeResource(context.resources, R.drawable.samantha5),
-            BitmapFactory.decodeResource(context.resources, R.drawable.priyankadesh1_15),
-            BitmapFactory.decodeResource(context.resources, R.drawable.pallavi4_6),
-            BitmapFactory.decodeResource(context.resources, R.drawable.deepika1_23),
-            BitmapFactory.decodeResource(context.resources, R.drawable.keerthy5),
+            pic16,
+            pic17,
+            pic18,
+            pic19,
+            pic20,
+            pic21,
+            pic22,
+            pic23,
+            pic24,
+            pic25,
+            pic26,
+            pic27,
+            pic28,
+            pic29,
+            pic30,
+            pic31,
 
+            pic1,
+            pic2,
+            pic3,
+            pic4,
+            pic5,
+            pic6,
+            pic7,
+            pic8,
+            pic9,
+            pic10,
+            pic11,
+            pic12,
+            pic13,
+            pic14,
+            pic15,
 
-            BitmapFactory.decodeResource(context.resources, R.drawable.simbu4_19),
-            BitmapFactory.decodeResource(context.resources, R.drawable.anirudh3_13),
-            BitmapFactory.decodeResource(context.resources, R.drawable.gvp2_11),
-            BitmapFactory.decodeResource(context.resources, R.drawable.yuvan2_1),
-            BitmapFactory.decodeResource(context.resources, R.drawable.nani4_17),
-            BitmapFactory.decodeResource(context.resources, R.drawable.dulquer1_5),
-            BitmapFactory.decodeResource(context.resources, R.drawable.harish3_17),
-            BitmapFactory.decodeResource(context.resources, R.drawable.siva2_16),
-            BitmapFactory.decodeResource(context.resources, R.drawable.siddharth2_9),
-            BitmapFactory.decodeResource(context.resources, R.drawable.hrithik1_19),
-            BitmapFactory.decodeResource(context.resources, R.drawable.tovino1_3),
-            BitmapFactory.decodeResource(context.resources, R.drawable.dhanush4_4),
-            BitmapFactory.decodeResource(context.resources, R.drawable.adharva1),
-            BitmapFactory.decodeResource(context.resources, R.drawable.makapa1_6),
-            BitmapFactory.decodeResource(context.resources, R.drawable.ashok3_21),
-
-            BitmapFactory.decodeResource(context.resources, R.drawable.trisha1_7),
-            BitmapFactory.decodeResource(context.resources, R.drawable.megha1_10),
-            BitmapFactory.decodeResource(context.resources, R.drawable.sri4_1),
-            BitmapFactory.decodeResource(context.resources, R.drawable.anupama2_16),
-            BitmapFactory.decodeResource(context.resources, R.drawable.amy2),
-            BitmapFactory.decodeResource(context.resources, R.drawable.shreya4_3),
-            BitmapFactory.decodeResource(context.resources, R.drawable.nazriya3_1),
-            BitmapFactory.decodeResource(context.resources, R.drawable.priyanka2_12),
-            BitmapFactory.decodeResource(context.resources, R.drawable.priya1_7),
-            BitmapFactory.decodeResource(context.resources, R.drawable.vani6),
-            BitmapFactory.decodeResource(context.resources, R.drawable.shwetha1_4),
-            BitmapFactory.decodeResource(context.resources, R.drawable.samantha5),
-            BitmapFactory.decodeResource(context.resources, R.drawable.priyankadesh1_15),
-            BitmapFactory.decodeResource(context.resources, R.drawable.pallavi4_6),
-            BitmapFactory.decodeResource(context.resources, R.drawable.deepika1_23),
-            BitmapFactory.decodeResource(context.resources, R.drawable.keerthy5),
+            pic16,
+            pic17,
+            pic18,
+            pic19,
+            pic20,
+            pic21,
+            pic22,
+            pic23,
+            pic24,
+            pic25,
+            pic26,
+            pic27,
+            pic28,
+            pic29,
+            pic30,
+            pic31,
         )
 
-//        albumRepository.addAlbum(Album(0, 1, BitmapFactory.decodeResource(context.resources, R.drawable.naruto_img5)))
 
-        for (i in 1..62) {
+        for (i in 1..count) {
             albumRepository.addAlbum(Album(0, i, profilePicArray[i - 1], true))
         }
         addAlbum()
 
-        val userArray = Array<User>(62) {
+        val userArray = Array<User>(count) {
             User(
-                0,
-                nameArr[it],
-                genderArr[it],
-                dobArr[it],
-                religionArr[it],
-                "English",
-                "Never Married",
-                null,
-                casteArr[it],
-                zodiacArr[it],
-                starArr[it],
-                "India",
-                stateArray[it],
-                cityArray[it],
-                heightArray[it],
+//                0,
+                name=nameArr[it],
+                gender=genderArr[it],
+                dob=dobArr[it],
+                religion = religionArr[it],
+                mother_tongue = "English",
+                marital_status = "Never Married",
+                no_of_children = null,
+                caste = casteArr[it],
+                zodiac = zodiacArr[it],
+                star = starArr[it],
+                country = "India",
+                state = stateArray[it],
+                city = cityArray[it],
+                height = heightArray[it],
 //                BitmapFactory.decodeResource(context.resources, R.drawable.default_profile_pic),
-                profilePicArray[it],
-                "Normal",
-                educationArray[it],
-                employedInArray[it],
-                occupationArray[it],
-                annualIncomeArray[it],
-                "Middle Class",
-                familyTypeArray[it],
-                "Not Set"
+                profile_pic = profilePicArray[it],
+                physical_status = "Normal",
+                education = educationArray[it],
+                employed_in = employedInArray[it],
+                occupation = occupationArray[it],
+                annual_income = annualIncomeArray[it],
+                family_status = "Middle Class",
+                family_type = familyTypeArray[it],
+                about = "I am a software engineer. I am currently living in Chennai. I come from a middle class, nuclear family background."
             )
         }
 
@@ -1255,26 +1338,37 @@ constructor(
         }
 
         Log.i(TAG,"Users Loaded")
+
+        handler.post {
+//            Toast.makeText(context.applicationContext,"Loading Complete",Toast.LENGTH_SHORT).show()
+        }
     }
 
     private suspend fun addAlbum() {
-//        albumRepository.addAlbum(Album(0, 1, BitmapFactory.decodeResource(context.resources, R.drawable.simbu1_12)))
-//        albumRepository.addAlbum(Album(0, 1, BitmapFactory.decodeResource(context.resources, R.drawable.simbu2_13)))
-        albumRepository.addAlbum(
-            Album(
-                0,
-                1,
-                BitmapFactory.decodeResource(context.resources, R.drawable.simbu3_14)
-            )
-        )
+        val options=BitmapFactory.Options()
+        options.inJustDecodeBounds=false
+        options.inSampleSize=calculateInSampleSize(options,500,500)
+        albumRepository.addAlbum(Album(0, 1, BitmapFactory.decodeResource(context.resources, R.drawable.simbu2,options)))
+        albumRepository.addAlbum(Album(0, 2, BitmapFactory.decodeResource(context.resources, R.drawable.anirudh2,options)))
+        albumRepository.addAlbum(Album(0, 3, BitmapFactory.decodeResource(context.resources, R.drawable.gvp2,options)))
+        albumRepository.addAlbum(Album(0, 4, BitmapFactory.decodeResource(context.resources, R.drawable.yuvan2,options)))
+        albumRepository.addAlbum(Album(0, 5, BitmapFactory.decodeResource(context.resources, R.drawable.nani2,options)))
+        albumRepository.addAlbum(Album(0, 10, BitmapFactory.decodeResource(context.resources, R.drawable.hirthik2,options)))
+        albumRepository.addAlbum(Album(0, 13, BitmapFactory.decodeResource(context.resources, R.drawable.atharva2,options)))
 
-
+        albumRepository.addAlbum(Album(0, 16, BitmapFactory.decodeResource(context.resources, R.drawable.trisha2,options)))
+        albumRepository.addAlbum(Album(0, 17, BitmapFactory.decodeResource(context.resources, R.drawable.megha2,options)))
+        albumRepository.addAlbum(Album(0, 18, BitmapFactory.decodeResource(context.resources, R.drawable.sri2,options)))
+        albumRepository.addAlbum(Album(0, 19, BitmapFactory.decodeResource(context.resources, R.drawable.anupama2,options)))
+        albumRepository.addAlbum(Album(0, 20, BitmapFactory.decodeResource(context.resources, R.drawable.amy2,options)))
+        albumRepository.addAlbum(Album(0, 26, BitmapFactory.decodeResource(context.resources, R.drawable.shwetha2,options)))
+        albumRepository.addAlbum(Album(0, 30, BitmapFactory.decodeResource(context.resources, R.drawable.deepika2,options)))
     }
 
     suspend fun addHabits() {
         val habitsArray = mutableListOf<Habits>()
 
-        for (i in 1..62) {
+        for (i in 1..count) {
 //            habitsArray.add(Habits(1,"Never","Occasionally","Non-Vegetarian"))
             habitsRepository.insertHabit(Habits(i, "Never", "Occasionally", "Non-Vegetarian"))
         }
@@ -1286,7 +1380,7 @@ constructor(
     suspend fun addFamilyDetails() {
 //        val habitsArray = mutableListOf<Habits>()
 
-        for (i in 1..62) {
+        for (i in 1..count) {
 //            habitsArray.add(Habits(1,"Never","Occasionally","Non-Vegetarian"))
             familyDetailsRepository.setFamilyDetails(
                 FamilyDetails(
@@ -1304,7 +1398,172 @@ constructor(
 //        addSuccessStories()
 
         Log.i(TAG,"Family Details Loaded")
+        addShortlists()
+        addConnections()
+        addMeetings()
+        addPartnerPreferences()
     }
+
+
+    private suspend fun addShortlists(){
+        val shortlistsArray= arrayOf(
+            Shortlists(user_id = 1, shortlisted_user_id = 16),
+            Shortlists(user_id = 1, shortlisted_user_id = 17),
+            Shortlists(user_id = 1, shortlisted_user_id = 18),
+            Shortlists(user_id = 1, shortlisted_user_id = 19),
+            Shortlists(user_id = 1, shortlisted_user_id = 20),
+            Shortlists(user_id = 1, shortlisted_user_id = 21),
+            Shortlists(user_id = 1, shortlisted_user_id = 22),
+            Shortlists(user_id = 1, shortlisted_user_id = 23),
+            Shortlists(user_id = 1, shortlisted_user_id = 24),
+            Shortlists(user_id = 1, shortlisted_user_id = 25),
+            Shortlists(user_id = 16, shortlisted_user_id = 1),
+            Shortlists(user_id = 16, shortlisted_user_id = 2),
+            Shortlists(user_id = 16, shortlisted_user_id = 3),
+            Shortlists(user_id = 16, shortlisted_user_id = 4),
+            Shortlists(user_id = 16, shortlisted_user_id = 5),
+            Shortlists(user_id = 16, shortlisted_user_id = 6),
+            Shortlists(user_id = 16, shortlisted_user_id = 7),
+            Shortlists(user_id = 16, shortlisted_user_id = 8),
+            Shortlists(user_id = 16, shortlisted_user_id = 9),
+            Shortlists(user_id = 16, shortlisted_user_id = 10),
+        )
+
+        shortlistsArray.forEach {
+            shortlistsRepository.addShortlist(it)
+        }
+    }
+
+    private suspend fun addConnections(){
+        val connectionsArray= arrayOf(
+            Connections(user_id = 16, connected_user_id = 1, status = "REQUESTED"),
+            Connections(user_id = 17, connected_user_id = 1, status = "REQUESTED"),
+            Connections(user_id = 18, connected_user_id = 1, status = "REQUESTED"),
+            Connections(user_id = 19, connected_user_id = 1, status = "REQUESTED"),
+            Connections(user_id = 20, connected_user_id = 1, status = "REQUESTED"),
+            Connections(user_id = 21, connected_user_id = 1, status = "REQUESTED"),
+            Connections(user_id = 22, connected_user_id = 1, status = "REQUESTED"),
+            Connections(user_id = 23, connected_user_id = 1, status = "REQUESTED"),
+            Connections(user_id = 24, connected_user_id = 1, status = "REQUESTED"),
+            Connections(user_id = 25, connected_user_id = 1, status = "REQUESTED"),
+
+            Connections(user_id = 26, connected_user_id = 1, status = "CONNECTED"),
+            Connections(user_id = 27, connected_user_id = 1, status = "CONNECTED"),
+            Connections(user_id = 28, connected_user_id = 1, status = "CONNECTED"),
+            Connections(user_id = 30, connected_user_id = 1, status = "CONNECTED"),
+            Connections(user_id = 29, connected_user_id = 1, status = "CONNECTED"),
+
+
+            Connections(user_id = 1, connected_user_id = 16, status = "REQUESTED"),
+            Connections(user_id = 2, connected_user_id = 16, status = "REQUESTED"),
+            Connections(user_id = 3, connected_user_id = 16, status = "REQUESTED"),
+            Connections(user_id = 4, connected_user_id = 16, status = "REQUESTED"),
+            Connections(user_id = 5, connected_user_id = 16, status = "REQUESTED"),
+            Connections(user_id = 6, connected_user_id = 16, status = "REQUESTED"),
+            Connections(user_id = 7, connected_user_id = 16, status = "REQUESTED"),
+            Connections(user_id = 8, connected_user_id = 16, status = "REQUESTED"),
+            Connections(user_id = 9, connected_user_id = 16, status = "REQUESTED"),
+            Connections(user_id = 10, connected_user_id = 16, status = "REQUESTED"),
+
+            Connections(user_id = 11, connected_user_id = 16, status = "CONNECTED"),
+            Connections(user_id = 12, connected_user_id = 16, status = "CONNECTED"),
+            Connections(user_id = 13, connected_user_id = 16, status = "CONNECTED"),
+            Connections(user_id = 14, connected_user_id = 16, status = "CONNECTED"),
+            Connections(user_id = 15, connected_user_id = 16, status = "CONNECTED"),
+        )
+        connectionsArray.forEach {
+            connectionsRepository.addConnection(it)
+        }
+    }
+
+    private suspend fun addMeetings(){
+        val meetingsArray= arrayOf(
+            Meetings(sender_user_id =26 , receiver_user_id =1 , title ="New Meet 1" , date = getDateFromString("05/06/2023")!!, time = "18:30", place = "GreenPark", status = "UPCOMING"),
+            Meetings(sender_user_id =28 , receiver_user_id =1 , title ="New Meet 2" , date = getDateFromString("06/06/2023")!!, time = "17:30", place = "Paris", status = "UPCOMING"),
+            Meetings(sender_user_id =27 , receiver_user_id =1 , title ="New Meet 3" , date = getDateFromString("07/06/2023")!!, time = "16:30", place = "Skywalk", status = "UPCOMING"),
+            Meetings(sender_user_id =30 , receiver_user_id =1 , title ="New Meet 4" , date = getDateFromString("08/06/2023")!!, time = "15:30", place = "Phoenix", status = "COMPLETED"),
+            Meetings(sender_user_id =29 , receiver_user_id =1 , title ="New Meet 5" , date = getDateFromString("20/06/2023")!!, time = "14:30", place = "Nexus", status = "CANCELLED"),
+
+            Meetings(sender_user_id =11 , receiver_user_id =16 , title ="New Meet 6" , date = getDateFromString("20/06/2023")!!, time = "14:30", place = "Nexus", status = "UPCOMING"),
+            Meetings(sender_user_id =12 , receiver_user_id =16 , title ="New Meet 7" , date = getDateFromString("20/06/2023")!!, time = "14:30", place = "Nexus", status = "UPCOMING"),
+            Meetings(sender_user_id =13 , receiver_user_id =16 , title ="New Meet 8" , date = getDateFromString("20/06/2023")!!, time = "14:30", place = "Nexus", status = "UPCOMING"),
+            Meetings(sender_user_id =14 , receiver_user_id =16 , title ="New Meet 9" , date = getDateFromString("20/06/2023")!!, time = "14:30", place = "Nexus", status = "COMPLETED"),
+            Meetings(sender_user_id =15 , receiver_user_id =16 , title ="New Meet 10" , date = getDateFromString("20/06/2023")!!, time = "14:30", place = "Nexus", status = "CANCELLED"),
+        )
+        meetingsArray.forEach {
+            meetingsRepository.addNewMeeting(it)
+        }
+    }
+
+    private suspend fun addPartnerPreferences(){
+        val preferenceArray= arrayOf(
+            PartnerPreferences(user_id = 1, state = "Tamilnadu"),
+            PartnerPreferences(user_id = 2, state = "Kerala"),
+            PartnerPreferences(user_id = 3, education = listOf("B.E")),
+            PartnerPreferences(user_id = 4, state = "Andhra Pradesh"),
+            PartnerPreferences(user_id = 5, state = "Karnataka"),
+            PartnerPreferences(user_id = 6, state = "Others"),
+            PartnerPreferences(user_id = 7, religion = "Muslim"),
+            PartnerPreferences(user_id = 8, religion = "Hindu"),
+            PartnerPreferences(user_id = 9, religion = "Christian"),
+            PartnerPreferences(user_id = 10, religion = "Atheism"),
+
+            PartnerPreferences(user_id = 16, state = "Tamilnadu"),
+            PartnerPreferences(user_id = 17, state = "Kerala"),
+            PartnerPreferences(user_id = 18, education = listOf("B.E")),
+            PartnerPreferences(user_id = 19, state = "Andhra Pradesh"),
+            PartnerPreferences(user_id = 20, state = "Karnataka"),
+            PartnerPreferences(user_id = 21, state = "Others"),
+            PartnerPreferences(user_id = 22, religion = "Muslim"),
+            PartnerPreferences(user_id = 23, religion = "Hindu"),
+            PartnerPreferences(user_id = 24, religion = "Christian"),
+            PartnerPreferences(user_id = 25, religion = "Atheism"),
+        )
+
+        preferenceArray.forEach {
+            partnerPreferenceRepository.addPreference(it)
+        }
+    }
+
+
+    private fun calculateInSampleSize(options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int): Int {
+        val (height: Int, width: Int) = options.run { outHeight to outWidth }
+        var inSampleSize = 1
+
+        if (height > reqHeight || width > reqWidth) {
+
+            val halfHeight: Int = height / 2
+            val halfWidth: Int = width / 2
+
+            while (halfHeight / inSampleSize >= reqHeight && halfWidth / inSampleSize >= reqWidth) {
+                inSampleSize *= 2
+            }
+        }
+
+        return inSampleSize
+    }
+
+    fun decodeSampledBitmapFromResource(
+        res: Resources,
+        resId: Int,
+        reqWidth: Int,
+        reqHeight: Int
+    ): Bitmap {
+        // First decode with inJustDecodeBounds=true to check dimensions
+        return BitmapFactory.Options().run {
+            inJustDecodeBounds = true
+            BitmapFactory.decodeResource(res, resId, this)
+
+            // Calculate inSampleSize
+            inSampleSize = calculateInSampleSize(this, reqWidth, reqHeight)
+
+            // Decode bitmap with inSampleSize set
+            inJustDecodeBounds = false
+
+            BitmapFactory.decodeResource(res, resId, this)
+        }
+    }
+
 
 
 

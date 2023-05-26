@@ -13,7 +13,7 @@ import java.util.Date
 )
 data class User(
     @PrimaryKey(autoGenerate = true)
-    val user_id: Int = 0,
+    var user_id: Int = 0,
     var name: String,
     val gender: String,
     @TypeConverters(DateConverter::class) var dob: Date,

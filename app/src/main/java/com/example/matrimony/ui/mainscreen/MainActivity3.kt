@@ -1,7 +1,6 @@
 package com.example.matrimony.ui.mainscreen
 
 import android.content.Context
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -10,7 +9,6 @@ import androidx.activity.viewModels
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-import com.example.matrimony.ClosingService
 import com.example.matrimony.R
 import com.example.matrimony.TAG
 import com.example.matrimony.databinding.ActivityMainBinding
@@ -29,7 +27,7 @@ import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity1 : AppCompatActivity() {
 
     companion object {
         private const val SELECTED_ITEM = "SELECTED_ITEM_ID"

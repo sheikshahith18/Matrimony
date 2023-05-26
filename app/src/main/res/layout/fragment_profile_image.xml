@@ -5,7 +5,7 @@
 
     <ImageView
         android:id="@id/iv_profile_pic"
-        android:src="@drawable/kakashi_img"
+        android:src="@drawable/default_profile_pic"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

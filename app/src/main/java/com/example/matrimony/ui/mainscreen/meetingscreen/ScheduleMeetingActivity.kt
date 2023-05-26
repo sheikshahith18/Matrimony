@@ -7,13 +7,9 @@ import android.view.MenuItem
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import com.example.matrimony.R
 import com.example.matrimony.TAG
 import com.example.matrimony.databinding.ActivityScheduleMeetingBinding
@@ -23,8 +19,6 @@ import com.example.matrimony.utils.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -51,7 +45,7 @@ class ScheduleMeetingActivity : AppCompatActivity() {
             getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
         userProfileViewModel.userId = sharedPref.getInt(CURRENT_USER_ID, -1)
 
-        Log.i(TAG,"userId= $userId")
+        Log.i(TAG, "userId= $userId")
         if (userId == -1) {
             val senderUserId = intent.getIntExtra("sender_user_id", -1)
             val receiverUserId = intent.getIntExtra("receiver_user_id", -1)
@@ -63,7 +57,8 @@ class ScheduleMeetingActivity : AppCompatActivity() {
                 receiverUserId
             else
                 senderUserId
-            userProfileViewModel.currentUserId= if(userId==senderUserId) receiverUserId else senderUserId
+            userProfileViewModel.currentUserId =
+                if (userId == senderUserId) receiverUserId else senderUserId
             Log.i(TAG, "userId $userId")
         }
 
@@ -75,16 +70,21 @@ class ScheduleMeetingActivity : AppCompatActivity() {
             userProfileViewModel.getUser(userId).observe(this@ScheduleMeetingActivity) {
 
                 binding.tvScheduleMeet.text = "Schedule an appointment with ${it.name}"
-                Glide.with(binding.ivProfilePic.context)
-                    .load(
-                        it.profile_pic ?: ResourcesCompat.getDrawable(
-                            resources,
-                            R.drawable.default_profile_pic,
-                            null
-                        )
-                    )
-                    .apply(RequestOptions.bitmapTransform(RoundedCorners(200)))
-                    .into(binding.ivProfilePic)
+                if (it.profile_pic != null) {
+                    binding.ivProfilePic.visibility = View.VISIBLE
+                    binding.noProfilesPic.visibility = View.GONE
+                    if(it.profile_pic!=null)
+                        binding.ivProfilePic.setImageBitmap(it.profile_pic)
+                    else
+                        binding.ivProfilePic.setImageResource(R.drawable.default_profile_pic)
+//                    Glide.with(binding.ivProfilePic.context)
+//                        .load(it.profile_pic)
+////                        .apply(RequestOptions.bitmapTransform(RoundedCorners(200)))
+//                        .into(binding.ivProfilePic)
+                } else {
+                    binding.ivProfilePic.visibility = View.GONE
+                    binding.noProfilesPic.visibility = View.VISIBLE
+                }
             }
         }
 
@@ -95,16 +95,22 @@ class ScheduleMeetingActivity : AppCompatActivity() {
         initDatePicker()
         initTimePicker()
 
-        binding.btnCancelMeeting.setOnClickListener {
-            finish()
-        }
+//        binding.btnCancelMeeting.setOnClickListener {
+//            finish()
+//        }
 
-        binding.btnScheduleMeeting.setOnClickListener {
+        binding.imgBtnSave?.setOnClickListener {
             scheduleMeeting()
         }
 
 
     }
+
+//    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+//        menuInflater.inflate(R.menu.save_menu,menu)
+//        return true
+//    }
+
 
     private fun initFocusListeners() {
         binding.etMeetingTitle.addTextChangedListener {
@@ -143,7 +149,7 @@ class ScheduleMeetingActivity : AppCompatActivity() {
     private fun initDatePicker() {
         binding.etMeetingDate.setOnClickListener {
 //            Toast.makeText(this, "date", Toast.LENGTH_SHORT).show()
-            val datePicker = DatePickerFragment(false)
+            val datePicker = DatePickerFragment(false,binding.etMeetingDate.text.toString().ifBlank { null })
             datePicker.datePickerListener =
                 DatePickerListener { date -> binding.etMeetingDate.setText(date) }
             datePicker.show(supportFragmentManager, "date-picker")
@@ -153,9 +159,9 @@ class ScheduleMeetingActivity : AppCompatActivity() {
     private fun initTimePicker() {
         binding.etMeetingTime.setOnClickListener {
 
-            val timePicker = TimePickerFragment()
+            val timePicker = TimePickerFragment(binding.etMeetingTime.text.toString().ifBlank { null })
             timePicker.timePickerListener =
-                TimePickerListener { time -> binding.etMeetingTime.setText(time) }
+                TimePickerListener { time -> binding.etMeetingTime.setText(formatTime(time)) }
             timePicker.show(supportFragmentManager, "date-picker")
         }
     }
@@ -170,7 +176,7 @@ class ScheduleMeetingActivity : AppCompatActivity() {
 //            val date = Date.from(localDateTime.atZone(ZoneId.systemDefault()).toInstant())
 
             val meetingId = intent.getIntExtra("meeting_id", -1)
-            Log.i(TAG,"meetingId =$meetingId")
+            Log.i(TAG, "meetingId =$meetingId")
             if (meetingId != -1) {
                 lifecycleScope.launch {
 

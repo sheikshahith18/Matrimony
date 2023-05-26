@@ -96,15 +96,17 @@ class SignUpNextPageActivity : AppCompatActivity() {
             occupation, annualIncome, familyStatus, familyType, about
         )
 
-        val editor=sharedPref.edit()
 //        editor.putString(CURRENT_USER_ID,userId)
         lifecycleScope.launch {
             val intent = Intent(this@SignUpNextPageActivity, MainActivity::class.java)
+            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
+            finish()
+            Log.i(TAG,"useruser"+ signUpViewModel.getUser(userId).value.toString())
             delay(5000)
-            Log.i(TAG, signUpViewModel.getUser(userId).value.toString())
         }
     }
+
 
     private fun initHeightSpinner() {
         val heightArray = resources.getStringArray(R.array.height)

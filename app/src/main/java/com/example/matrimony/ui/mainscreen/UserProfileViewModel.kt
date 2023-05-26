@@ -11,6 +11,7 @@ import com.example.matrimony.TAG
 import com.example.matrimony.db.entities.*
 import com.example.matrimony.db.repository.*
 import com.example.matrimony.models.UserData
+import com.example.matrimony.ui.mainscreen.connectionsscreen.RemoveConnectionDialogFragment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -30,17 +31,14 @@ class UserProfileViewModel
 ) : ViewModel() {
 
 
-    val filterChange = MutableLiveData<Boolean>(false)
-    val sortChange = MutableLiveData<Boolean>(false)
 
     var sendConnection: Boolean? = null
     var initialLogin=true
 
     var preferredUserIds= mutableListOf<Int>()
-//    var preferredUserIds= MutableLiveData<MutableList<Int>>(mutableListOf<Int>())
 
 
-    var currentNavMenu=R.id.nav_home
+    var currentNavMenu:Int?=null
     var currentSwipeImage=0
 
     var gender = ""
@@ -48,6 +46,11 @@ class UserProfileViewModel
     var isCurrentUser = false
     var currentUserId = -1
     var isUserConnected = false
+
+    var dialogLoad = false
+    var dialogUserId = -1
+    var dialogUserName = ""
+    var dialogAdapterPosition = -1
 
     var loaded = true
 
@@ -59,14 +62,19 @@ class UserProfileViewModel
     var profilesLoaded=false
 
 
-//    var profilePic: Bitmap =BitmapFactory.decodeResource(Resources.getSystem(), R.drawable.default_profile_pic)
 
     var currentUserData = MutableLiveData<UserData>()
 
     var currentNavItem = R.id.nav_home
 
+    var dialog:RemoveConnectionDialogFragment = RemoveConnectionDialogFragment()
+
     suspend fun getUser(userId: Int): LiveData<User> {
         return userRepository.getUser(userId)
+    }
+
+    suspend fun getNoOfUsers():Int{
+        return userRepository.getNoOfUsers()
     }
 
 
@@ -96,9 +104,6 @@ class UserProfileViewModel
         }
     }
 
-    suspend fun getConnectedUserIds(userId: Int): LiveData<List<Int>> {
-        return connectionsRepository.getConnectedUserIds(userId)
-    }
 
     fun shortlistUser(shortlist: Shortlists) {
         viewModelScope.launch {
@@ -113,9 +118,6 @@ class UserProfileViewModel
         }
     }
 
-    suspend fun getShortlistedProfiles(userId: Int): LiveData<List<Int>> {
-        return shortlistsRepository.getShortlistedProfiles(userId)
-    }
 
     suspend fun getUserData(userId: Int): UserData {
         return userRepository.getUserData(userId)
@@ -142,20 +144,11 @@ class UserProfileViewModel
         return connectionsRepository.getConnectionStatus(this.userId, connectedUserId)
     }
 
-
-//    suspend fun getAllUsers(): LiveData<List<UserData>> {
-//        return userRepository.getAllUsers()
-//    }
-
     fun addUser(user: User) {
         viewModelScope.launch {
             userRepository.addUser(user)
         }
     }
-
-//    suspend fun getNoOfUsers(): Int {
-//        return userRepository.getNoOfUsers()
-//    }
 
     suspend fun getUserGender(userId: Int): String {
         return userRepository.getUserGender(userId)
@@ -226,8 +219,6 @@ class UserProfileViewModel
         employedInArray: List<String>,
         occupationArraySize: Int,
         occupationArray: List<String>,
-        annualIncomeArraySize: Int,
-        annualIncomeArray: String,
         religionArraySize: Int,
         religionArray: List<String>,
         casteArraySize: Int,
@@ -262,8 +253,6 @@ class UserProfileViewModel
             employedInArray,
             occupationArraySize,
             occupationArray,
-            annualIncomeArraySize,
-            annualIncomeArray,
             religionArraySize,
             religionArray,
             casteArraySize,
@@ -292,22 +281,6 @@ class UserProfileViewModel
         return userRepository.getUserMobile(userId)
     }
 
-    suspend fun addHobby(hobby: Hobbies) {
-        hobbiesRepository.addHobby(hobby)
-    }
-
-
-    suspend fun removeHobby(userId: Int, hobby: String) {
-        hobbiesRepository.removeHobby(userId, hobby)
-    }
-
-    suspend fun getHobbies(userId: Int): LiveData<List<String>> {
-        return hobbiesRepository.getHobbies(userId)
-    }
-
-    suspend fun getFamilyDetails(userId: Int): LiveData<FamilyDetails?> {
-        return familyDetailsRepository.getFamilyDetails(userId)
-    }
 
     suspend fun updateMobile(userId: Int, newMobile: String) {
         userRepository.updateMobile(userId, newMobile)

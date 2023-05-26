@@ -9,11 +9,18 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = Account::class,
-            parentColumns = arrayOf("user_id"),
-            childColumns = arrayOf("user_id"),
+            parentColumns = ["user_id"],
+            childColumns = ["user_id"],
             onDelete = ForeignKey.CASCADE,
             onUpdate = ForeignKey.CASCADE
         ),
+        ForeignKey(
+            entity = Account::class,
+            parentColumns = ["user_id"],
+            childColumns = ["shortlisted_user_id"],
+            onDelete = ForeignKey.CASCADE,
+            onUpdate = ForeignKey.CASCADE
+        )
     ]
 )
 data class Shortlists(

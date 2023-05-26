@@ -31,6 +31,7 @@
 
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/personal_info_edit_scroll_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -38,47 +39,42 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-
-                <!--            <TextView-->
-                <!--                android:id="@+id/tv_personal_info"-->
-                <!--                android:layout_width="wrap_content"-->
-                <!--                android:layout_height="wrap_content"-->
-                <!--                android:layout_marginStart="12dp"-->
-                <!--                android:layout_marginTop="12dp"-->
-                <!--                android:text="Edit Personal Information"-->
-                <!--                android:textSize="20sp"-->
-                <!--                android:textStyle="bold"-->
-                <!--                app:layout_constraintStart_toStartOf="parent"-->
-                <!--                app:layout_constraintTop_toTopOf="parent" />-->
-
                 <TextView
                     android:id="@+id/tv_about_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="12dp"
-                    android:text="About me"
+                    android:text="About me (Max 200 characters)"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <EditText
+                <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tv_about_desc"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="3dp"
                     android:layout_marginEnd="12dp"
-                    android:background="@drawable/background_rectangle"
-                    android:gravity="top|start"
-                    android:hint="-- Not Set -- "
                     android:inputType="textMultiLine"
-                    android:maxLength="250"
+                    android:maxLength="200"
                     android:textSize="16sp"
                     app:layout_constraintHorizontal_chainStyle="packed"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_about_header" />
+                    app:layout_constraintTop_toBottomOf="@+id/tv_about_header">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/et_about_desc"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:maxLength="200"
+                        android:text="About" />
+                </com.google.android.material.textfield.TextInputLayout>
+
 
                 <TextView
                     android:id="@+id/tv_basic_details_header"
@@ -108,7 +104,7 @@
                         android:id="@+id/et_edit_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:inputType="text"
+                        android:inputType="textCapWords"
                         android:maxLength="30"
                         android:text="My name" />
 
@@ -123,6 +119,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="12dp"
                     android:hint="Date of Birth"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/til_edit_name">
 
@@ -135,16 +132,16 @@
 
                 </com.google.android.material.textfield.TextInputLayout>
 
-<!--                <ImageButton-->
-<!--                    android:id="@+id/img_btn_pick_date"-->
-<!--                    android:layout_width="50dp"-->
-<!--                    android:layout_height="50dp"-->
-<!--                    android:layout_marginLeft="12dp"-->
-<!--                    android:layout_marginTop="12dp"-->
-<!--                    android:background="@android:color/transparent"-->
-<!--                    android:src="@drawable/ic_baseline_calendar"-->
-<!--                    app:layout_constraintStart_toEndOf="@id/til_edit_dob"-->
-<!--                    app:layout_constraintTop_toBottomOf="@id/til_edit_name" />-->
+                <!--                <ImageButton-->
+                <!--                    android:id="@+id/img_btn_pick_date"-->
+                <!--                    android:layout_width="50dp"-->
+                <!--                    android:layout_height="50dp"-->
+                <!--                    android:layout_marginLeft="12dp"-->
+                <!--                    android:layout_marginTop="12dp"-->
+                <!--                    android:background="@android:color/transparent"-->
+                <!--                    android:src="@drawable/ic_baseline_calendar"-->
+                <!--                    app:layout_constraintStart_toEndOf="@id/til_edit_dob"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@id/til_edit_name" />-->
 
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -183,7 +180,8 @@
                         android:id="@+id/physical_status_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -203,7 +201,8 @@
                         android:id="@+id/marital_status_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -223,7 +222,8 @@
                         android:id="@+id/children_count_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -256,7 +256,8 @@
                         android:id="@+id/drinking_habit_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -276,7 +277,8 @@
                         android:id="@+id/smoking_habit_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -296,7 +298,8 @@
                         android:id="@+id/food_type_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -328,7 +331,9 @@
                         android:id="@+id/hobbies_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false"
+                        android:text="- Select Hobbies -" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -416,7 +421,8 @@
                         android:id="@+id/brothers_count_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -440,7 +446,8 @@
                         android:id="@+id/married_brothers_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -463,7 +470,8 @@
                         android:id="@+id/sisters_count_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -486,7 +494,8 @@
                         android:id="@+id/married_sisters_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -509,7 +518,8 @@
                         android:id="@+id/family_status_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -531,7 +541,8 @@
                         android:id="@+id/family_type_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -547,24 +558,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/til_family_type" />
 
-                <!--            <com.google.android.material.textfield.TextInputLayout-->
-                <!--                android:id="@+id/til_country"-->
-                <!--                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-                <!--                android:layout_width="match_parent"-->
-                <!--                android:layout_height="wrap_content"-->
-                <!--                android:layout_marginStart="12dp"-->
-                <!--                android:layout_marginTop="8dp"-->
-                <!--                android:layout_marginEnd="12dp"-->
-                <!--                android:hint="Country"-->
-                <!--                app:layout_constraintStart_toStartOf="parent"-->
-                <!--                app:layout_constraintTop_toBottomOf="@id/tv_location_header">-->
-
-                <!--                <androidx.appcompat.widget.AppCompatAutoCompleteTextView-->
-                <!--                    android:id="@+id/country_selector"-->
-                <!--                    style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"-->
-                <!--                    android:layout_width="match_parent"-->
-                <!--                    android:layout_height="wrap_content" />-->
-                <!--            </com.google.android.material.textfield.TextInputLayout>-->
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/til_state"
@@ -582,7 +575,8 @@
                         android:id="@+id/state_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -601,7 +595,8 @@
                         android:id="@+id/city_selector"
                         style="@style/Widget.MaterialComponents.AutoCompleteTextView.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:focusable="false" />
                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -648,7 +643,6 @@
                     android:text="Discard Changes"
                     android:textAllCaps="false"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/btn_save_changes"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"

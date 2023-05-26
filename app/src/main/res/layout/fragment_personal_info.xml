@@ -4,6 +4,7 @@
     <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
+        android:id="@+id/personal_info_scroll"
         android:layout_height="match_parent">
 
 
@@ -24,13 +25,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/img_btn_edit"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:padding="10sp"
                 android:layout_marginEnd="16dp"
-                android:background="@android:color/transparent"
+                android:background="?attr/selectableItemBackground"
+                android:clickable="true"
+                android:enabled="true"
+                android:focusable="true"
                 android:src="@drawable/ic_edit_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -77,7 +82,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_about_desc" />
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/tv_basic_details_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -89,18 +94,25 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_basic_details_header">
 
                 <TextView
+
+                    app:layout_constraintWidth_percent="0.4"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_name"
-                    android:layout_width="135dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="Name\t\t\t\t\t\t\t\t\t\t\t-"
+                    android:text="Name"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintWidth_percent="0.6"
+                    app:layout_constraintStart_toEndOf="@id/tv_name"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:id="@+id/tv_name_value"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/tv_name"
                     android:paddingStart="12dp"
@@ -108,17 +120,23 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintWidth_percent="0.4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_name"
                     android:id="@+id/tv_age"
-                    android:layout_width="135dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_name_value"
-                    android:text="Age\t\t\t\t\t\t\t\t\t\t\t\t\t-"
+                    android:text="Age"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toEndOf="@id/tv_age"
+                    app:layout_constraintTop_toBottomOf="@id/tv_name"
                     android:id="@+id/tv_age_value"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_below="@id/tv_name_value"
                     android:layout_toEndOf="@id/tv_name"
                     android:paddingStart="12dp"
@@ -126,52 +144,70 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_age"
                     android:id="@+id/tv_dob"
-                    android:layout_width="135dp"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.4"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_age_value"
-                    android:text="DOB\t\t\t\t\t\t\t\t\t\t\t\t-"
+                    android:text="DOB"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toEndOf="@id/tv_dob"
+                    app:layout_constraintTop_toBottomOf="@id/tv_age"
                     android:id="@+id/tv_dob_value"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_age_value"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_toEndOf="@id/tv_name"
                     android:paddingStart="12dp"
                     android:text="12/12/2000"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_dob"
                     android:id="@+id/tv_height"
-                    android:layout_width="135dp"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.4"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_dob_value"
-                    android:text="Height\t\t\t\t\t\t\t\t\t\t-"
+                    android:text="Height"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toEndOf="@id/tv_height"
+                    app:layout_constraintTop_toBottomOf="@id/tv_dob"
                     android:id="@+id/tv_height_value"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_dob_value"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_toEndOf="@id/tv_name"
                     android:paddingStart="12dp"
                     android:text="5 ft 4 in"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_height"
                     android:id="@+id/tv_physical_status"
-                    android:layout_width="135dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent="0.4"
                     android:layout_below="@id/tv_height_value"
-                    android:text="Physical Status\t\t-"
+                    android:text="Physical Status"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toEndOf="@id/tv_physical_status"
+                    app:layout_constraintTop_toBottomOf="@id/tv_height"
                     android:id="@+id/tv_physical_status_value"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_height_value"
                     android:layout_toEndOf="@id/tv_name"
@@ -180,16 +216,22 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_physical_status"
                     android:id="@+id/tv_marital_status"
-                    android:layout_width="135dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent="0.4"
                     android:layout_below="@id/tv_physical_status"
-                    android:text="Marital Status\t\t\t-"
+                    android:text="Marital Status"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toEndOf="@id/tv_marital_status"
+                    app:layout_constraintTop_toBottomOf="@id/tv_physical_status"
                     android:id="@+id/tv_marital_status_value"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_physical_status"
                     android:layout_toEndOf="@id/tv_name"
@@ -198,16 +240,22 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_marital_status"
                     android:id="@+id/tv_no_of_children"
-                    android:layout_width="135dp"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.4"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_marital_status"
-                    android:text="No. of Children\t\t\t-"
+                    android:text="No. of Children"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintStart_toEndOf="@id/tv_no_of_children"
+                    app:layout_constraintTop_toBottomOf="@id/tv_marital_status"
                     android:id="@+id/tv_no_of_children_value"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_marital_status"
                     android:layout_toEndOf="@id/tv_name"
@@ -215,7 +263,7 @@
                     android:text="0"
                     android:textSize="16sp" />
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_habits_header"
@@ -229,7 +277,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_basic_details_desc" />
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/tv_habits_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -242,39 +290,52 @@
 
                 <TextView
                     android:id="@+id/tv_drinking_habit"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.4"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:gravity="top|start"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
                     android:maxLength="500"
-                    android:text="Drinking\t\t\t\t-"
+                    android:text="Drinking"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_drinking_habit"
+                    android:layout_width="0dp"
                     android:id="@+id/tv_drinking_habit_value"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/tv_drinking_habit"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
+                    app:layout_constraintWidth_percent="0.6"
                     android:text="Never"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_smoking_habit"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_drinking_habit"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_drinking_habit_value"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="Smoking\t\t\t-"
+                    android:text="Smoking"
                     android:textSize="16sp" />
 
                 <TextView
+
                     android:id="@+id/tv_smoking_habit_value"
-                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_drinking_habit_value"
+                    app:layout_constraintStart_toEndOf="@id/tv_smoking_habit"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_drinking_habit_value"
                     android:layout_toEndOf="@id/tv_smoking_habit"
@@ -286,18 +347,24 @@
 
                 <TextView
                     android:id="@+id/tv_food_type"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.4"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_smoking_habit"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_smoking_habit_value"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="Food Type\t\t-"
+                    android:text="Food Type"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_food_type_value"
-                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_smoking_habit_value"
+                    app:layout_constraintStart_toEndOf="@id/tv_food_type"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_smoking_habit_value"
                     android:layout_toEndOf="@id/tv_food_type"
@@ -308,7 +375,7 @@
                     android:textSize="16sp" />
 
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_hobbies_header"
@@ -350,7 +417,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_hobbies_desc" />
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/tv_family_details_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -362,109 +429,139 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_family_details_header">
 
                 <TextView
+                    app:layout_constraintWidth_percent="0.4"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_father_name"
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="Father's Name\t\t\t\t-"
+                    android:text="Father's Name"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_father_name"
+                    android:layout_width="0dp"
                     android:id="@+id/tv_father_name_value"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/tv_father_name"
                     android:enabled="false"
                     android:gravity="top|start"
+                    app:layout_constraintWidth_percent="0.6"
                     android:hint="- Not Set -"
                     android:maxLength="500"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintTop_toBottomOf="@id/tv_father_name"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_mother_name"
-                    android:layout_width="150dp"
+                    app:layout_constraintWidth_percent="0.4"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_father_name_value"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="Mother's Name\t\t\t-"
+                    android:text="Mother's Name"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_mother_name_value"
-                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_father_name_value"
+                    app:layout_constraintStart_toEndOf="@id/tv_mother_name"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_father_name_value"
                     android:layout_toEndOf="@id/tv_mother_name"
                     android:enabled="false"
                     android:gravity="top|start"
+                    app:layout_constraintWidth_percent="0.6"
                     android:hint="- Not Set -"
                     android:maxLength="500"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintTop_toBottomOf="@id/tv_mother_name"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_no_of_brothers"
-                    android:layout_width="150dp"
+                    app:layout_constraintWidth_percent="0.4"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_mother_name_value"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="No. of Brothers\t\t\t-"
+                    android:text="No. of Brothers"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_no_of_brothers_value"
-                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_mother_name"
+                    app:layout_constraintStart_toEndOf="@id/tv_no_of_brothers"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_mother_name_value"
                     android:layout_toEndOf="@id/tv_no_of_brothers"
                     android:enabled="false"
+                    app:layout_constraintWidth_percent="0.6"
                     android:gravity="top|start"
                     android:hint="- Not Set -"
                     android:maxLength="500"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintTop_toBottomOf="@id/tv_no_of_brothers"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_married_brothers"
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    app:layout_constraintWidth_percent="0.4"
                     android:layout_below="@id/tv_no_of_brothers"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="Married Brothers\t\t-"
+                    android:text="Married Brothers"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_married_brothers_value"
-                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_no_of_brothers_value"
+                    app:layout_constraintStart_toEndOf="@id/tv_married_brothers"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_no_of_brothers_value"
                     android:layout_toEndOf="@id/tv_married_brothers"
                     android:enabled="false"
+                    app:layout_constraintWidth_percent="0.6"
                     android:gravity="top|start"
                     android:hint="- Not Set -"
                     android:maxLength="500"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintTop_toBottomOf="@id/tv_married_brothers"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_no_of_sisters"
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.4"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_married_brothers_value"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="No. of Sisters\t\t\t\t\t-"
+                    android:text="No. of Sisters"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_no_of_sisters_value"
-                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_married_brothers_value"
+                    app:layout_constraintStart_toEndOf="@id/tv_no_of_sisters"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_married_brothers_value"
                     android:layout_toEndOf="@id/tv_no_of_sisters"
@@ -475,19 +572,25 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintTop_toBottomOf="@id/tv_no_of_sisters"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_married_sisters"
-                    android:layout_width="150dp"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.4"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_no_of_sisters"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="Married Sisters\t\t\t-"
+                    android:text="Married Sisters"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_married_sisters_value"
-                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_no_of_sisters_value"
+                    app:layout_constraintStart_toEndOf="@id/tv_married_sisters"
+                    android:layout_width="0dp"
+                    app:layout_constraintWidth_percent="0.6"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_no_of_sisters_value"
                     android:layout_toEndOf="@id/tv_married_sisters"
@@ -498,7 +601,7 @@
                     android:textSize="16sp" />
 
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
 
             <TextView
@@ -523,7 +626,7 @@
             <!--                android:textSize="16sp"-->
             <!--                />-->
 
-            <RelativeLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/tv_location_desc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -535,65 +638,84 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_location_header">
 
                 <TextView
+                    app:layout_constraintWidth_percent="0.4"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_country"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="Country\t\t\t\t-"
+                    android:text="Country"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_country"
+                    android:layout_width="0dp"
                     android:id="@+id/tv_country_value"
-                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_toEndOf="@id/tv_country"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
+                    app:layout_constraintWidth_percent="0.6"
                     android:paddingStart="12dp"
-                    android:text="India"
+                    android:text="-\t\tIndia"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintWidth_percent="0.4"
+                    app:layout_constraintTop_toBottomOf="@id/tv_country"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_state"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_country_value"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="State\t\t\t\t\t\t\t-"
+                    android:text="State"
                     android:textSize="16sp" />
 
                 <TextView
+
                     android:id="@+id/tv_state_value"
-                    android:layout_width="match_parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_country_value"
+                    app:layout_constraintStart_toEndOf="@id/tv_state"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_country_value"
                     android:layout_toEndOf="@id/tv_state"
                     android:enabled="false"
                     android:gravity="top|start"
+                    app:layout_constraintWidth_percent="0.6"
                     android:maxLength="500"
                     android:paddingStart="12dp"
                     android:text="Tamilnadu"
                     android:textSize="16sp" />
 
                 <TextView
+                    app:layout_constraintWidth_percent="0.4"
+                    app:layout_constraintTop_toBottomOf="@id/tv_state"
+                    app:layout_constraintStart_toStartOf="parent"
                     android:id="@+id/tv_city"
-                    android:layout_width="100dp"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_state_value"
                     android:enabled="false"
                     android:gravity="top|start"
                     android:maxLength="500"
-                    android:text="City\t\t\t\t\t\t\t\t-"
+                    android:text="City"
                     android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/tv_city_value"
-                    android:layout_width="match_parent"
+                    app:layout_constraintWidth_percent="0.6"
+                    app:layout_constraintTop_toBottomOf="@id/tv_state_value"
+                    app:layout_constraintStart_toEndOf="@id/tv_city"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tv_state_value"
                     android:layout_toEndOf="@id/tv_city"
@@ -605,7 +727,7 @@
                     android:textSize="16sp" />
 
 
-            </RelativeLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <TextView
                 android:id="@+id/tv_contact_header"
@@ -635,11 +757,10 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_contact_header" />
 
-            <TextView
+            <View
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:paddingBottom="150dp"
+                android:layout_marginTop="100dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_contact_desc" />
 

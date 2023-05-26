@@ -1,8 +1,10 @@
 package com.example.matrimony.ui.registerscreen
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.matrimony.TAG
 import com.example.matrimony.db.entities.Account
 import com.example.matrimony.db.entities.PrivacySettings
 import com.example.matrimony.db.entities.User
@@ -33,6 +35,9 @@ class SignUpViewModel @Inject constructor(
     var cityPosition = -1
     var maritalStatusPosition = -1
 
+    var loaded=false
+    var loadingStarted=false
+
     suspend fun isEmailAlreadyExists(email: String): Boolean {
         return accountRepository.isEmailAlreadyExists(email)
     }
@@ -42,17 +47,27 @@ class SignUpViewModel @Inject constructor(
         return accountRepository.isMobileAlreadyExists(mobile)
     }
 
-    suspend fun createAccount(account: Account, user: User) {
+    suspend fun createAccount(account: Account,user:User) {
 //        viewModelScope.launch {
         accountRepository.addAccount(account)
-        accountRepository.addUser(user)
         val userId=accountRepository.getUserByMobile(account.mobile_no)
+        user.user_id=userId
+        accountRepository.addUser(user)
+        Log.i(TAG,"singUpViewModel ${user.toString()}")
         privacySettingsRepository.addPrivacySettings(PrivacySettings(userId))
 //        }
     }
 
+    suspend fun addUser(user:User){
+        accountRepository.addUser(user)
+    }
+
     suspend fun getUserByEmail(email: String): Int {
         return accountRepository.getUserByEmail(email)
+    }
+
+    suspend fun getUserGender(userId: Int): String {
+        return accountRepository.getUserGender(userId)
     }
 
     suspend fun getUser(userId: Int): LiveData<User> {

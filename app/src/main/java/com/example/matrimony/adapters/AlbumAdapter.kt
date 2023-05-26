@@ -1,23 +1,29 @@
 package com.example.matrimony.adapters
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import android.view.*
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.matrimony.R
 import com.example.matrimony.TAG
 import com.example.matrimony.databinding.ImageViewGridBinding
 import com.example.matrimony.db.entities.Album
+import com.example.matrimony.ui.mainscreen.MainActivity
 import com.example.matrimony.ui.mainscreen.UserProfileViewModel
 import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class AlbumAdapter(
+    private val context:Context,
     private val userProfileViewModel: UserProfileViewModel,
     private val albumViewModel: AlbumViewModel,
     private val addImage: () -> Unit,
@@ -73,6 +79,8 @@ class AlbumAdapter(
         override fun onMenuItemClick(item: MenuItem): Boolean {
             when (item.itemId) {
                 R.id.remove_profile_pic -> {
+                    Toast.makeText(context,"Profile Picture Removed",Toast.LENGTH_SHORT).show()
+//                    Snackbar.make(binding.root,"Profile Picture Removed", Snackbar.LENGTH_SHORT).show()
                     Log.i(TAG, "Remove Profile Pic")
                     userProfileViewModel.updateProfilePic(
                         albumList[absoluteAdapterPosition].user_id,
@@ -87,6 +95,8 @@ class AlbumAdapter(
                     notifyDataSetChanged()
                 }
                 R.id.set_profile_pic -> {
+                    Toast.makeText(context,"Profile Picture Updated",Toast.LENGTH_SHORT).show()
+//                    Snackbar.make(binding.root,"Profile Picture Updated", Snackbar.LENGTH_SHORT).show()
                     CoroutineScope(Dispatchers.Main).launch {
                         val image = albumViewModel.getImage(
                             albumList[0].user_id,
@@ -120,6 +130,8 @@ class AlbumAdapter(
 
                 }
                 R.id.delete_picture -> {
+//                    Snackbar.make(binding.root,"Profile Removed From Album", Snackbar.LENGTH_SHORT).show()
+                    Toast.makeText(context,"Picture Removed From Album",Toast.LENGTH_SHORT).show()
                     albumViewModel.removePicture(
                         userProfileViewModel.userId,
                         albumList[absoluteAdapterPosition].image_id

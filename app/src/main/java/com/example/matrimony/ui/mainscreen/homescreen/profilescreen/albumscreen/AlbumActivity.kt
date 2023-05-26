@@ -71,7 +71,7 @@ class AlbumActivity : AppCompatActivity(), OpenCameraDialogFragment.Companion.Bu
 
         val albumRecyclerView = binding.rvAlbum
         albumRecyclerView.layoutManager = GridLayoutManager(this, 1)
-        adapter = AlbumAdapter(userProfileViewModel, albumViewModel, addImage,::getPermission,::checkForPermission)
+        adapter = AlbumAdapter(this,userProfileViewModel, albumViewModel, addImage,::getPermission,::checkForPermission)
         albumRecyclerView.adapter = adapter
 
 
@@ -123,31 +123,16 @@ class AlbumActivity : AppCompatActivity(), OpenCameraDialogFragment.Companion.Bu
     }
 
     private fun startGalleryIntent() {
-//        if (!hasGalleryPermission()) {
-//            askForGalleryPermission()
-//        }
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-//            if(!hasImagesPermission()){
-//                askForImagesPermission()
-//
-//            }
-//        }
-
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         startActivityForResult(intent, REQUEST_IMAGE_CHOOSE)
     }
 
-    // Define a constant for the request code
-//    private val REQUEST_IMAGE_CAPTURE = 1
-
-    // Define a variable to store the URI of the captured image
     private var imageUri: Uri? = null
 
-    // Function to launch the camera app
     private fun launchCamera() {
         val values = ContentValues()
-        values.put(MediaStore.Images.Media.TITLE, "New Picture")
-        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera")
+        values.put(MediaStore.Images.Media.TITLE, "new_picture")
+        values.put(MediaStore.Images.Media.DESCRIPTION, "from_camera")
         imageUri = this.contentResolver.insert(
             MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values
         )
@@ -156,24 +141,8 @@ class AlbumActivity : AppCompatActivity(), OpenCameraDialogFragment.Companion.Bu
 
         startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
 
-//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//        if (intent.resolveActivity(packageManager) != null) {
-//            val photoFile: File?
-//            val photoFileName = "IMG_${SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())}"
-//            val storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES)
-//            try {
-//                photoFile = File.createTempFile(photoFileName, ".jpg", storageDir)
-//                imageUri = FileProvider.getUriForFile(this, "${BuildConfig.APPLICATION_ID}.fileprovider", photoFile)
-//                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri)
-//                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE)
-//            } catch (ex: IOException) {
-//                ex.printStackTrace()
-//            }
-
-
     }
 
-    // Function to get the file path of an image URI
     private fun getRealPathFromURI(contentUri: Uri?): String? {
         val proj = arrayOf(MediaStore.Images.Media.DATA)
         val cursor: Cursor? = contentResolver.query(contentUri!!, proj, null, null, null)
@@ -182,15 +151,9 @@ class AlbumActivity : AppCompatActivity(), OpenCameraDialogFragment.Companion.Bu
         return cursor?.getString(columnIndex!!).also { cursor?.close() }
     }
 
-    // Function to load a new image from file path
+
     private fun loadNewImage(filePath: String) {
-//        val bitmap = BitmapFactory.decodeFile(filePath)
-//        lifecycleScope.launch {
-//            val album = (Album(0, userProfileViewModel.userId, bitmap, false))
-//            albumViewModel.addAlbum(album)
-//            albumList.add(album)
-//            adapter?.notifyDataSetChanged()
-//        }
+
         Log.i(TAG, "load image: $filePath")
         var mBitmap = BitmapFactory.decodeFile(filePath)
         Log.d("Images New ", mBitmap.toString())
@@ -200,14 +163,14 @@ class AlbumActivity : AppCompatActivity(), OpenCameraDialogFragment.Companion.Bu
         val width: Int = size.x
         val height: Int = size.y
         Log.i(TAG, "bitmap: " + mBitmap!!.getWidth() + " " + mBitmap!!.getHeight())
-        val maxP = Math.max(mBitmap!!.getWidth(), mBitmap!!.getHeight())
+        val maxP = Math.max(mBitmap.getWidth(), mBitmap!!.getHeight())
         val scale1280 = maxP.toFloat() / 1280
         Log.i(TAG, "scaled: " + scale1280 + " - " + 1 / scale1280)
 //        mImageView!!.maxZoom = width * 2 / 1280f
         mBitmap = Bitmap.createScaledBitmap(
             mBitmap,
-            (mBitmap.getWidth() / scale1280).toInt(),
-            (mBitmap.getHeight() / scale1280).toInt(),
+            (mBitmap.width / scale1280).toInt(),
+            (mBitmap.height / scale1280).toInt(),
             true
         )
         val exif = ExifInterface(filePath)
@@ -233,7 +196,6 @@ class AlbumActivity : AppCompatActivity(), OpenCameraDialogFragment.Companion.Bu
 //        mImageView!!.setImageBitmap(mBitmap)
     }
 
-    // Function to delete an image by its URI
     private fun deleteImage(uri: Uri?) {
         if (uri != null) {
             val contentResolver = this.contentResolver
@@ -241,22 +203,12 @@ class AlbumActivity : AppCompatActivity(), OpenCameraDialogFragment.Companion.Bu
         }
     }
 
-    // Override the onActivityResult() function to get the result of the camera app
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        // Check if the result is OK
         if (resultCode == Activity.RESULT_OK) {
-            // Check if the request code matches the image capture request code
             if (requestCode == REQUEST_IMAGE_CAPTURE) {
-                // Get the file path of the captured image
                 val path = getRealPathFromURI(imageUri)!!
-//                addPostViewModel.galleryImagePath = path
-//                galleryViewRecyclerAdapter.cursor = getImagesCursor()!!
-//                galleryViewRecyclerAdapter.notifyDataSetChanged()
-//                loadNewImage(path)
-//                val path = getRealPathFromURI(imageUri)!!
-                // Load the new image from file path
                 loadNewImage(path)
             }
             else if(requestCode == REQUEST_IMAGE_CHOOSE){
@@ -269,7 +221,6 @@ class AlbumActivity : AppCompatActivity(), OpenCameraDialogFragment.Companion.Bu
                 }
             }
         } else {
-            // If the result is not OK, delete the captured image if it exists
             deleteImage(imageUri)
             imageUri = null
         }

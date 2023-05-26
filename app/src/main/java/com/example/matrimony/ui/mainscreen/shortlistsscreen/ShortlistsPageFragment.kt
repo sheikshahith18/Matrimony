@@ -12,6 +12,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.matrimony.R
 import com.example.matrimony.TAG
@@ -20,6 +21,7 @@ import com.example.matrimony.databinding.FragmentShortlistsPageBinding
 import com.example.matrimony.models.UserData
 import com.example.matrimony.ui.mainscreen.UserProfileViewModel
 import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.ViewProfileActivity
+import com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen.AlbumViewModel
 import com.example.matrimony.ui.mainscreen.homescreen.settingsscreen.SettingsViewModel
 import com.example.matrimony.utils.CURRENT_USER_GENDER
 import com.example.matrimony.utils.CURRENT_USER_ID
@@ -34,6 +36,7 @@ class ShortlistsPageFragment : Fragment() {
     private val userProfileViewModel by activityViewModels<UserProfileViewModel>()
     private val shortlistsViewModel by activityViewModels<ShortlistsViewModel>()
     private val settingsViewModel by activityViewModels<SettingsViewModel>()
+    private val albumViewModel by activityViewModels<AlbumViewModel>()
 
     lateinit var binding: FragmentShortlistsPageBinding
 
@@ -86,13 +89,17 @@ class ShortlistsPageFragment : Fragment() {
 
         val shortlistedProfilesView = binding.rvShortlists
         shortlistedProfilesView.layoutManager =
-            GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
+            LinearLayoutManager(requireContext())
+//            GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
 
         val adapter = ShortlistedProfilesAdapter(
+            requireActivity(),
             userProfileViewModel,
             shortlistsViewModel,
             settingsViewModel,
-            viewFullProfile
+            albumViewModel,
+            viewFullProfile,
+            noShortlistedProfiles
         )
         adapter.stateRestorationPolicy =
             RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
@@ -128,61 +135,11 @@ class ShortlistsPageFragment : Fragment() {
         }
 
 
-//        shortListedProfiles.observe(viewLifecycleOwner) { shortListedId ->
-//            if (shortListedId.isEmpty()) {
-//                binding.rvShortlists.visibility = View.GONE
-//                binding.noProfilesMessage.visibility = View.VISIBLE
-//                return@observe
-//            }
-//            binding.rvShortlists.visibility = View.VISIBLE
-//            binding.noProfilesMessage.visibility = View.GONE
-//
-//            val shortlistedProfilesView = binding.rvShortlists
-//
-//            shortlistedProfilesView.layoutManager =
-//                GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
-//
-//            val adapter = ShortlistedProfilesAdapter(userProfileViewModel)
-//            shortlistedProfilesView.adapter = adapter
-//
-//            val usersList = mutableListOf<UserData>()
-//
-//            lifecycleScope.launch {
-//                shortListedId.forEach {
-//                    usersList.add(userProfileViewModel.getUserData(it))
-//                }
-//                adapter.setUserList(usersList)
-//            }
-//        }
+    }
 
-
-//        val users=mViewModel.getAllUsers
-//        users.observe(viewLifecycleOwner) {
-//            ShortlistedProfilesAdapter(it.toMutableList())
-//        }
-//        val profilesRecyclerView = binding.rvShortlists
-
-//        profilesRecyclerView.layoutManager =
-//            GridLayoutManager(requireContext(), 1, GridLayoutManager.VERTICAL, false)
-//        LinearLayoutManager(requireContext())
-
-//        val profilesAdapter = ShortlistedProfilesAdapter(userProfileViewModel)
-//        profilesRecyclerView.adapter = profilesAdapter
-
-//        lifecycleScope.launch {
-//            viewModel.getComments().observe(this@CommentActivity) {
-//                commentsRecyclerAdapter.setComments(it)
-//                commentBinding.pbLoading.visibility = View.GONE
-//                commentBinding.nestedScrollView.visibility = View.VISIBLE
-//                commentBinding.addComment.isEnabled = true
-//            }
-//        }
-//        lifecycleScope.launch {
-//            mViewModel.getAllUsers().observe(viewLifecycleOwner) {
-//                profilesAdapter.setUserList(it)
-//            }
-//        }
-
+    private val noShortlistedProfiles={
+        binding.rvShortlists.visibility = View.GONE
+        binding.noProfilesMessage.visibility = View.VISIBLE
     }
 
 

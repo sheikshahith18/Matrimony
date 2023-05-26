@@ -7,8 +7,10 @@ import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
 import java.util.*
 
-class DatePickerFragment(private val isAge: Boolean) : DialogFragment(),
-    DatePickerDialog.OnDateSetListener {
+class DatePickerFragment(private val isAge: Boolean?,private val dateString:String?) : DialogFragment(), DatePickerDialog.OnDateSetListener {
+
+//    private var dateString:String?="31/12/2005"
+
     lateinit var datePickerListener: DatePickerListener
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val calendar = Calendar.getInstance()
@@ -16,7 +18,10 @@ class DatePickerFragment(private val isAge: Boolean) : DialogFragment(),
         val month = calendar.get(Calendar.MONTH)
         val day = calendar.get(Calendar.DAY_OF_MONTH)
         var datePickerDialog: DatePickerDialog? = null
-        if (isAge) {
+        if(isAge==null){
+            datePickerDialog = DatePickerDialog(requireContext(), this, year, month, day)
+        }
+        else if (isAge) {
             calendar.add(Calendar.YEAR, -18)
             val maxDate = calendar.timeInMillis
             calendar.add(Calendar.YEAR, -25)
@@ -29,6 +34,12 @@ class DatePickerFragment(private val isAge: Boolean) : DialogFragment(),
             val minDate = calendar.timeInMillis
             datePickerDialog = DatePickerDialog(requireContext(), this, year, month, day)
             datePickerDialog.datePicker.minDate = minDate
+        }
+
+        if(dateString!=null){
+            val date=getDateFromString(dateString!!)
+            calendar.time=date!!
+            datePickerDialog.updateDate(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DATE))
         }
 
         return datePickerDialog

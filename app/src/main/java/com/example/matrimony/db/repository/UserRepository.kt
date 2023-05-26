@@ -1,7 +1,12 @@
 package com.example.matrimony.db.repository
 
+import android.app.Application
 import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
+import androidx.paging.PagingData
+import com.example.matrimony.db.AppDatabase
 import com.example.matrimony.db.dao.AccountDao
 import com.example.matrimony.db.dao.UserDao
 import com.example.matrimony.db.entities.User
@@ -16,6 +21,10 @@ class UserRepository(
 
     suspend fun getUser(userId: Int): LiveData<User> {
         return userDao.getUser(userId)
+    }
+
+    suspend fun getNoOfUsers():Int{
+        return userDao.getNoOfUsers()
     }
 
     suspend fun getUserData(userId: Int): UserData {
@@ -115,8 +124,6 @@ class UserRepository(
         employedInArray: List<String>,
         occupationArraySize: Int,
         occupationArray: List<String>,
-        annualIncomeArraySize: Int,
-        annualIncomeArray: String,
         religionArraySize: Int,
         religionArray: List<String>,
         casteArraySize: Int,
@@ -151,8 +158,6 @@ class UserRepository(
             employedInArray,
             occupationArraySize,
             occupationArray,
-            annualIncomeArraySize,
-            annualIncomeArray,
             religionArraySize,
             religionArray,
             casteArraySize,

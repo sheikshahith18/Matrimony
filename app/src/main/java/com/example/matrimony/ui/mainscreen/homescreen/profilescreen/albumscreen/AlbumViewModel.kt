@@ -1,5 +1,6 @@
 package com.example.matrimony.ui.mainscreen.homescreen.profilescreen.albumscreen
 
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -17,6 +18,9 @@ class AlbumViewModel @Inject constructor(private val albumRepository: AlbumRepos
     var loaded=false
 
     var albumList = mutableListOf<Album>()
+
+
+    var imageUri: Uri? = null
 
     suspend fun getProfilePic(userId: Int):LiveData<Album?>{
         return albumRepository.getProfilePic(userId)

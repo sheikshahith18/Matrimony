@@ -3,6 +3,7 @@ package com.example.matrimony.ui.mainscreen.homescreen.profilescreen.editscreen
 import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.ArrayAdapter
@@ -15,6 +16,8 @@ import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import com.example.matrimony.R
+import com.example.matrimony.TAG
+import com.example.matrimony.adapters.CustomArrayAdapter
 import com.example.matrimony.databinding.ActivityPersonalInfoEditBinding
 import com.example.matrimony.db.entities.FamilyDetails
 import com.example.matrimony.db.entities.Hobbies
@@ -46,6 +49,8 @@ class PersonalInfoEditActivity : AppCompatActivity() {
     private val habitsViewModel by viewModels<HabitsViewModel>()
     private val editScreenViewModel by viewModels<EditScreenViewModel>()
 
+    private lateinit var hobbiesAdapter:CustomArrayAdapter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_personal_info_edit)
@@ -67,10 +72,12 @@ class PersonalInfoEditActivity : AppCompatActivity() {
 //        binding.stateSelector.keyListener = null
 //        binding.citySelector.keyListener = null
 
+        binding.citySelector.keyListener = null
+
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        initDatePicker()
+//        initDatePicker()
 
         binding.btnSaveChanges.setOnClickListener {
             saveChanges()
@@ -84,6 +91,7 @@ class PersonalInfoEditActivity : AppCompatActivity() {
             getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)
         userProfileViewModel.userId = sharedPref.getInt(CURRENT_USER_ID, -1)
 
+//        Toast.makeText(this,"Init Hobby",Toast.LENGTH_SHORT).show()
         initDropDownList(
             binding.heightSelector,
             resources.getStringArray(R.array.height).toMutableList(),
@@ -92,31 +100,31 @@ class PersonalInfoEditActivity : AppCompatActivity() {
         initDropDownList(
             binding.physicalStatusSelector,
             resources.getStringArray(R.array.physical_status).toMutableList()
-                .apply { add(0, "- Not Set -") },
+                .apply { add(0, "Not Set") },
             "physical_status"
         )
         initDropDownList(
             binding.maritalStatusSelector,
             resources.getStringArray(R.array.marital_status).toMutableList()
-                .apply { add(0, "- Not Set -") },
+                .apply { add(0, "Not Set") },
             "marital_status"
         )
         initDropDownList(
             binding.drinkingHabitSelector,
             resources.getStringArray(R.array.habits).toMutableList()
-                .apply { add(0, "- Not Set -") },
+                .apply { add(0, "Not Set") },
             "habit"
         )
         initDropDownList(
             binding.smokingHabitSelector,
             resources.getStringArray(R.array.habits).toMutableList()
-                .apply { add(0, "- Not Set -") },
+                .apply { add(0, "Not Set") },
             "habit"
         )
         initDropDownList(
             binding.foodTypeSelector,
             resources.getStringArray(R.array.food_type).toMutableList()
-                .apply { add(0, "- Not Set -") },
+                .apply { add(0, "Not Set") },
             "food_type"
         )
         initDropDownList(
@@ -137,13 +145,13 @@ class PersonalInfoEditActivity : AppCompatActivity() {
         initDropDownList(
             binding.familyStatusSelector,
             resources.getStringArray(R.array.family_status).toMutableList()
-                .apply { add(0, "- Not Set -") },
+                .apply { add(0, "Not Set") },
             "family_status"
         )
         initDropDownList(
             binding.familyTypeSelector,
             resources.getStringArray(R.array.family_type).toMutableList()
-                .apply { add(0, "- Not Set -") },
+                .apply { add(0, "Not Set") },
             "family_type"
         )
         initDropDownList(
@@ -154,18 +162,22 @@ class PersonalInfoEditActivity : AppCompatActivity() {
 
 
 
-        if (editScreenViewModel.loaded)
+//        if (editScreenViewModel.loaded)
             initValues()
-        else
-            editScreenViewModel.hobbies.forEach {
-                addChips(binding.hobbiesChipGroup, it, "hobbies")
-
-            }
+//        else
+//            hobbiesViewModel.selectedHobbies.forEach {
+//                val hobbiesArray=resources.getStringArray(R.array.hobbies)
+//                hobbiesAdapter.setSelectedPosition(hobbiesArray.indexOf(it))
+//                addChips(binding.hobbiesChipGroup, it, "hobbies")
+//            }
     }
 
 
     private fun initValues() {
-        editScreenViewModel.loaded = false
+//        editScreenViewModel.loaded=true
+
+        Log.i(TAG+3,"loaded1=${editScreenViewModel.loaded}")
+
         lifecycleScope.launch {
             userProfileViewModel.getUserMobile(userProfileViewModel.userId)
                 .observe(this@PersonalInfoEditActivity) {
@@ -175,7 +187,7 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                 }
             userProfileViewModel.getUser(userProfileViewModel.userId)
                 .observe(this@PersonalInfoEditActivity) { user ->
-                    binding.tvAboutDesc.setText(user.about)
+                    binding.etAboutDesc.setText(user.about)
                     binding.etEditName.setText(user.name)
                     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
                     val date = user.dob
@@ -184,7 +196,7 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                     binding.heightSelector.setText(user.height)
                     binding.physicalStatusSelector.setText(user.physical_status)
                     binding.maritalStatusSelector.setText(user.marital_status)
-                    if (user.marital_status == "Never Married" || user.marital_status == "- Not Set -") {
+                    if (user.marital_status == "Never Married" || user.marital_status == "Not Set") {
                         binding.tilChildrenCount.visibility = View.GONE
                     } else {
                         binding.tilChildrenCount.visibility = View.VISIBLE
@@ -201,8 +213,21 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                     binding.familyStatusSelector.setText(user.family_status)
                     binding.familyTypeSelector.setText(user.family_type)
                     binding.stateSelector.setText(user.state)
-                    user.city?.let {
-                        binding.citySelector.setText(it)
+                    if (user.state == "Others") {
+                        binding.tilCity.visibility = View.GONE
+                    } else {
+                        binding.tilCity.visibility = View.VISIBLE
+                        user.city?.let {
+                            binding.citySelector.setText(it)
+                            binding.citySelector.setText(user.city ?: "")
+                            if (binding.citySelector.text.toString().isNotBlank()) {
+                                initDropDownList(
+                                    binding.citySelector,
+                                    getCityArray(user.state) as List<String>,
+                                    "city"
+                                )
+                            }
+                        }
                     }
                 }
 
@@ -217,9 +242,10 @@ class PersonalInfoEditActivity : AppCompatActivity() {
 
                         if (it.no_of_brothers > 0) {
                             binding.tilMarriedBrothers.visibility = View.VISIBLE
-                            val arr = IntArray(it.no_of_brothers + 1) { num ->
-                                num
-                            }
+                            val arr = Array(it.no_of_brothers + 1) { it }
+//                                IntArray(it.no_of_brothers + 1) { num ->
+//                                num
+//                            }
                             val count = it.married_brothers ?: 0
                             binding.marriedBrothersSelector.setText(count.toString())
                             initDropDownList(
@@ -230,9 +256,7 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                         }
                         if (it.no_of_sisters > 0) {
                             binding.tilMarriedSisters.visibility = View.VISIBLE
-                            val arr = IntArray(it.no_of_sisters + 1) { num ->
-                                num
-                            }
+                            val arr = Array(it.no_of_sisters + 1) { it }
                             val count = it.married_sisters ?: 0
                             binding.marriedSistersSelector.setText(count.toString())
                             initDropDownList(
@@ -261,9 +285,16 @@ class PersonalInfoEditActivity : AppCompatActivity() {
             hobbiesViewModel.getHobbies(userProfileViewModel.userId)
                 .observe(this@PersonalInfoEditActivity) {
                     it.forEach { hobby ->
-                        editScreenViewModel.hobbies.add(hobby)
+//                        editScreenViewModel.hobbies.add(hobby)
                         addChips(binding.hobbiesChipGroup, hobby, "hobbies")
+                        val hobbiesArray=resources.getStringArray(R.array.hobbies)
+//                        hobbiesAdapter.removeSelectedPosition(hobbiesArray.indexOf(value))
+                        hobbiesAdapter.setSelectedPosition(hobbiesArray.indexOf(hobby))
+                        Log.i(TAG+3,"loaded=${editScreenViewModel.loaded}")
+                        if(editScreenViewModel.loaded)
+                            hobbiesViewModel.selectedHobbies.clear()
                     }
+                    editScreenViewModel.loaded = false
                 }
 
             habitsViewModel.getUserHabits(userProfileViewModel.userId)
@@ -272,7 +303,17 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                     binding.smokingHabitSelector.setText(it?.smoking ?: "")
                     binding.foodTypeSelector.setText(it?.food_type ?: "")
                 }
+
+
+            hobbiesViewModel.selectedHobbies.forEach {
+                val hobbiesArray=resources.getStringArray(R.array.hobbies)
+                hobbiesAdapter.setSelectedPosition(hobbiesArray.indexOf(it))
+                addChips(binding.hobbiesChipGroup, it, "hobbies")
+            }
+
+//        hobbiesViewModel.selectedHobbies.clear()
         }
+
 
     }
 
@@ -284,7 +325,7 @@ class PersonalInfoEditActivity : AppCompatActivity() {
         }
         when (key) {
             "hobbies" -> {
-                hobbiesViewModel.selectedHobbies.add(value)
+//                hobbiesViewModel.selectedHobbies.add(value)
             }
         }
         chipGroup.addView(getChip(value, key))
@@ -306,6 +347,9 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                 }
                 when (key) {
                     "hobbies" -> {
+//                        Toast.makeText(this@PersonalInfoEditActivity,"$value removed",Toast.LENGTH_SHORT).show()
+                        val hobbiesArray=resources.getStringArray(R.array.hobbies)
+                        hobbiesAdapter.removeSelectedPosition(hobbiesArray.indexOf(value))
                         hobbiesViewModel.selectedHobbies.remove(value)
                     }
                 }
@@ -314,14 +358,14 @@ class PersonalInfoEditActivity : AppCompatActivity() {
     }
 
 
-    private fun initDatePicker() {
-        binding.etEditDob.setOnClickListener {
-            val datePicker = DatePickerFragment(true)
-            datePicker.datePickerListener =
-                DatePickerListener { date -> binding.etEditDob.setText(date) }
-            datePicker.show(supportFragmentManager, "date-picker")
-        }
-    }
+//    private fun initDatePicker() {
+//        binding.etEditDob.setOnClickListener {
+//            val datePicker = DatePickerFragment(true)
+//            datePicker.datePickerListener =
+//                DatePickerListener { date -> binding.etEditDob.setText(date) }
+//            datePicker.show(supportFragmentManager, "date-picker")
+//        }
+//    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
@@ -341,12 +385,21 @@ class PersonalInfoEditActivity : AppCompatActivity() {
         itemArray: List<Any>,
         key: String?
     ) {
+//        Toast.makeText(this,"Init Dropdown,$key",Toast.LENGTH_SHORT).show()
+//        Log.i(TAG+2,"Init Dropdown,$key")
+//        Toast.makeText(this,"Init Dropdown,$key",Toast.LENGTH_SHORT).show()
         selector.keyListener = null
-        val arrayAdapter = object : ArrayAdapter<Any>(
+        val arrayAdapter = object : CustomArrayAdapter(
             this,
             android.R.layout.simple_spinner_dropdown_item,
-            itemArray
-        ) {
+            itemArray as List<String>
+        )
+//        val arrayAdapter = object : ArrayAdapter<Any>(
+//            this,
+//            android.R.layout.simple_spinner_dropdown_item,
+//            itemArray
+//        )
+        {
             override fun getFilter(): Filter {
                 return object : Filter() {
                     override fun performFiltering(constraint: CharSequence?): FilterResults {
@@ -367,6 +420,9 @@ class PersonalInfoEditActivity : AppCompatActivity() {
         }
         selector.setAdapter(arrayAdapter)
 
+        if(key=="hobbies")
+            hobbiesAdapter=arrayAdapter
+
         var previousPosition = -1
         selector.setOnItemClickListener { parent, view, position, id ->
 
@@ -378,7 +434,7 @@ class PersonalInfoEditActivity : AppCompatActivity() {
 
                     if (parent.getItemAtPosition(position)
                             .toString() == "Never Married" || parent.getItemAtPosition(position)
-                            .toString() == "- Not Set -"
+                            .toString() == "Not Set"
                     ) {
                         binding.tilChildrenCount.visibility = View.GONE
                         binding.childrenCountSelector.text = null
@@ -412,9 +468,12 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                         binding.tilMarriedBrothers.visibility = View.VISIBLE
                         initDropDownList(
                             binding.marriedBrothersSelector,
-                            IntArray(
-                                parent.getItemAtPosition(position).toString().toInt()
+                            Array(
+                                parent.getItemAtPosition(position).toString().toInt() + 1
                             ) { it }.toList(),
+//                            IntArray(
+//                                parent.getItemAtPosition(position).toString().toInt()
+//                            ) { it }.toList(),
                             "married_count"
                         )
                     } else {
@@ -429,8 +488,8 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                         binding.tilMarriedSisters.visibility = View.VISIBLE
                         initDropDownList(
                             binding.marriedSistersSelector,
-                            IntArray(
-                                parent.getItemAtPosition(position).toString().toInt()
+                            Array(
+                                parent.getItemAtPosition(position).toString().toInt() + 1
                             ) { it }.toList(),
                             "married_count"
                         )
@@ -439,18 +498,26 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                     }
                 }
                 "hobbies" -> {
+                    Log.i(TAG+2,"Inside Hobbiees")
+//                    Toast.makeText(this,"Hobbieees",Toast.LENGTH_SHORT).show()
+                    hobbiesAdapter=arrayAdapter
+                    arrayAdapter.setSelectedPosition(position)
                     editScreenViewModel.hobbies.add(parent.getItemAtPosition(position).toString())
+                    hobbiesViewModel.selectedHobbies.add(parent.getItemAtPosition(position).toString())
                     addChips(
                         binding.hobbiesChipGroup,
                         parent.getItemAtPosition(position).toString(),
                         "hobbies"
                     )
+                    hobbiesViewModel.selectedHobbies.add(parent.getItemAtPosition(position).toString())
                     binding.hobbiesSelector.setText("- Select Hobbies -")
                 }
                 else -> return@setOnItemClickListener
             }
         }
     }
+
+
 
     private fun getCityArray(selectedState: String): List<String>? {
         return when (selectedState) {
@@ -533,15 +600,22 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                                 it.annual_income,
                                 binding.familyStatusSelector.text.toString(),
                                 binding.familyTypeSelector.text.toString(),
-                                binding.tvAboutDesc.text.toString().trim(),
+                                binding.etAboutDesc.text.toString().trim(),
                             )
                         }
+
+                        val sharedPref =
+                            getSharedPreferences(MY_SHARED_PREFERENCES, Context.MODE_PRIVATE)!!
+                        val editor = sharedPref.edit()
+                        editor.putBoolean("personal_info_updated",true)
+                        editor.apply()
+
                     }
 
                 val drinking =
-                    binding.drinkingHabitSelector.text.toString().ifBlank { "- Not Set -" }
-                val smoking = binding.smokingHabitSelector.text.toString().ifBlank { "- Not Set -" }
-                val foodType = binding.foodTypeSelector.text.toString().ifBlank { "- Not Set -" }
+                    binding.drinkingHabitSelector.text.toString().ifBlank { "Not Set" }
+                val smoking = binding.smokingHabitSelector.text.toString().ifBlank { "Not Set" }
+                val foodType = binding.foodTypeSelector.text.toString().ifBlank { "Not Set" }
 
                 habitsViewModel.updateHabits(
                     userProfileViewModel.userId,
@@ -550,8 +624,8 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                     foodType
                 )
 
-                val fatherName = binding.etFatherName.text.toString().ifBlank { "- Not Set -" }
-                val motherName = binding.etMotherName.text.toString().ifBlank { "- Not Set -" }
+                val fatherName = binding.etFatherName.text.toString().ifBlank { "Not Set" }
+                val motherName = binding.etMotherName.text.toString().ifBlank { "Not Set" }
                 val noOfBrothers = binding.brothersCountSelector.text.toString().ifBlank { 0 }
                 val marriedBrothers =
                     if (binding.tilMarriedBrothers.isVisible) binding.marriedBrothersSelector.text.toString()
@@ -573,6 +647,7 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                     )
                 )
 
+                Log.i(TAG+3," selectHob  ${hobbiesViewModel.selectedHobbies.joinToString()}")
                 hobbiesViewModel.selectedHobbies.forEach { hobby ->
                     hobbiesViewModel.addHobby(Hobbies(0, userProfileViewModel.userId, hobby))
                 }
@@ -583,6 +658,7 @@ class PersonalInfoEditActivity : AppCompatActivity() {
                 )
 
                 finish()
+                Toast.makeText(this@PersonalInfoEditActivity,"Personal Info Details Saved",Toast.LENGTH_SHORT).show()
             }
         } else {
 //            Toast.makeText(this@PersonalInfoEditActivity, "False", Toast.LENGTH_SHORT).show()

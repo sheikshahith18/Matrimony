@@ -9,14 +9,21 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#006DFF</color>
     <color name="red">#ad1010</color>
+    <color name="like_red">#FE251B</color>
     <color name="yellow">#FFEA00</color>
     <color name="dark_yellow">#fcb103</color>
     <color name="light_pink">#FBEAEB</color>
+    <color name="dark_pink">#f060f0</color>
+    <color name="whatsapp_green">#25D366</color>
+    <color name="dial_blue">#0000FF</color>
+    <color name="orange">#FFA500</color>
+    <color name="light_gray">#CDCDCD</color>
+    <color name="dark_pink1">#E75480</color>
 
 
     <color name="toolbar_background">#FF03DAC5</color>
     <color name="sky_blue">#87d5e2</color>
     <color name="text_color">@android:color/black</color>
-    <color name="radio_color">@color/teal_200</color>
+    <color name="radio_color">@android:color/holo_blue_dark</color>
 
 </resources>
